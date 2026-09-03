@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guru Maan | Full-Stack Web Developer & UI Engineer</title>
+    <meta name="description" content="Portfolio of Guru Maan - Full-Stack Web Developer specializing in React, Next.js, Node.js, Python, and modern responsive web applications.">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#1e1b4b',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #080c14; color: #e2e8f0; }
+        .gradient-text {
+            background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-border {
+            position: relative;
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .gradient-border:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-4px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 20px 30px -10px rgba(99, 102, 241, 0.15);
+        }
+        .glow-circle {
+            position: absolute;
+            filter: blur(100px);
+            border-radius: 9999px;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="selection:bg-indigo-500 selection:text-white relative overflow-x-hidden">
+
+    <!-- BACKGROUND GLOWS -->
+    <div class="glow-circle w-[500px] h-[500px] bg-indigo-600/15 top-[-100px] left-1/2 -translate-x-1/2"></div>
+    <div class="glow-circle w-[400px] h-[400px] bg-cyan-600/10 top-[600px] right-[-100px]"></div>
+
+    <!-- NAVBAR -->
+    <header class="sticky top-0 z-50 backdrop-blur-md bg-[#080c14]/80 border-b border-slate-800/80">
+        <div class="max-w-6xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#" class="flex items-center space-x-3 group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-bold text-lg text-white shadow-lg shadow-indigo-500/25 group-hover:scale-105 transition">
+                    &lt;G/&gt;
+                </div>
+                <div>
+                    <span class="font-extrabold text-xl tracking-tight text-white">Guru<span class="text-indigo-400">Maan</span></span>
+                    <span class="block text-[11px] font-medium text-slate-400">Full-Stack Developer</span>
+                </div>
+            </a>
+
+            <!-- NAV LINKS -->
+            <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+                <a href="#about" class="hover:text-white transition">About</a>
+                <a href="#skills" class="hover:text-white transition">Skills</a>
+                <a href="#projects" class="hover:text-white transition">Projects</a>
+                <a href="#services" class="hover:text-white transition">Services</a>
+            </nav>
+
+            <div class="flex items-center space-x-3">
+                <a href="https://t.me/Guru4code" target="_blank" class="hidden sm:inline-flex items-center px-4 py-2 rounded-xl text-xs font-semibold bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 hover:bg-indigo-500/20 transition">
+                    💬 Telegram
+                </a>
+                <a href="#contact" class="px-5 py-2.5 rounded-xl text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition">
+                    Hire Me
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="about" class="relative z-10 max-w-6xl mx-auto px-6 pt-16 sm:pt-24 pb-16">
+        <div class="max-w-3xl mx-auto text-center space-y-6">
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Available for Freelance & Remote Contracts
+            </div>
+            
+            <h1 class="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.15] text-white">
+                Building <span class="gradient-text">High-Performance</span> Web Apps & Scalable Systems
+            </h1>
+            
+            <p class="text-slate-300 text-lg sm:text-xl leading-relaxed">
+                Hi, I'm <strong class="text-white">Guru Maan</strong>. A Full-Stack Web Developer with <strong class="text-indigo-400">1.5+ years of practical experience</strong> building fast, clean, and reliable web applications. I turn complex product ideas into modern production software.
+            </p>
+
+            <div class="pt-4 flex flex-wrap items-center justify-center gap-4">
+                <a href="#projects" class="px-7 py-3.5 rounded-xl font-semibold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/30 transition">
+                    Explore Projects →
+                </a>
+                <a href="https://t.me/Guru4code" target="_blank" class="px-7 py-3.5 rounded-xl font-semibold bg-slate-800/80 hover:bg-slate-700 text-slate-200 border border-slate-700 transition flex items-center gap-2">
+                    <span>⚡ Quick Chat</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- STATS / HIGHLIGHTS -->
+        <div class="mt-20 grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div class="gradient-border p-6 rounded-2xl text-center">
+                <div class="text-3xl font-extrabold text-white mb-1">1.5+</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Years Experience</div>
+            </div>
+            <div class="gradient-border p-6 rounded-2xl text-center">
+                <div class="text-3xl font-extrabold text-cyan-400 mb-1">100%</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Modern Tech Stack</div>
+            </div>
+            <div class="gradient-border p-6 rounded-2xl text-center">
+                <div class="text-3xl font-extrabold text-indigo-400 mb-1">24-48h</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Rapid Prototype</div>
+            </div>
+            <div class="gradient-border p-6 rounded-2xl text-center">
+                <div class="text-3xl font-extrabold text-purple-400 mb-1">Clean</div>
+                <div class="text-xs text-slate-400 uppercase tracking-wider font-semibold">Architecture & Code</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- TECH STACK SECTION -->
+    <section id="skills" class="py-16 max-w-6xl mx-auto px-6 border-t border-slate-800/60">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <p class="text-indigo-400 font-semibold text-xs uppercase tracking-widest mb-2">Technical Proficiency</p>
+            <h2 class="text-3xl font-bold text-white tracking-tight">Technologies & Frameworks</h2>
+            <p class="text-slate-400 mt-2 text-sm">Full-stack tooling used to deliver end-to-end web applications</p>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">⚛️</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">React & Next.js</h4>
+                    <p class="text-[11px] text-slate-400">SSR, SSG, State Mgmt</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🟢</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Node.js & Express</h4>
+                    <p class="text-[11px] text-slate-400">REST APIs & Microservices</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🟡</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">JavaScript & TS</h4>
+                    <p class="text-[11px] text-slate-400">Type-safe & Modern ES6+</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🐍</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Python</h4>
+                    <p class="text-[11px] text-slate-400">Automation & Scripting</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🎨</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Tailwind CSS</h4>
+                    <p class="text-[11px] text-slate-400">Pixel-perfect UI Design</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🗄️</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">PostgreSQL & Mongo</h4>
+                    <p class="text-[11px] text-slate-400">Relational & NoSQL</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🔌</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">REST & Webhooks</h4>
+                    <p class="text-[11px] text-slate-400">Third-party Integrations</p>
+                </div>
+            </div>
+            <div class="gradient-border p-5 rounded-xl flex items-center space-x-3">
+                <span class="text-2xl">🚀</span>
+                <div>
+                    <h4 class="font-bold text-white text-sm">Git & GitHub</h4>
+                    <p class="text-[11px] text-slate-400">CI/CD & Version Control</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURED PROJECTS SECTION -->
+    <section id="projects" class="py-20 max-w-6xl mx-auto px-6 border-t border-slate-800/60">
+        <div class="text-center max-w-2xl mx-auto mb-16">
+            <p class="text-indigo-400 font-semibold text-xs uppercase tracking-widest mb-2">Portfolio Showcase</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Featured Engineering Projects</h2>
+            <p class="text-slate-400 mt-2 text-sm">Real-world production architectures, applications, and automated workflows</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Project 1 -->
+            <div class="gradient-border rounded-2xl p-8 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Full-Stack SaaS</span>
+                        <span class="text-xs text-slate-400">2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">SaaS Analytics & Lead Dashboard</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        A real-time analytical web application equipped with dynamic charts, dark mode, user authentication, and data export. Optimized for sub-second query rendering and clean UX.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">React.js</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Tailwind CSS</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Node.js</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">REST API</span>
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between">
+                    <span class="text-xs text-emerald-400 font-medium">✓ Production Optimized</span>
+                    <a href="https://github.com/gurumaan5" target="_blank" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition">View on GitHub →</a>
+                </div>
+            </div>
+
+            <!-- Project 2 -->
+            <div class="gradient-border rounded-2xl p-8 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">E-Commerce & Landing</span>
+                        <span class="text-xs text-slate-400">2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">High-Converting Storefront & Checkout</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Fast e-commerce storefront with product filtering, cart drawer, Stripe payment gateway integration, and 99+ Core Web Vitals performance score.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Next.js</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">TypeScript</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Stripe API</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Responsive UI</span>
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between">
+                    <span class="text-xs text-emerald-400 font-medium">✓ 99+ Google PageSpeed</span>
+                    <a href="https://github.com/gurumaan5" target="_blank" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition">View on GitHub →</a>
+                </div>
+            </div>
+
+            <!-- Project 3 -->
+            <div class="gradient-border rounded-2xl p-8 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/10 text-purple-400 border border-purple-500/20">Automation & AI Agent</span>
+                        <span class="text-xs text-slate-400">2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Autonomous Client Hunter & Notification Bot</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        24/7 background AI agent that scans multi-platform developer job feeds, scores match relevance against technical criteria, and triggers instant Telegram alerts with copy-ready proposals.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Python</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Telegram Bot API</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Google Gemini</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Multi-threading</span>
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between">
+                    <span class="text-xs text-emerald-400 font-medium">✓ 24/7 Autonomous Operation</span>
+                    <a href="https://github.com/gurumaan5" target="_blank" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition">View on GitHub →</a>
+                </div>
+            </div>
+
+            <!-- Project 4 -->
+            <div class="gradient-border rounded-2xl p-8 flex flex-col justify-between">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between">
+                        <span class="px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Backend & API</span>
+                        <span class="text-xs text-slate-400">2026</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white">Secure Auth & User Management API</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Scalable Node.js backend architecture with JSON Web Token (JWT) authentication, password hashing, role-based access control (RBAC), and automated rate limiting.
+                    </p>
+                    <div class="flex flex-wrap gap-2 pt-2">
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Node.js</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">Express</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">MongoDB / SQL</span>
+                        <span class="text-xs px-2.5 py-1 rounded-md bg-slate-800 text-slate-300">JWT Security</span>
+                    </div>
+                </div>
+                <div class="pt-6 border-t border-slate-800/80 mt-6 flex items-center justify-between">
+                    <span class="text-xs text-emerald-400 font-medium">✓ Enterprise Security Standards</span>
+                    <a href="https://github.com/gurumaan5" target="_blank" class="text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition">View on GitHub →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- RAPID PROTOTYPE GUARANTEE -->
+    <section class="py-12 max-w-4xl mx-auto px-6">
+        <div class="gradient-border p-8 sm:p-12 rounded-3xl border-indigo-500/30 bg-gradient-to-br from-indigo-950/40 via-slate-900/90 to-purple-950/40 text-center space-y-4">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/20 text-indigo-300">
+                🤝 The 24-48 Hour Guarantee
+            </div>
+            <h3 class="text-2xl sm:text-3xl font-extrabold text-white">Need Proof of Execution Before Committing?</h3>
+            <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
+                For serious client projects, I can build a working milestone or prototype within <strong>24–48 hours</strong>. This gives you zero financial risk and total confidence in my technical capability and delivery speed.
+            </p>
+            <div class="pt-4">
+                <a href="#contact" class="inline-block px-7 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 font-bold text-white transition shadow-lg shadow-indigo-600/30 text-sm">
+                    Discuss Your Milestone Requirements →
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section id="contact" class="py-20 max-w-4xl mx-auto px-6 border-t border-slate-800/60">
+        <div class="text-center max-w-2xl mx-auto mb-12">
+            <p class="text-indigo-400 font-semibold text-xs uppercase tracking-widest mb-2">Get In Touch</p>
+            <h2 class="text-3xl font-bold text-white tracking-tight">Let's Work Together</h2>
+            <p class="text-slate-400 mt-2 text-sm">Have a freelance project or remote opening? Reach out directly:</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
+            <a href="https://t.me/Guru4code" target="_blank" class="gradient-border p-6 rounded-2xl text-center group hover:border-cyan-500/50 transition">
+                <div class="w-12 h-12 rounded-xl bg-cyan-500/10 text-cyan-400 flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">
+                    ✈️
+                </div>
+                <h4 class="font-bold text-white text-sm">Telegram</h4>
+                <p class="text-xs text-cyan-400 mt-1">@Guru4code</p>
+            </a>
+
+            <a href="mailto:gurudeveloper05@gmail.com" class="gradient-border p-6 rounded-2xl text-center group hover:border-indigo-500/50 transition">
+                <div class="w-12 h-12 rounded-xl bg-indigo-500/10 text-indigo-400 flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">
+                    ✉️
+                </div>
+                <h4 class="font-bold text-white text-sm">Email</h4>
+                <p class="text-xs text-indigo-400 mt-1">gurudeveloper05@gmail.com</p>
+            </a>
+
+            <a href="https://github.com/gurumaan5" target="_blank" class="gradient-border p-6 rounded-2xl text-center group hover:border-purple-500/50 transition">
+                <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl mx-auto mb-3 group-hover:scale-110 transition">
+                    🐙
+                </div>
+                <h4 class="font-bold text-white text-sm">GitHub</h4>
+                <p class="text-xs text-purple-400 mt-1">@gurumaan5</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-slate-800/80 py-8 text-center text-slate-500 text-xs">
+        <p>© 2026 Guru Maan. All rights reserved. Crafted with clean code & modern architecture.</p>
+    </footer>
+
+</body>
+</html>
