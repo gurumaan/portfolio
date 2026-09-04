@@ -1,6 +1,6 @@
 /* ==========================================================================
-   GURSHARAN SINGH MANN — PORTFOLIO RUNTIME SCRIPT
-   Harmonic Pendulum Physics · 3D Perspective Tilt · Blueprint Modal · Filter
+   GURSHARAN SINGH MANN — PORTFOLIO RUNTIME ENGINE (DELUXE WORKSHOP EDITION)
+   Harmonic Pendulum Physics · 3D Tilt · Synthesized Audio · Craftsman Terminal · Desk Lamp
    ========================================================================== */
 
 (function () {
@@ -10,7 +10,176 @@
   const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* --------------------------------------------------------------------------
-     1. 3D PERSPECTIVE TILT & CAST SHADOW ENGINE
+     1. NATIVE SYNTHESIZED WEB AUDIO ENGINE (Zero external sound files!)
+     -------------------------------------------------------------------------- */
+  let audioCtx = null;
+  let isSoundEnabled = localStorage.getItem('guru_sound_enabled') === 'true';
+
+  function getAudioContext() {
+    if (!audioCtx) {
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (AudioContextClass) audioCtx = new AudioContextClass();
+    }
+    if (audioCtx && audioCtx.state === 'suspended') {
+      audioCtx.resume();
+    }
+    return audioCtx;
+  }
+
+  // Wooden tock click (pins, buttons, tabs)
+  function playTock() {
+    if (!isSoundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(480, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(120, ctx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.04);
+    } catch (e) {}
+  }
+
+  // Soft paper rustle (card tilt, sheet hover)
+  function playRustle() {
+    if (!isSoundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const bufferSize = ctx.sampleRate * 0.035;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = Math.random() * 2 - 1;
+      }
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.value = 1200;
+      filter.Q.value = 1.2;
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.04, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.035);
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+    } catch (e) {}
+  }
+
+  // Deep rubber stamp thud (copy to clipboard, send email)
+  function playStamp() {
+    if (!isSoundEnabled) return;
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(140, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.12);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.12);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.12);
+    } catch (e) {}
+  }
+
+  /* --------------------------------------------------------------------------
+     2. MIDNIGHT CODING SESSION (DESK LAMP MODE) CONTROLLER
+     -------------------------------------------------------------------------- */
+  function initDeskLamp() {
+    const lampBtn = document.getElementById('lampToggleBtn');
+    const isLampOn = localStorage.getItem('guru_lamp_mode') === 'true';
+
+    if (isLampOn) {
+      document.body.classList.add('midnight-mode');
+      if (lampBtn) {
+        lampBtn.classList.add('active');
+        lampBtn.innerHTML = '<span>💡 Lamp: Midnight</span>';
+      }
+    }
+
+    if (lampBtn) {
+      lampBtn.addEventListener('click', function () {
+        playTock();
+        const active = document.body.classList.toggle('midnight-mode');
+        localStorage.setItem('guru_lamp_mode', active ? 'true' : 'false');
+        lampBtn.classList.toggle('active', active);
+        lampBtn.innerHTML = active
+          ? '<span>💡 Lamp: Midnight</span>'
+          : '<span>💡 Lamp: Daylight</span>';
+      });
+    }
+  }
+
+  /* --------------------------------------------------------------------------
+     3. SOUND TOGGLE CONTROLLER
+     -------------------------------------------------------------------------- */
+  function initSoundToggle() {
+    const soundBtn = document.getElementById('soundToggleBtn');
+    if (!soundBtn) return;
+
+    if (isSoundEnabled) {
+      soundBtn.classList.add('active');
+      soundBtn.innerHTML = '<span>🔊 Audio: ON</span>';
+    } else {
+      soundBtn.innerHTML = '<span>🔇 Audio: OFF</span>';
+    }
+
+    soundBtn.addEventListener('click', function () {
+      isSoundEnabled = !isSoundEnabled;
+      localStorage.setItem('guru_sound_enabled', isSoundEnabled ? 'true' : 'false');
+      soundBtn.classList.toggle('active', isSoundEnabled);
+      soundBtn.innerHTML = isSoundEnabled
+        ? '<span>🔊 Audio: ON</span>'
+        : '<span>🔇 Audio: OFF</span>';
+      if (isSoundEnabled) {
+        playTock();
+      }
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     4. LIVE DESK CLOCK WIDGET (IST / UTC+5:30)
+     -------------------------------------------------------------------------- */
+  function initDeskClock() {
+    const clockEl = document.getElementById('deskClockText');
+    if (!clockEl) return;
+
+    function updateTime() {
+      const now = new Date();
+      // Format time in Indian Standard Time (IST)
+      const options = {
+        timeZone: 'Asia/Kolkata',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      };
+      try {
+        const timeStr = new Intl.DateTimeFormat('en-US', options).format(now);
+        clockEl.textContent = timeStr + ' IST';
+      } catch (e) {
+        clockEl.textContent = now.toLocaleTimeString();
+      }
+    }
+
+    updateTime();
+    setInterval(updateTime, 1000);
+  }
+
+  /* --------------------------------------------------------------------------
+     5. 3D PERSPECTIVE TILT & CAST SHADOW ENGINE
      -------------------------------------------------------------------------- */
   function initTiltEngine() {
     if (prefersReducedMotion) return;
@@ -45,6 +214,10 @@
         element.style.setProperty('--my', sheenY);
       });
 
+      element.addEventListener('mouseenter', function () {
+        playRustle();
+      });
+
       element.addEventListener('mouseleave', function () {
         element.style.setProperty('--rx', '0deg');
         element.style.setProperty('--ry', '0deg');
@@ -77,7 +250,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     2. DAMPED HARMONIC PENDULUM SIMULATION (Swinging Hanging Note)
+     6. DAMPED HARMONIC PENDULUM SIMULATION (Swinging Hanging Note)
      -------------------------------------------------------------------------- */
   function initPendulum() {
     if (prefersReducedMotion) return;
@@ -108,7 +281,8 @@
 
     // Allow user to flick/click the note directly
     note.addEventListener('click', function () {
-      angularVelocity += (Math.random() > 0.5 ? 12 : -12);
+      playTock();
+      angularVelocity += (Math.random() > 0.5 ? 14 : -14);
     });
 
     // Physics step loop
@@ -131,7 +305,21 @@
   }
 
   /* --------------------------------------------------------------------------
-     3. CORKBOARD PARALLAX SCROLL DEPTH
+     7. PUSH PIN WOBBLE ON CLICK
+     -------------------------------------------------------------------------- */
+  function initPinWobble() {
+    document.querySelectorAll('.pin, .pin-corner, .note-pin').forEach(function (pin) {
+      pin.addEventListener('click', function () {
+        playTock();
+        pin.classList.remove('wobble');
+        void pin.offsetWidth; // trigger reflow
+        pin.classList.add('wobble');
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     8. CORKBOARD PARALLAX SCROLL DEPTH
      -------------------------------------------------------------------------- */
   function initCorkParallax() {
     if (prefersReducedMotion) return;
@@ -152,7 +340,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     4. PROJECT GALLERY FILTER TABS
+     9. PROJECT GALLERY FILTER TABS
      -------------------------------------------------------------------------- */
   function initProjectFilters() {
     const filterBtns = document.querySelectorAll('.filter-btn');
@@ -160,6 +348,7 @@
 
     filterBtns.forEach(function (btn) {
       btn.addEventListener('click', function () {
+        playTock();
         filterBtns.forEach(function (b) { b.classList.remove('active'); });
         btn.classList.add('active');
 
@@ -169,7 +358,6 @@
           const category = card.getAttribute('data-category') || '';
           if (filter === 'all' || category.includes(filter)) {
             card.style.display = 'flex';
-            card.style.animation = 'fadeInCard 0.3s ease-out forwards';
           } else {
             card.style.display = 'none';
           }
@@ -179,7 +367,127 @@
   }
 
   /* --------------------------------------------------------------------------
-     5. ARCHITECTURAL BLUEPRINT MODAL DATA & CONTROLLER
+     10. INTERACTIVE CONTINUOUS-FEED TERMINAL ("Craftsman CLI")
+     -------------------------------------------------------------------------- */
+  function initTerminal() {
+    const terminalScreen = document.getElementById('terminalScreen');
+    const terminalInput = document.getElementById('terminalInput');
+    const presetBtns = document.querySelectorAll('.terminal-preset-btn');
+
+    if (!terminalScreen || !terminalInput) return;
+
+    function appendOutput(html) {
+      const div = document.createElement('div');
+      div.style.marginBottom = '8px';
+      div.innerHTML = html;
+      terminalScreen.appendChild(div);
+      terminalScreen.scrollTop = terminalScreen.scrollHeight;
+    }
+
+    function runCommand(rawCmd) {
+      const cmd = rawCmd.trim().toLowerCase();
+      playTock();
+
+      appendOutput(`<span style="color:#4ade80;">guru@nohar:~$</span> <span style="color:#fff;">${rawCmd}</span>`);
+
+      switch (cmd) {
+        case 'help':
+          appendOutput(`
+Available Commands:
+  <span style="color:#fcd34d;">skills</span>          - View core technology matrix & production years
+  <span style="color:#fcd34d;">audit-demo</span>      - Run live simulated OWASP header audit on guru4code.online
+  <span style="color:#fcd34d;">experience</span>      - View 2.5+ years production engineering timeline
+  <span style="color:#fcd34d;">contact</span>         - Jump to postal contact section
+  <span style="color:#fcd34d;">download-resume</span> - Download Gursharan Singh's verified resume PDF
+  <span style="color:#fcd34d;">clear</span>           - Clear terminal log screen
+          `);
+          break;
+
+        case 'skills':
+          appendOutput(`
++------------------------+-------------------+----------------------------+
+| Category               | Core Technologies | Production Context         |
++------------------------+-------------------+----------------------------+
+| Frontend Architecture  | TypeScript, React | InspectFlow, Next 14 apps  |
+| Backend & Replicat.    | Node, PostgreSQL  | PowerSync Sync Engine      |
+| Background Daemons     | Python 3, BS4     | 24/7 Market Intel Hunter   |
+| Linux & Infrastructure | Hetzner, Nginx    | Sub-50ms TTFB, Certbot SSL |
++------------------------+-------------------+----------------------------+
+          `);
+          break;
+
+        case 'experience':
+          appendOutput(`
+[2024 - PRESENT] Full-Stack Developer & Technical Consultant (Independent)
+  -> Next.js 14 App Router dashboards, 24/7 Python automation daemons, Stripe integrations.
+[2023 - 2024] Frontend Developer (Freelance / Regional Businesses)
+  -> Translated Figma designs into modular React/Vue UI with 95+ Lighthouse scores.
+[2023] Systems Foundations & Open Source
+  -> Relational schema design, Linux server administration, PowerSync replication.
+          `);
+          break;
+
+        case 'audit-demo':
+          appendOutput(`<span style="color:#38bdf8;">[INIT] Starting OWASP Security Audit for target: guru4code.online ...</span>`);
+          setTimeout(function () {
+            appendOutput(`
+[HTTP/2] 200 OK | TLS 1.3 | Server: Cloudflare / Nginx
+------------------------------------------------------------
+[PASS] Strict-Transport-Security: max-age=31536000; includeSubDomains (Score: 100)
+[PASS] Content-Security-Policy: default-src 'self'; (Score: 95)
+[PASS] X-Frame-Options: SAMEORIGIN (Score: 100)
+[PASS] X-Content-Type-Options: nosniff (Score: 100)
+[PASS] Referrer-Policy: strict-origin-when-cross-origin (Score: 100)
+[PASS] Permissions-Policy: camera=(), microphone=() (Score: 90)
+------------------------------------------------------------
+OVERALL SECURITY GRADE: <span style="color:#4ade80; font-weight:bold;">A+ (97/100)</span> — Hardened Production Spec
+Try the full interactive tool: <a href="http://localhost:3002" target="_blank" style="color:#fcd34d;">http://localhost:3002</a>
+            `);
+          }, 350);
+          break;
+
+        case 'contact':
+          appendOutput(`Routing to airmail postal desk...`);
+          const contactSec = document.getElementById('contact');
+          if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
+          break;
+
+        case 'download-resume':
+          appendOutput(`Opening Gursharan_Singh_Resume.pdf ...`);
+          window.open('Gursharan_Singh_Resume.pdf', '_blank');
+          break;
+
+        case 'clear':
+          terminalScreen.innerHTML = '';
+          break;
+
+        case '':
+          break;
+
+        default:
+          appendOutput(`<span style="color:#f87171;">Command not found: "${cmd}". Type <span style="color:#fcd34d;">help</span> for valid commands.</span>`);
+          break;
+      }
+    }
+
+    terminalInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const val = terminalInput.value;
+        terminalInput.value = '';
+        runCommand(val);
+      }
+    });
+
+    presetBtns.forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const cmd = btn.getAttribute('data-cmd');
+        runCommand(cmd);
+      });
+    });
+  }
+
+  /* --------------------------------------------------------------------------
+     11. ARCHITECTURAL BLUEPRINT MODAL
      -------------------------------------------------------------------------- */
   const ARCHITECTURE_DATA = {
     inspectflow: {
@@ -252,6 +560,7 @@
     if (!overlay || !closeBtn || !modalContent) return;
 
     function openModal(projectId) {
+      playTock();
       const data = ARCHITECTURE_DATA[projectId];
       if (!data) return;
 
@@ -282,6 +591,7 @@
     }
 
     function closeModal() {
+      playTock();
       overlay.classList.remove('open');
       document.body.style.overflow = '';
     }
@@ -307,7 +617,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     6. 1-CLICK COPY & TORN-PAPER TOAST NOTIFICATION
+     12. 1-CLICK COPY & TORN-PAPER TOAST NOTIFICATION
      -------------------------------------------------------------------------- */
   function initToastAndClipboard() {
     const toast = document.getElementById('paperToast');
@@ -315,11 +625,12 @@
 
     function showToast(message) {
       if (!toast) return;
+      playStamp();
       if (toastMsg) toastMsg.textContent = message;
       toast.classList.add('show');
       setTimeout(function () {
         toast.classList.remove('show');
-      }, 3200);
+      }, 3400);
     }
 
     const copyEmailBtn = document.getElementById('copyEmailBtn');
@@ -343,10 +654,44 @@
         });
       });
     }
+
+    // Interactive Postcard Form Handling
+    const postForm = document.getElementById('postcardForm');
+    const copyDraftBtn = document.getElementById('copyDraftBtn');
+
+    if (postForm) {
+      postForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('senderName')?.value || 'Friend';
+        const email = document.getElementById('senderEmail')?.value || 'Not provided';
+        const type = document.getElementById('projectType')?.value || 'General Inquiry';
+        const msg = document.getElementById('projectMessage')?.value || '';
+
+        const subject = encodeURIComponent(`[${type}] Project Inquiry from ${name}`);
+        const body = encodeURIComponent(`Hi Gursharan,\n\nName: ${name}\nEmail: ${email}\nProject Type: ${type}\n\nMessage:\n${msg}\n\nSent via guru4code.online`);
+
+        window.location.href = `mailto:gurudeveloper05@gmail.com?subject=${subject}&body=${body}`;
+        showToast('✉ Opening email composer with draft...');
+      });
+    }
+
+    if (copyDraftBtn) {
+      copyDraftBtn.addEventListener('click', function () {
+        const name = document.getElementById('senderName')?.value || 'Inquirer';
+        const email = document.getElementById('senderEmail')?.value || '';
+        const type = document.getElementById('projectType')?.value || 'General Inquiry';
+        const msg = document.getElementById('projectMessage')?.value || '';
+
+        const draft = `Inquiry for Gursharan Singh Mann:\nName: ${name}\nEmail: ${email}\nType: ${type}\nMessage: ${msg}`;
+        navigator.clipboard.writeText(draft).then(function () {
+          showToast('📋 Copied formatted draft to clipboard!');
+        });
+      });
+    }
   }
 
   /* --------------------------------------------------------------------------
-     7. MOBILE NAVIGATION DRAWER
+     13. MOBILE NAVIGATION DRAWER
      -------------------------------------------------------------------------- */
   function initMobileNav() {
     const navToggle = document.getElementById('navToggle');
@@ -355,6 +700,7 @@
     if (!navToggle || !mobilePanel) return;
 
     navToggle.addEventListener('click', function () {
+      playTock();
       mobilePanel.classList.toggle('open');
       const isOpen = mobilePanel.classList.contains('open');
       navToggle.setAttribute('aria-expanded', isOpen);
@@ -368,7 +714,7 @@
   }
 
   /* --------------------------------------------------------------------------
-     8. ACTIVE NAVIGATION HIGHLIGHTING ON SCROLL
+     14. ACTIVE NAVIGATION HIGHLIGHTING ON SCROLL
      -------------------------------------------------------------------------- */
   function initNavSpy() {
     const sections = document.querySelectorAll('section[id], header[id], footer[id]');
@@ -399,10 +745,15 @@
      BOOTSTRAP EVERYTHING
      -------------------------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
+    initDeskLamp();
+    initSoundToggle();
+    initDeskClock();
     initTiltEngine();
     initPendulum();
+    initPinWobble();
     initCorkParallax();
     initProjectFilters();
+    initTerminal();
     initModal();
     initToastAndClipboard();
     initMobileNav();

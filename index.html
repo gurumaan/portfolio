@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gursharan Singh Mann — Full-Stack Developer &amp; Systems Builder</title>
-  <meta name="description" content="Full-stack developer with 2.5+ years of production experience in TypeScript, React, Next.js, Node.js, and Python. Building web architectures, offline-first sync engines, and 24/7 automation daemons." />
+  <meta name="description" content="Full-stack developer with 2.5+ years of production experience in TypeScript, React 19, Next.js 14, Node.js, and Python. Building web architectures, offline-first sync engines, and 24/7 automation daemons." />
   <meta name="author" content="Gursharan Singh Mann" />
 
   <!-- OpenGraph / Social Metadata -->
@@ -16,7 +16,7 @@
   <!-- Google Fonts: Fraunces, Inter, IBM Plex Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
 
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -40,6 +40,7 @@
 
       <ul class="navlinks">
         <li><a href="#work">Work</a></li>
+        <li><a href="#terminal">Terminal</a></li>
         <li><a href="#experience">Experience</a></li>
         <li><a href="#about">About</a></li>
         <li><a href="#stack">Stack</a></li>
@@ -48,6 +49,14 @@
       </ul>
 
       <div class="nav-actions">
+        <!-- Desk Lamp & Audio Control Switches -->
+        <button class="nav-action-pill" id="lampToggleBtn" title="Toggle between warm daylight workshop and moody midnight coding session">
+          <span>💡 Lamp: Daylight</span>
+        </button>
+        <button class="nav-action-pill" id="soundToggleBtn" title="Toggle tactile physical audio effects (synthesized via Web Audio API)">
+          <span>🔇 Audio: OFF</span>
+        </button>
+
         <a href="Gursharan_Singh_Resume.pdf" target="_blank" rel="noreferrer noopener" class="nav-btn-resume" title="Download Gursharan's Resume PDF">
           <span>Resume PDF</span>
           <span>📄</span>
@@ -60,6 +69,7 @@
     <div class="mobile-nav-panel" id="mobileNavPanel">
       <ul>
         <li><a href="#work">Selected Work</a></li>
+        <li><a href="#terminal">Craftsman Terminal</a></li>
         <li><a href="#experience">Experience (2.5+ Yrs)</a></li>
         <li><a href="#about">About &amp; Philosophy</a></li>
         <li><a href="#stack">Tools &amp; Stack</a></li>
@@ -84,7 +94,10 @@
 
       <!-- Main Hero Pinned Card -->
       <div class="hero-card">
-        <div class="pin" aria-hidden="true"></div>
+        <div class="pin" aria-hidden="true" title="Click me!"></div>
+
+        <!-- Subtle Coffee Ring Watermark on Paper Corner -->
+        <div class="coffee-stain" aria-hidden="true"></div>
 
         <div class="hero-meta-row">
           <span class="eyebrow-note">// 2.5+ YEARS SHIPPING PRODUCTION CODE</span>
@@ -92,6 +105,10 @@
             <span>📍</span>
             <span>Nohar, Rajasthan, India</span>
           </span>
+          <div class="desk-clock-badge" id="deskClockBadge" title="Live Indian Standard Time">
+            <span>⏰</span>
+            <span id="deskClockText">Loading IST...</span>
+          </div>
         </div>
 
         <h1 class="headline">I build software that businesses can actually run on.</h1>
@@ -110,6 +127,10 @@
           <a href="http://localhost:3002" target="_blank" rel="noreferrer noopener" class="btn btn-flagship" title="Launch InspectFlow live security auditor">
             <span>InspectFlow (Live Tool)</span>
             <span>↗</span>
+          </a>
+          <a href="#terminal" class="btn btn-ghost">
+            <span>Open Terminal CLI</span>
+            <span>&gt;_</span>
           </a>
           <a href="#contact" class="btn btn-ghost">
             <span>Get in touch</span>
@@ -139,6 +160,40 @@
       </div>
     </div>
   </header>
+
+  <!-- =========================================================================
+       INTERACTIVE DOT-MATRIX CONTINUOUS-FEED TERMINAL ("CRAFTSMAN CLI")
+       ========================================================================= -->
+  <section class="terminal-section" id="terminal">
+    <div class="wrap">
+      <div class="dot-matrix-paper">
+        <div class="paper-clip" aria-hidden="true"></div>
+        <div class="terminal-header-bar">
+          <div class="terminal-brand-label">// GURU CRAFTSMAN SHELL v2.6 &middot; INTERACTIVE CLI</div>
+          <div class="terminal-presets">
+            <button class="terminal-preset-btn" data-cmd="skills">[skills]</button>
+            <button class="terminal-preset-btn" data-cmd="audit-demo">[audit-demo]</button>
+            <button class="terminal-preset-btn" data-cmd="experience">[experience]</button>
+            <button class="terminal-preset-btn" data-cmd="contact">[contact]</button>
+            <button class="terminal-preset-btn" data-cmd="download-resume">[resume-pdf]</button>
+            <button class="terminal-preset-btn" data-cmd="help">[help]</button>
+            <button class="terminal-preset-btn" data-cmd="clear">[clear]</button>
+          </div>
+        </div>
+
+        <div class="terminal-screen" id="terminalScreen">
+          <div><span style="color:#fcd34d;">Gursharan Singh Mann &mdash; Terminal Shell Initialized.</span></div>
+          <div>Type <span style="color:#4ade80; font-weight:bold;">help</span> or click preset buttons above to inspect live architectures, test simulated security audits, or view engineering timelines.</div>
+          <div style="color:#94a3b8; font-size:0.8rem; margin-top:4px;">Local Session: guru@nohar-rajasthan (x86_64-pc-linux-gnu)</div>
+        </div>
+
+        <div class="terminal-input-row">
+          <span class="terminal-prompt">guru@nohar:~$</span>
+          <input type="text" id="terminalInput" class="terminal-input" placeholder="type 'skills', 'audit-demo', 'experience', or 'help'..." autocomplete="off" spellcheck="false" />
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- =========================================================================
        TOOLS I REACH FOR (STACK STRIP)
@@ -206,6 +261,7 @@
         <!-- CARD 1: InspectFlow (FLAGSHIP) -->
         <article class="card" data-category="flagship fullstack">
           <div class="tape ochre" aria-hidden="true"></div>
+          <span class="rubber-stamp">VERIFIED 2026</span>
           <div class="card-top-meta">
             <span class="card-status status-flagship">★ Flagship Tool · Live</span>
             <span class="card-year">2026</span>
@@ -243,6 +299,7 @@
         <!-- CARD 2: PowerSync Offline-First Backend -->
         <article class="card" data-category="fullstack">
           <div class="tape teal" aria-hidden="true"></div>
+          <span class="rubber-stamp teal">OPEN SOURCE</span>
           <div class="card-top-meta">
             <span class="card-status status-live">● Open Source · Live</span>
             <span class="card-year">2025</span>
@@ -334,6 +391,7 @@
         <!-- CARD 5: ApexStore E-Commerce -->
         <article class="card" data-category="storefront fullstack">
           <div class="tape teal" aria-hidden="true"></div>
+          <span class="rubber-stamp">PRODUCTION</span>
           <div class="card-top-meta">
             <span class="card-status status-live">● Production Storefront</span>
             <span class="card-year">2024</span>
@@ -418,7 +476,7 @@
 
         <!-- Role 1 -->
         <article class="timeline-card">
-          <span class="pin-corner" aria-hidden="true"></span>
+          <span class="pin-corner" aria-hidden="true" title="Click pin"></span>
           <div class="timeline-header">
             <h3 class="timeline-title">Full-Stack Developer &amp; Technical Consultant</h3>
             <span class="timeline-period">2024 &mdash; PRESENT</span>
@@ -446,7 +504,7 @@
 
         <!-- Role 2 -->
         <article class="timeline-card">
-          <span class="pin-corner" aria-hidden="true"></span>
+          <span class="pin-corner" aria-hidden="true" title="Click pin"></span>
           <div class="timeline-header">
             <h3 class="timeline-title">Frontend &amp; Web Developer</h3>
             <span class="timeline-period">2023 &mdash; 2024</span>
@@ -570,7 +628,7 @@
   </section>
 
   <!-- =========================================================================
-       CONTACT / FOOTER — AIRMAIL POSTCARD
+       CONTACT / FOOTER — VINTAGE AIRMAIL POSTCARD
        ========================================================================= -->
   <footer id="contact">
     <div class="wrap">
@@ -578,15 +636,40 @@
         <div class="stamp-box" aria-hidden="true"></div>
         <div class="stamp-badge">AIRMAIL</div>
 
-        <!-- Left Column -->
+        <!-- Left Column: Interactive Inquiry Form -->
         <div class="postcard-left">
           <div>
             <h3>Let's build something real.</h3>
             <p>
               I am open to <strong>full-time remote engineering roles</strong> and select freelance consulting projects.
-              Whether you need an offline-first backend, an interactive web tool, or a 24/7 automation pipeline &mdash; reach out any time.
+              Send a quick dispatch below or use direct contact handles.
             </p>
           </div>
+
+          <!-- Working Airmail Inquiry Form -->
+          <form class="postcard-form" id="postcardForm">
+            <div class="form-group-row">
+              <input type="text" id="senderName" class="form-input" placeholder="Your Name / Company" required />
+              <input type="email" id="senderEmail" class="form-input" placeholder="Your Email Address" required />
+            </div>
+            <select id="projectType" class="form-select">
+              <option value="Full-Stack Web Application">Project: Full-Stack Web Application (React / Next / Node)</option>
+              <option value="24/7 Automation Daemon">Project: 24/7 Automation Daemon / API Scraper</option>
+              <option value="Full-Time Engineering Role">Opportunity: Full-Time Remote Engineering Role</option>
+              <option value="VPS & Web Hardening">Project: Linux VPS Deployment &amp; Web Security</option>
+              <option value="General Conversation">General Conversation / Consultation</option>
+            </select>
+            <textarea id="projectMessage" class="form-textarea" placeholder="Brief outline of your project or role requirements..." required></textarea>
+
+            <div class="form-btn-row">
+              <button type="submit" class="btn btn-primary" style="font-size:0.88rem; padding:10px 20px;">
+                <span>Send via Email Client ✉</span>
+              </button>
+              <button type="button" class="btn btn-ghost" id="copyDraftBtn" style="font-size:0.88rem; padding:10px 18px;">
+                <span>Copy Draft 📋</span>
+              </button>
+            </div>
+          </form>
 
           <div class="quick-contact-actions">
             <button class="contact-action-btn" id="copyEmailBtn" title="Copy email address to clipboard">
@@ -625,11 +708,15 @@
               <span>Website:</span>
               <span>guru4code.online</span>
             </div>
+            <div class="postcard-line">
+              <span>Status:</span>
+              <span style="color:#15803d; font-weight:600;">Available for Hire</span>
+            </div>
           </div>
 
           <div style="margin-top:24px;">
-            <a href="mailto:gurudeveloper05@gmail.com?subject=Project%20Inquiry%20from%20Portfolio&amp;body=Hi%20Gursharan%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss..." class="btn btn-primary" style="width:100%; justify-content:center;">
-              <span>Send Direct Email</span>
+            <a href="mailto:gurudeveloper05@gmail.com?subject=Direct%20Inquiry%20from%20Portfolio&amp;body=Hi%20Gursharan%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss..." class="btn btn-primary" style="width:100%; justify-content:center;">
+              <span>Instant Mail Compose</span>
               <span>✉</span>
             </a>
           </div>
@@ -637,7 +724,7 @@
       </div>
 
       <p class="site-footer-note">
-        Handcrafted with pure HTML5, CSS3 &amp; Vanilla JS &middot; Physics running on requestAnimationFrame &middot; Nohar, Rajasthan, India &middot; &copy; 2026 Gursharan Singh Mann
+        Handcrafted with pure HTML5, CSS3 &amp; Vanilla JS &middot; Physics &amp; Web Audio on native APIs &middot; Nohar, Rajasthan, India &middot; &copy; 2026 Gursharan Singh Mann
       </p>
     </div>
   </footer>
