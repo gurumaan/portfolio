@@ -1,6 +1,6 @@
 /* ==========================================================================
-   GURSHARAN SINGH MANN — PORTFOLIO RUNTIME ENGINE (DELUXE WORKSHOP EDITION)
-   Harmonic Pendulum Physics · 3D Tilt · Synthesized Audio · Craftsman Terminal · Desk Lamp
+   GURSHARAN SINGH — PORTFOLIO RUNTIME ENGINE (DELUXE WORKSHOP EDITION)
+   Harmonic Pendulum Physics · 3D Tilt · Synthesized Audio · Verlet Chain · Desk Lamp
    ========================================================================== */
 
 (function () {
@@ -864,125 +864,7 @@
     });
   }
 
-  /* --------------------------------------------------------------------------
-     10. INTERACTIVE CONTINUOUS-FEED TERMINAL ("Craftsman CLI")
-     -------------------------------------------------------------------------- */
-  function initTerminal() {
-    const terminalScreen = document.getElementById('terminalScreen');
-    const terminalInput = document.getElementById('terminalInput');
-    const presetBtns = document.querySelectorAll('.terminal-preset-btn');
 
-    if (!terminalScreen || !terminalInput) return;
-
-    function appendOutput(html) {
-      const div = document.createElement('div');
-      div.style.marginBottom = '8px';
-      div.innerHTML = html;
-      terminalScreen.appendChild(div);
-      terminalScreen.scrollTop = terminalScreen.scrollHeight;
-    }
-
-    function runCommand(rawCmd) {
-      const cmd = rawCmd.trim().toLowerCase();
-      playTock();
-
-      appendOutput(`<span style="color:#4ade80;">guru@nohar:~$</span> <span style="color:#fff;">${rawCmd}</span>`);
-
-      switch (cmd) {
-        case 'help':
-          appendOutput(`
-Available Commands:
-  <span style="color:#fcd34d;">skills</span>          - View core technology matrix & production years
-  <span style="color:#fcd34d;">audit-demo</span>      - Run live simulated OWASP header audit on guru4code.online
-  <span style="color:#fcd34d;">experience</span>      - View 2.5+ years production engineering timeline
-  <span style="color:#fcd34d;">contact</span>         - Jump to postal contact section
-  <span style="color:#fcd34d;">download-resume</span> - Download Gursharan Singh's verified resume PDF
-  <span style="color:#fcd34d;">clear</span>           - Clear terminal log screen
-          `);
-          break;
-
-        case 'skills':
-          appendOutput(`
-+------------------------+-------------------+----------------------------+
-| Category               | Core Technologies | Production Context         |
-+------------------------+-------------------+----------------------------+
-| Frontend Architecture  | TypeScript, React | InspectFlow, Next 14 apps  |
-| Backend & Replicat.    | Node, PostgreSQL  | PowerSync Sync Engine      |
-| Background Daemons     | Python 3, BS4     | 24/7 Market Intel Hunter   |
-| Linux & Infrastructure | Hetzner, Nginx    | Sub-50ms TTFB, Certbot SSL |
-+------------------------+-------------------+----------------------------+
-          `);
-          break;
-
-        case 'experience':
-          appendOutput(`
-[2024 - PRESENT] Full-Stack Developer & Technical Consultant (Independent)
-  -> Next.js 14 App Router dashboards, 24/7 Python automation daemons, Stripe integrations.
-[2023 - 2024] Frontend Developer (Freelance / Regional Businesses)
-  -> Translated Figma designs into modular React/Vue UI with 95+ Lighthouse scores.
-[2023] Systems Foundations & Open Source
-  -> Relational schema design, Linux server administration, PowerSync replication.
-          `);
-          break;
-
-        case 'audit-demo':
-          appendOutput(`<span style="color:#38bdf8;">[INIT] Starting OWASP Security Audit for target: guru4code.online ...</span>`);
-          setTimeout(function () {
-            appendOutput(`
-[HTTP/2] 200 OK | TLS 1.3 | Server: Cloudflare / Nginx
-------------------------------------------------------------
-[PASS] Strict-Transport-Security: max-age=31536000; includeSubDomains (Score: 100)
-[PASS] Content-Security-Policy: default-src 'self'; (Score: 95)
-[PASS] X-Frame-Options: SAMEORIGIN (Score: 100)
-[PASS] X-Content-Type-Options: nosniff (Score: 100)
-[PASS] Referrer-Policy: strict-origin-when-cross-origin (Score: 100)
-[PASS] Permissions-Policy: camera=(), microphone=() (Score: 90)
-------------------------------------------------------------
-OVERALL SECURITY GRADE: <span style="color:#4ade80; font-weight:bold;">A+ (97/100)</span> — Hardened Production Spec
-Try the full interactive tool: <a href="http://localhost:3002" target="_blank" style="color:#fcd34d;">http://localhost:3002</a>
-            `);
-          }, 350);
-          break;
-
-        case 'contact':
-          appendOutput(`Routing to airmail postal desk...`);
-          const contactSec = document.getElementById('contact');
-          if (contactSec) contactSec.scrollIntoView({ behavior: 'smooth' });
-          break;
-
-        case 'download-resume':
-          appendOutput(`Opening Gursharan_Singh_Resume.pdf ...`);
-          window.open('Gursharan_Singh_Resume.pdf', '_blank');
-          break;
-
-        case 'clear':
-          terminalScreen.innerHTML = '';
-          break;
-
-        case '':
-          break;
-
-        default:
-          appendOutput(`<span style="color:#f87171;">Command not found: "${cmd}". Type <span style="color:#fcd34d;">help</span> for valid commands.</span>`);
-          break;
-      }
-    }
-
-    terminalInput.addEventListener('keydown', function (e) {
-      if (e.key === 'Enter') {
-        const val = terminalInput.value;
-        terminalInput.value = '';
-        runCommand(val);
-      }
-    });
-
-    presetBtns.forEach(function (btn) {
-      btn.addEventListener('click', function () {
-        const cmd = btn.getAttribute('data-cmd');
-        runCommand(cmd);
-      });
-    });
-  }
 
   /* --------------------------------------------------------------------------
      11. ARCHITECTURAL BLUEPRINT MODAL
@@ -1180,7 +1062,7 @@ Try the full interactive tool: <a href="http://localhost:3002" target="_blank" s
         const type = document.getElementById('projectType')?.value || 'General Inquiry';
         const msg = document.getElementById('projectMessage')?.value || '';
 
-        const draft = `Inquiry for Gursharan Singh Mann:\nName: ${name}\nEmail: ${email}\nType: ${type}\nMessage: ${msg}`;
+        const draft = `Inquiry for Gursharan Singh:\nName: ${name}\nEmail: ${email}\nType: ${type}\nMessage: ${msg}`;
         navigator.clipboard.writeText(draft).then(function () {
           showToast('📋 Copied formatted draft to clipboard!');
         });
@@ -1250,7 +1132,6 @@ Try the full interactive tool: <a href="http://localhost:3002" target="_blank" s
     initPinWobble();
     initCorkParallax();
     initProjectFilters();
-    initTerminal();
     initModal();
     initToastAndClipboard();
     initMobileNav();
