@@ -738,9 +738,9 @@
       attachTilt(tCard, { shadowBase: 16, shadowSpread: 10 });
     });
 
-    // Attach to wood plaque
-    const woodPlaque = document.getElementById('woodPlaque');
-    if (woodPlaque) attachTilt(woodPlaque, { shadowBase: 24, shadowSpread: 14 });
+    // Attach to about dossier
+    const aboutDossier = document.getElementById('aboutDossier');
+    if (aboutDossier) attachTilt(aboutDossier, { shadowBase: 24, shadowSpread: 14 });
 
     // Attach to postcard
     const postcard = document.querySelector('.postcard');
@@ -1025,13 +1025,21 @@
       });
     }
 
-    const copyTelegramBtn = document.getElementById('copyTelegramBtn');
-    if (copyTelegramBtn) {
-      copyTelegramBtn.addEventListener('click', function () {
-        const handle = '@Guru4code';
-        navigator.clipboard.writeText(handle).then(function () {
-          showToast('📌 Copied Telegram: ' + handle);
-        });
+    // Postal Desk Airmail Form Handling
+    const contactForm = document.getElementById('contactForm');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const name = document.getElementById('contactName')?.value || 'Friend';
+        const email = document.getElementById('contactEmail')?.value || 'Not provided';
+        const type = document.getElementById('projectType')?.value || 'General Inquiry';
+        const msg = document.getElementById('contactMessage')?.value || '';
+
+        const subject = encodeURIComponent(`[${type}] Project Inquiry from ${name}`);
+        const body = encodeURIComponent(`Hi Gursharan,\n\nName: ${name}\nEmail: ${email}\nInquiry Type: ${type}\n\nProject Scope / Message:\n${msg}\n\nSent via guru4code.online`);
+
+        window.location.href = `mailto:gurudeveloper05@gmail.com?subject=${subject}&body=${body}`;
+        showToast('📮 Airmail drafted! Opening email client...');
       });
     }
 
