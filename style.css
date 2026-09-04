@@ -1733,212 +1733,421 @@ h2.section-title svg.underline {
 }
 
 /* --------------------------------------------------------------------------
-   Postcard Footer & Direct Contact
+   Postcard Footer & Direct Contact Desk
    -------------------------------------------------------------------------- */
 footer#contact {
   padding: 68px 0 80px;
 }
 
 .postcard {
-  background: var(--paper);
-  padding: 46px 48px;
   position: relative;
-  z-index: 1;
-  box-shadow: var(--sx, 0px) var(--sy, 18px) 34px var(--shadow-soft);
-  clip-path: polygon(0% 1%, 2.5% 0%, 97.5% 0.4%, 100% 1.6%, 99.4% 98.5%, 97% 100%, 3% 99.4%, 0.6% 97.5%);
+  max-width: 980px;
+  margin: 0 auto;
+  background: #faf6ee;
+  background: linear-gradient(175deg, #fdfbf7 0%, #f6f0e4 100%);
+  border: 1px solid rgba(0, 0, 0, 0.14);
+  border-radius: 8px;
+  box-shadow:
+    0 26px 54px rgba(0, 0, 0, 0.45),
+    0 6px 14px rgba(0, 0, 0, 0.2);
+  padding: 42px 46px 38px;
   display: grid;
   grid-template-columns: 1.15fr 0.85fr;
-  gap: 38px;
+  gap: 40px;
   --rx: 0deg;
   --ry: 0deg;
-  transform: perspective(1000px) rotateX(var(--ry)) rotateY(var(--rx));
+  transform: perspective(1000px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
+  overflow: hidden;
+  z-index: 1;
 }
 
+/* Authentic Airmail Chevron Edge Trim at Top */
+.postcard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: repeating-linear-gradient(
+    -45deg,
+    #dc2626 0,
+    #dc2626 14px,
+    #fdfbf7 14px,
+    #fdfbf7 22px,
+    #2563eb 22px,
+    #2563eb 36px,
+    #fdfbf7 36px,
+    #fdfbf7 44px
+  );
+  z-index: 5;
+}
+
+/* Offset Stacked Paper Layer */
 .postcard::after {
   content: "";
   position: absolute;
-  top: 9px;
-  left: -8px;
-  right: -9px;
-  bottom: -9px;
-  background: var(--paper-alt);
+  inset: -5px -5px -9px -9px;
+  background: #ede4d3;
+  border-radius: 10px;
   z-index: -1;
-  clip-path: polygon(0% 1%, 2.5% 0%, 97.5% 0.4%, 100% 1.6%, 99.4% 98.5%, 97% 100%, 3% 99.4%, 0.6% 97.5%);
-  box-shadow: 2px 12px 18px var(--shadow-soft);
-}
-
-.postcard > * {
-  position: relative;
-  z-index: 1;
+  transform: rotate(0.4deg);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.35);
 }
 
 .postcard-left {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
 }
 
-.postcard h3 {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: 2rem;
-  line-height: 1.2;
-  margin: 0 0 10px;
-  color: var(--ink);
-}
-
-.postcard p {
-  color: var(--ink-soft);
-  font-size: 1.02rem;
-  margin: 0 0 20px;
-}
-
-/* Postcard Inquiry Interactive Form */
-.postcard-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.postcard-head-wrap {
   margin-bottom: 20px;
 }
 
-.form-group-row {
+.postcard-head-title {
+  font-family: var(--font-display);
+  font-size: 1.65rem;
+  font-weight: 700;
+  color: #1f1610;
+  margin: 0 0 4px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.postcard-head-desc {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: #78716c;
+  display: block;
+}
+
+/* Postcard Inquiry Form */
+.postal-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 12px;
+  gap: 14px;
 }
 
-.form-input, .form-textarea, .form-select {
-  background: #fff;
-  border: 1.5px dashed var(--line-strong);
-  border-radius: 4px;
-  padding: 8px 12px;
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
   font-family: var(--font-mono);
-  font-size: 0.82rem;
-  color: var(--ink);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  font-size: 0.74rem;
+  font-weight: 700;
+  color: #44362b;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.form-input:focus, .form-textarea:focus, .form-select:focus {
-  border-color: var(--teal);
-  box-shadow: 0 2px 8px rgba(47, 110, 93, 0.18);
+.form-input, .form-select, .form-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  background: #ffffff;
+  border: 1.5px solid #d5cbba;
+  border-radius: 5px;
+  padding: 10px 14px;
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: #1c1917;
+  transition: all 0.18s ease;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color: #0f766e;
+  box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.18), inset 0 1px 2px rgba(0, 0, 0, 0.05);
   outline: none;
+  background: #fff;
 }
 
 .form-textarea {
   resize: vertical;
-  min-height: 64px;
-  font-family: var(--font-body);
+  min-height: 90px;
+  line-height: 1.5;
 }
 
-.form-btn-row {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.quick-contact-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.contact-action-btn {
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  font-weight: 600;
-  color: var(--ink);
-  background: var(--paper-alt);
-  border: 1.5px dashed var(--line-strong);
-  padding: 9px 16px;
-  border-radius: 6px;
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
-  transition: all 0.15s ease;
-  cursor: pointer;
-}
-
-.contact-action-btn:hover {
-  background: #fff;
-  border-color: var(--teal);
-  color: var(--teal-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-}
-
-/* Postcard Right Address Column with Airmail Divider */
-.postcard-right {
-  border-left: 2px dashed var(--line);
-  padding-left: 36px;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.postcard .stamp-box {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 64px;
-  height: 74px;
-  border: 2px dashed var(--ink-faint);
+/* Submit Airmail Button */
+.postal-submit-btn {
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: rotate(3deg);
-  background: rgba(0, 0, 0, 0.02);
-}
-
-.postcard .stamp-box::after {
-  content: "✉";
-  color: var(--ink-faint);
-  font-size: 1.6rem;
-}
-
-.stamp-badge {
-  position: absolute;
-  top: 14px;
-  right: 76px;
-  border: 1.5px solid var(--rose);
-  color: var(--rose);
+  gap: 8px;
+  background: #1b5e4c;
+  color: #ffffff;
   font-family: var(--font-mono);
-  font-size: 0.68rem;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 4px;
-  transform: rotate(-6deg);
-  opacity: 0.85;
+  font-size: 0.92rem;
+  font-weight: 600;
+  padding: 12px 24px;
+  border-radius: 6px;
+  border: 1px solid #134639;
+  box-shadow: 0 4px 10px rgba(27, 94, 76, 0.28);
+  cursor: pointer;
+  transition: all 0.18s ease;
 }
 
-.postcard-lines {
-  margin-top: 86px;
+.postal-submit-btn:hover {
+  background: #14493b;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(27, 94, 76, 0.38);
+}
+
+.postal-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Direct Contact Channels */
+.contact-channels {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.contact-action-btn {
+  background: #f7f2e7;
+  border: 1px solid #dcd3c4;
+  border-radius: 6px;
+  padding: 9px 12px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: #3b2e25;
+  transition: all 0.18s ease;
+}
+
+.contact-action-btn:hover {
+  background: #ffffff;
+  border-color: #0f766e;
+  color: #0f766e;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.contact-action-btn .channel-text {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.contact-action-btn .channel-arrow {
+  font-size: 0.9rem;
+  color: #8c7866;
+}
+
+/* Right Address Column with Airmail Divider */
+.postcard-right {
+  border-left: 2px dashed #d1c7b7;
+  padding-left: 38px;
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+}
+
+/* Stamp & Cancellation Postmark Area */
+.postcard-stamp-area {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  min-height: 94px;
+  margin-bottom: 24px;
+}
+
+.postage-stamp {
+  position: relative;
+  width: 78px;
+  height: 92px;
+  background: #fdfbf7;
+  padding: 5px;
+  border-radius: 2px;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.22);
+  border: 1px dashed rgba(0, 0, 0, 0.2);
+  transform: rotate(2.5deg);
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+.stamp-inner {
+  width: 100%;
+  height: 100%;
+  border: 1.5px solid #1e3a8a;
+  background: #f0f6ff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 3px 4px;
+  box-sizing: border-box;
+}
+
+.stamp-rate {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: 0.06em;
+}
+
+.stamp-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.stamp-country {
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 700;
+  color: #1e3a8a;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stamp-postmark {
+  position: absolute;
+  top: 14px;
+  right: 62px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0.85;
+  transform: rotate(-10deg);
+}
+
+.postmark-seal {
+  width: 58px;
+  height: 58px;
+  border: 1.5px solid #b91c1c;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #b91c1c;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  line-height: 1.15;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.postmark-lines-svg {
+  width: 62px;
+  height: 36px;
+  margin-left: -5px;
+}
+
+/* Address Letterpress Lines */
+.postcard-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
 }
 
 .postcard-line {
-  border-bottom: 1px solid var(--line);
-  padding-bottom: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.88rem;
-  color: var(--ink-soft);
+  border-bottom: 1.5px solid #e0d7c7;
+  padding-bottom: 6px;
   display: flex;
   justify-content: space-between;
+  align-items: baseline;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
 }
 
-.postcard-line span:first-child {
-  color: var(--ink-faint);
+.postcard-line .line-label {
+  color: #8c7866;
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 600;
+}
+
+.postcard-line .line-val {
+  color: #1f1610;
+  font-weight: 600;
+}
+
+.postcard-line .status-pill {
+  color: #15803d;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.3);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* Instant Compose Secondary Button */
+.instant-compose-btn {
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #f4eee2;
+  color: #2e231a;
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 12px 20px;
+  border-radius: 6px;
+  border: 1.5px dashed #c4b69f;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.instant-compose-btn:hover {
+  background: #ebe1d1;
+  border-color: #8c7866;
+  color: #170f0a;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 @media (max-width: 860px) {
-  .postcard { grid-template-columns: 1fr; gap: 32px; }
-  .postcard-right { border-left: none; border-top: 2px dashed var(--line); padding-left: 0; padding-top: 28px; }
-  .postcard-lines { margin-top: 36px; }
-  .form-group-row { grid-template-columns: 1fr; }
+  .postcard {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 20px;
+  }
+  .postcard-right {
+    border-left: none;
+    border-top: 2px dashed #d1c7b7;
+    padding-left: 0;
+    padding-top: 28px;
+  }
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .contact-channels {
+    grid-template-columns: 1fr;
+  }
 }
 
 .site-footer-note {
@@ -1946,8 +2155,8 @@ footer#contact {
   color: var(--paper-alt);
   font-family: var(--font-mono);
   font-size: 0.84rem;
-  margin-top: 32px;
-  opacity: 0.75;
+  margin-top: 36px;
+  opacity: 0.8;
 }
 
 /* --------------------------------------------------------------------------
