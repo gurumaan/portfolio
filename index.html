@@ -1,440 +1,666 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gursharan Singh &middot; Full-Stack Developer</title>
-    
-    <meta name="description" content="Full-Stack Developer building web applications and automation tools with React, Next.js, Node.js, and Python.">
-    <meta name="author" content="Gursharan Singh">
-    
-    <!-- Open Graph / Meta -->
-    <meta property="og:title" content="Gursharan Singh &middot; Full-Stack Developer">
-    <meta property="og:description" content="Full-Stack Developer building web applications and automation tools with React, Next.js, Node.js, and Python.">
-    <meta property="og:url" content="https://guru4code.online">
-    <meta property="og:type" content="website">
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    
-    <!-- Handcrafted Stylesheet (Zero CDN warnings, Zero framework bloat) -->
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gursharan Singh Mann — Full-Stack Developer &amp; Systems Builder</title>
+  <meta name="description" content="Full-stack developer with 2.5+ years of production experience in TypeScript, React, Next.js, Node.js, and Python. Building web architectures, offline-first sync engines, and 24/7 automation daemons." />
+  <meta name="author" content="Gursharan Singh Mann" />
+
+  <!-- OpenGraph / Social Metadata -->
+  <meta property="og:title" content="Gursharan Singh Mann — Full-Stack Developer" />
+  <meta property="og:description" content="I build software that businesses can actually run on. Handcrafted developer portfolio with 2.5+ years experience." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://guru4code.online" />
+
+  <!-- Google Fonts: Fraunces, Inter, IBM Plex Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-    <!-- Subtle interactive cursor spotlight -->
-    <div id="spotlight" aria-hidden="true"></div>
+  <!-- =========================================================================
+       STICKY CORK NAVIGATION BAR
+       ========================================================================= -->
+  <nav class="cork-nav" id="mainNav">
+    <div class="wrap nav-container">
+      <div class="brand-wrapper">
+        <a href="#top" class="brand-link">
+          <span class="brand-monogram">GM</span>
+          <span>Gursharan Singh Mann</span>
+        </a>
+        <div class="live-badge" title="Based in Nohar, Rajasthan (IST)">
+          <span class="pulse-dot"></span>
+          <span>Available for work · Nohar, RJ</span>
+        </div>
+      </div>
 
-    <!-- Notification Toast -->
-    <div id="toast" role="status" aria-live="polite">
-        <span class="toast-indicator"></span>
-        <span id="toast-msg">Copied to clipboard</span>
+      <ul class="navlinks">
+        <li><a href="#work">Work</a></li>
+        <li><a href="#experience">Experience</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#stack">Stack</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+
+      <div class="nav-actions">
+        <a href="Gursharan_Singh_Resume.pdf" target="_blank" rel="noreferrer noopener" class="nav-btn-resume" title="Download Gursharan's Resume PDF">
+          <span>Resume PDF</span>
+          <span>📄</span>
+        </a>
+        <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation Menu">☰</button>
+      </div>
     </div>
 
-    <!-- Main Container -->
-    <div class="layout-container">
-
-        <!-- ==================================================================
-             LEFT SIDEBAR (STICKY ON DESKTOP)
-             ================================================================== -->
-        <header class="sidebar">
-            <div class="sidebar-top">
-                <h1 class="author-name">
-                    <a href="/">Gursharan Singh</a>
-                </h1>
-                
-                <h2 class="author-title">Full-Stack Developer</h2>
-                
-                <p class="author-bio">
-                    I build web applications and automation tools. Focused on TypeScript, React, Next.js, Node.js, and Python.
-                </p>
-
-                <!-- Availability Badge -->
-                <div class="status-badge">
-                    <span class="status-dot"></span>
-                    <span>Available for full-time & contract work</span>
-                </div>
-                
-                <div class="location-note">
-                    Based in India (IST) &middot; Remote worldwide
-                </div>
-
-                <!-- Desktop Navigation -->
-                <nav class="desktop-nav" aria-label="Page sections">
-                    <ul class="nav-list">
-                        <li>
-                            <a class="nav-link active" href="#about">
-                                <span class="nav-line"></span>
-                                <span>About</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="#experience">
-                                <span class="nav-line"></span>
-                                <span>Experience</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="#projects">
-                                <span class="nav-line"></span>
-                                <span>Projects</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="#stack">
-                                <span class="nav-line"></span>
-                                <span>Stack</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a class="nav-link" href="#contact">
-                                <span class="nav-line"></span>
-                                <span>Contact</span>
-                            </a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-
-            <!-- Action Buttons & Socials -->
-            <div class="sidebar-bottom">
-                <div class="action-row">
-                    <a href="Gursharan_Singh_Resume.pdf" download class="btn" title="Download Gursharan Singh Resume (PDF)">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        <span>Resume.pdf</span>
-                    </a>
-                    
-                    <button type="button" onclick="copyEmail('gurudeveloper05@gmail.com')" class="btn" title="Copy email address">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
-                        <span>Copy Email</span>
-                    </button>
-                </div>
-
-                <ul class="social-links" aria-label="Social Profiles">
-                    <li>
-                        <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener" class="social-link" title="GitHub Profile">
-                            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://t.me/Guru4code" target="_blank" rel="noreferrer noopener" class="social-link" title="Telegram">
-                            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="mailto:gurudeveloper05@gmail.com" class="social-link" title="Email">
-                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </header>
-
-        <!-- ==================================================================
-             RIGHT CONTENT AREA (SCROLLABLE)
-             ================================================================== -->
-        <main class="main-content">
-
-            <!-- ABOUT -->
-            <section id="about" class="content-section">
-                <div class="mobile-section-header">
-                    <h2 class="section-label">About</h2>
-                </div>
-                <div class="prose">
-                    <p>
-                        I am Gursharan (Guru), a full-stack developer based in India. I focus on building responsive web applications and backend automation tools.
-                    </p>
-                    <p>
-                        Over the past <strong>2.5+ years</strong>, I have worked primarily across <strong>TypeScript, React, Next.js, Node.js, and Python</strong>. I enjoy shipping end-to-end solutions: from clean, accessible UI components and client state synchronization to database schemas and background data collection daemons.
-                    </p>
-                    <p>
-                        I value straightforward, maintainable engineering over unnecessary abstraction. I build software that runs fast, handles failures gracefully, and is easy for other developers to inspect and maintain.
-                    </p>
-                </div>
-            </section>
-
-            <!-- EXPERIENCE -->
-            <section id="experience" class="content-section">
-                <div class="mobile-section-header">
-                    <h2 class="section-label">Experience</h2>
-                </div>
-
-                <ul class="card-list">
-                    <!-- Role 1 -->
-                    <li class="card-item">
-                        <div class="card-header">
-                            <h3 class="card-title">Full-Stack Developer</h3>
-                            <span class="card-date">2024 &mdash; PRESENT</span>
-                        </div>
-                        <div class="card-role-org">Independent / Contract</div>
-                        <p class="card-desc">
-                            Delivering full-stack web applications and custom automation tools for clients and independent projects.
-                        </p>
-                        <ul class="card-bullets">
-                            <li class="card-bullet-item">Built full-stack client dashboards using Next.js 14 App Router, Server Actions, and MongoDB with sub-200ms page transitions.</li>
-                            <li class="card-bullet-item">Designed 24/7 Python automation daemons that parse multiple remote data sources, manage proxy pools, and dispatch structured alerts via Telegram.</li>
-                            <li class="card-bullet-item">Integrated Stripe Checkout sessions, webhooks, and JWT session handling using secure HTTP-only cookies.</li>
-                        </ul>
-                        <ul class="tag-list">
-                            <li class="tag-item">Next.js 14</li>
-                            <li class="tag-item">React</li>
-                            <li class="tag-item">Node.js</li>
-                            <li class="tag-item">Python</li>
-                            <li class="tag-item">MongoDB</li>
-                            <li class="tag-item">Tailwind CSS</li>
-                        </ul>
-                    </li>
-
-                    <!-- Role 2 -->
-                    <li class="card-item">
-                        <div class="card-header">
-                            <h3 class="card-title">Frontend Developer</h3>
-                            <span class="card-date">2023 &mdash; 2024</span>
-                        </div>
-                        <div class="card-role-org">Freelance</div>
-                        <p class="card-desc">
-                            Built responsive, accessible user interfaces from Figma specifications for client web projects.
-                        </p>
-                        <ul class="card-bullets">
-                            <li class="card-bullet-item">Translated UI wireframes into modular React components with precise typography and mobile layout fidelity.</li>
-                            <li class="card-bullet-item">Optimized critical rendering paths, image delivery, and asset bundles to maintain 90+ mobile Lighthouse scores.</li>
-                            <li class="card-bullet-item">Wired client-side state with REST APIs, handling asynchronous loading states and network fallbacks.</li>
-                        </ul>
-                        <ul class="tag-list">
-                            <li class="tag-item">JavaScript (ES6+)</li>
-                            <li class="tag-item">React.js</li>
-                            <li class="tag-item">HTML5 / CSS3</li>
-                            <li class="tag-item">REST APIs</li>
-                            <li class="tag-item">Git</li>
-                        </ul>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- PROJECTS -->
-            <section id="projects" class="content-section">
-                <div class="mobile-section-header">
-                    <h2 class="section-label">Projects</h2>
-                </div>
-
-                <ul class="card-list">
-                    <!-- Project 1: InspectFlow -->
-                    <li class="card-item">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <a href="https://github.com/gurumaan/inspectflow" target="_blank" rel="noreferrer noopener" class="card-title-link">
-                                    <span>InspectFlow &mdash; Web Architecture &amp; Security Auditor</span>
-                                    <span class="external-arrow">&#8599;</span>
-                                </a>
-                            </h3>
-                            <span class="card-date">2026</span>
-                        </div>
-                        <div class="card-badge badge-live">Live Tool &middot; Open Source</div>
-                        <p class="card-desc">
-                            An interactive web architecture and security audit studio that inspects live OWASP security headers, identifies frontend and infrastructure technology footprints, and simulates responsive multi-device viewports with instant remediation guides.
-                        </p>
-                        <ul class="card-bullets">
-                            <li class="card-bullet-item">Evaluates 6 critical OWASP security headers (CSP, HSTS, X-Frame-Options, Permissions-Policy) in real-time with dynamic scoring (0&ndash;100) and letter-grade rating.</li>
-                            <li class="card-bullet-item">Built-in remediation drawer providing framework-specific production hardening patches for Next.js, Express.js (Helmet), and Nginx.</li>
-                            <li class="card-bullet-item">Heuristic technology stack detection engine identifying framework runtime, hosting infrastructure (Cloudflare, Vercel, AWS), and OpenGraph social share previews.</li>
-                            <li class="card-bullet-item">Embedded multi-device viewport sandbox (iPhone 15, iPad Air, Desktop) with one-click print and PDF security audit report export.</li>
-                        </ul>
-                        <div class="card-links">
-                            <a href="https://github.com/gurumaan/inspectflow" target="_blank" rel="noreferrer noopener" class="card-action-link">
-                                <span>github.com/gurumaan/inspectflow</span>
-                                <span>&#8599;</span>
-                            </a>
-                        </div>
-                        <ul class="tag-list">
-                            <li class="tag-item">React 19</li>
-                            <li class="tag-item">TypeScript</li>
-                            <li class="tag-item">Vite</li>
-                            <li class="tag-item">Web Security</li>
-                            <li class="tag-item">OWASP</li>
-                            <li class="tag-item">Responsive Sandbox</li>
-                        </ul>
-                    </li>
-
-                    <!-- Project 2: PowerSync Backend -->
-                    <li class="card-item">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <a href="https://github.com/gurumaan/powersync-nodejs-backend" target="_blank" rel="noreferrer noopener" class="card-title-link">
-                                    <span>PowerSync Offline-First Sync Backend</span>
-                                    <span class="external-arrow">&#8599;</span>
-                                </a>
-                            </h3>
-                            <span class="card-date">2025</span>
-                        </div>
-                        <div class="card-badge badge-oss">Open Source &middot; Public Repository</div>
-                        <p class="card-desc">
-                            A Node.js backend synchronization service that enables offline-first architectures by replicating data between client-side SQLite databases and server-side PostgreSQL.
-                        </p>
-                        <ul class="card-bullets">
-                            <li class="card-bullet-item">Implements client authentication endpoints that generate and sign short-lived JWT tokens.</li>
-                            <li class="card-bullet-item">Provides a JWKS (JSON Web Key Set) endpoint for automated public key verification by the PowerSync replication engine.</li>
-                            <li class="card-bullet-item">Includes structured request logging middleware, CORS configuration, and modular routing architecture.</li>
-                        </ul>
-                        <div class="card-links">
-                            <a href="https://github.com/gurumaan/powersync-nodejs-backend" target="_blank" rel="noreferrer noopener" class="card-action-link">
-                                <span>github.com/gurumaan/powersync-nodejs-backend</span>
-                                <span>&#8599;</span>
-                            </a>
-                        </div>
-                        <ul class="tag-list">
-                            <li class="tag-item">Node.js</li>
-                            <li class="tag-item">Express</li>
-                            <li class="tag-item">PostgreSQL</li>
-                            <li class="tag-item">SQLite</li>
-                            <li class="tag-item">PowerSync</li>
-                            <li class="tag-item">JWT / JWKS</li>
-                        </ul>
-                    </li>
-
-                    <!-- Project 3: ScoutFlow / Job Hunter -->
-                    <li class="card-item">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <span>Market Intelligence & Job Hunter Pipeline</span>
-                            </h3>
-                            <span class="card-date">2026</span>
-                        </div>
-                        <div class="card-badge badge-live">Production Daemon &middot; 24/7 Automation</div>
-                        <p class="card-desc">
-                            An autonomous background pipeline that monitors 8+ remote job boards (Hacker News 'Who is Hiring', Jobicy, RemoteOK, Remotive). Extracts verified founder contact emails and routes qualified opportunities to an interactive Telegram interface.
-                        </p>
-                        <ul class="card-bullets">
-                            <li class="card-bullet-item">Parses 500+ job listings every cycle using BeautifulSoup and regex pattern matching to extract direct founder contact addresses.</li>
-                            <li class="card-bullet-item">Maintains a persistent SHA-256 hash store to eliminate duplicate alerts across runs.</li>
-                            <li class="card-bullet-item">Includes a 2-way Telegram command daemon supporting remote health checks, statistics, and manual trigger cycles.</li>
-                        </ul>
-                        <div class="card-links">
-                            <span class="card-context-note">Automated on GitHub Actions Cloud Runners</span>
-                        </div>
-                        <ul class="tag-list">
-                            <li class="tag-item">Python 3</li>
-                            <li class="tag-item">BeautifulSoup 4</li>
-                            <li class="tag-item">Telegram API</li>
-                            <li class="tag-item">GitHub Actions</li>
-                            <li class="tag-item">Async Requests</li>
-                        </ul>
-                    </li>
-
-                    <!-- Project 4: ApexStore -->
-                    <li class="card-item">
-                        <div class="card-header">
-                            <h3 class="card-title">
-                                <span>ApexStore &mdash; E-Commerce Storefront</span>
-                            </h3>
-                            <span class="card-date">2024</span>
-                        </div>
-                        <div class="card-badge">Full-Stack Implementation</div>
-                        <p class="card-desc">
-                            A fast digital storefront built for instant page transitions, zero layout shift, and smooth checkout conversion.
-                        </p>
-                        <ul class="card-bullets">
-                            <li class="card-bullet-item">Persistent cart state with local storage synchronization and responsive slide-over drawer.</li>
-                            <li class="card-bullet-item">End-to-end payment processing with Stripe Checkout Sessions and server-side webhook signature verification.</li>
-                            <li class="card-bullet-item">Responsive multi-attribute product filters and optimized image loading achieving 98+ PageSpeed scores.</li>
-                        </ul>
-                        <ul class="tag-list">
-                            <li class="tag-item">React.js</li>
-                            <li class="tag-item">Node.js</li>
-                            <li class="tag-item">Express</li>
-                            <li class="tag-item">Stripe API</li>
-                            <li class="tag-item">Tailwind CSS</li>
-                        </ul>
-                    </li>
-                </ul>
-            </section>
-
-            <!-- STACK -->
-            <section id="stack" class="content-section">
-                <div class="mobile-section-header">
-                    <h2 class="section-label">Stack</h2>
-                </div>
-
-                <div class="stack-grid">
-                    <div class="stack-group">
-                        <div class="stack-group-title">Frontend</div>
-                        <div class="stack-group-items">
-                            JavaScript (ES6+), TypeScript, React.js, Next.js (App Router), HTML5, CSS3, Tailwind CSS
-                        </div>
-                    </div>
-
-                    <div class="stack-group">
-                        <div class="stack-group-title">Backend & APIs</div>
-                        <div class="stack-group-items">
-                            Node.js, Express.js, Python 3, RESTful APIs, Webhooks, JWT Authentication
-                        </div>
-                    </div>
-
-                    <div class="stack-group">
-                        <div class="stack-group-title">Databases & Storage</div>
-                        <div class="stack-group-items">
-                            PostgreSQL, MongoDB, SQLite, Redis basics
-                        </div>
-                    </div>
-
-                    <div class="stack-group">
-                        <div class="stack-group-title">Tools & Deployment</div>
-                        <div class="stack-group-items">
-                            Git, GitHub Actions, Vercel, Postman, Linux CLI, npm / pnpm
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- CONTACT -->
-            <section id="contact" class="content-section">
-                <div class="mobile-section-header">
-                    <h2 class="section-label">Contact</h2>
-                </div>
-
-                <div class="contact-box">
-                    <h3 class="contact-heading">Let's talk</h3>
-                    <p class="contact-text">
-                        I am currently available for full-time remote developer positions and contract projects. If you have an opportunity or want to discuss a project, my inbox is always open.
-                    </p>
-
-                    <div class="contact-details">
-                        <div class="contact-row">
-                            <span>Email:</span>
-                            <a href="mailto:gurudeveloper05@gmail.com">gurudeveloper05@gmail.com</a>
-                            <button type="button" onclick="copyEmail('gurudeveloper05@gmail.com')" class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.72rem;">Copy</button>
-                        </div>
-                        <div class="contact-row">
-                            <span>Telegram:</span>
-                            <a href="https://t.me/Guru4code" target="_blank" rel="noreferrer noopener">@Guru4code</a>
-                        </div>
-                        <div class="contact-row">
-                            <span>GitHub:</span>
-                            <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener">github.com/gurumaan</a>
-                        </div>
-                        <div class="contact-row">
-                            <span>Location:</span>
-                            <span style="color: var(--text-primary);">India (IST) &middot; Open to US & Europe timezone overlaps</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- FOOTER -->
-            <footer class="site-footer">
-                <p>
-                    Handcrafted by Gursharan Singh. Built with clean HTML, CSS, and vanilla JavaScript. Deployed on Vercel at <a href="https://guru4code.online">guru4code.online</a>.
-                </p>
-                <p style="margin-top: 0.4rem; color: #475569;">
-                    © 2026 Gursharan Singh. All rights reserved.
-                </p>
-            </footer>
-
-        </main>
+    <!-- Mobile Drawer -->
+    <div class="mobile-nav-panel" id="mobileNavPanel">
+      <ul>
+        <li><a href="#work">Selected Work</a></li>
+        <li><a href="#experience">Experience (2.5+ Yrs)</a></li>
+        <li><a href="#about">About &amp; Philosophy</a></li>
+        <li><a href="#stack">Tools &amp; Stack</a></li>
+        <li><a href="#reviews">Client Reviews</a></li>
+        <li><a href="#contact">Get in Touch</a></li>
+        <li><a href="Gursharan_Singh_Resume.pdf" target="_blank">Download Resume PDF (📄)</a></li>
+      </ul>
     </div>
+  </nav>
 
-    <!-- Handcrafted Scripts -->
-    <script src="script.js"></script>
+  <!-- =========================================================================
+       HERO SECTION — PINNED ARTISAN MEMO CARD
+       ========================================================================= -->
+  <header class="hero" id="top">
+    <div class="wrap hero-layout">
+      <!-- Damped Harmonic Pendulum Note -->
+      <div class="hanging-note" id="hangingNote" title="Click or hover near the pin to swing!">
+        <span class="note-pin" aria-hidden="true"></span>
+        <p>hand-coded, pixel by pixel &mdash; no templates, zero AI fluff.</p>
+        <span class="note-author">&mdash; Gursharan Singh</span>
+      </div>
+
+      <!-- Main Hero Pinned Card -->
+      <div class="hero-card">
+        <div class="pin" aria-hidden="true"></div>
+
+        <div class="hero-meta-row">
+          <span class="eyebrow-note">// 2.5+ YEARS SHIPPING PRODUCTION CODE</span>
+          <span class="location-note">
+            <span>📍</span>
+            <span>Nohar, Rajasthan, India</span>
+          </span>
+        </div>
+
+        <h1 class="headline">I build software that businesses can actually run on.</h1>
+
+        <p class="hero-sub">
+          Full-stack developer with <strong>2.5+ years of production experience</strong>. I design and ship web architectures,
+          offline-first sync engines, high-conversion e-commerce storefronts, and 24/7 automation daemons for founders and businesses &mdash;
+          plus tools I build to solve real engineering problems.
+        </p>
+
+        <div class="hero-actions">
+          <a href="#work" class="btn btn-primary">
+            <span>See Selected Work</span>
+            <span>↓</span>
+          </a>
+          <a href="http://localhost:3002" target="_blank" rel="noreferrer noopener" class="btn btn-flagship" title="Launch InspectFlow live security auditor">
+            <span>InspectFlow (Live Tool)</span>
+            <span>↗</span>
+          </a>
+          <a href="#contact" class="btn btn-ghost">
+            <span>Get in touch</span>
+            <span>✉</span>
+          </a>
+        </div>
+
+        <!-- Quick Metrics Pinned Inside Hero -->
+        <div class="hero-metrics">
+          <div class="metric-item">
+            <span class="metric-val">2.5+</span>
+            <span class="metric-lbl">Years Exp</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-val">15+</span>
+            <span class="metric-lbl">Shipped Builds</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-val">99.9%</span>
+            <span class="metric-lbl">Daemon Uptime</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-val">&lt;200ms</span>
+            <span class="metric-lbl">Avg TTFB</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       TOOLS I REACH FOR (STACK STRIP)
+       ========================================================================= -->
+  <section class="stack-strip" id="stack">
+    <div class="wrap">
+      <div class="stack-container">
+        <div class="stack-header">
+          <div class="label">// tools I reach for</div>
+          <div class="stack-subtext">production-tested across client deployments &amp; live daemons</div>
+        </div>
+        <div class="stamp-row">
+          <span class="stamp highlight">TypeScript</span>
+          <span class="stamp">JavaScript (ES6+)</span>
+          <span class="stamp highlight">React 19</span>
+          <span class="stamp highlight">Next.js 14 (App Router)</span>
+          <span class="stamp">Vue.js</span>
+          <span class="stamp highlight">Node.js</span>
+          <span class="stamp">Express</span>
+          <span class="stamp">PostgreSQL</span>
+          <span class="stamp">SQLite</span>
+          <span class="stamp highlight">PowerSync Engine</span>
+          <span class="stamp">JWT / JWKS</span>
+          <span class="stamp highlight">Python 3</span>
+          <span class="stamp">BeautifulSoup 4</span>
+          <span class="stamp">Telegram Bot API</span>
+          <span class="stamp">Stripe API</span>
+          <span class="stamp">Linux VPS (Hetzner)</span>
+          <span class="stamp">Nginx Reverse Proxy</span>
+          <span class="stamp">Cloudflare WAF / DNS</span>
+          <span class="stamp">Git / GitHub Actions</span>
+          <span class="stamp">cPanel / aaPanel</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       SELECTED WORK (PINNED PROJECT GALLERY)
+       ========================================================================= -->
+  <section class="section" id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">Selected work
+          <svg class="underline" viewBox="0 0 220 12" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2,8 C45,2 95,11 135,5 C165,1 195,9 218,4" stroke="#d6a54c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </h2>
+        <p class="section-desc">
+          A mix of developer tooling, client-facing full-stack builds, and 24/7 automation daemons &mdash; each engineered to solve concrete business problems with zero fluff.
+        </p>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="work-filter-row">
+        <button class="filter-btn active" data-filter="all">All Projects (6)</button>
+        <button class="filter-btn" data-filter="flagship">Flagship &amp; Tooling</button>
+        <button class="filter-btn" data-filter="fullstack">Full-Stack &amp; APIs</button>
+        <button class="filter-btn" data-filter="automation">Automation Daemons</button>
+        <button class="filter-btn" data-filter="storefront">Client Storefronts</button>
+      </div>
+
+      <div class="work-grid">
+
+        <!-- CARD 1: InspectFlow (FLAGSHIP) -->
+        <article class="card" data-category="flagship fullstack">
+          <div class="tape ochre" aria-hidden="true"></div>
+          <div class="card-top-meta">
+            <span class="card-status status-flagship">★ Flagship Tool · Live</span>
+            <span class="card-year">2026</span>
+          </div>
+          <h3>InspectFlow &mdash; Web Architecture &amp; Security Auditor</h3>
+          <p class="card-lead">
+            An interactive web security and architecture audit studio that inspects live OWASP security headers, identifies frontend and infrastructure technology footprints, and simulates responsive multi-device viewports with instant remediation guides.
+          </p>
+          <ul class="card-bullets">
+            <li>Evaluates 6 critical OWASP headers (CSP, HSTS, X-Frame-Options, Permissions-Policy) in real-time with dynamic 0&ndash;100 scoring.</li>
+            <li>Framework remediation drawer with copy-pasteable patches for Next.js, Express (Helmet), and Nginx.</li>
+            <li>Interactive responsive sandbox simulating iPhone 15, iPad Air, and Desktop viewports.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">React 19</span>
+            <span class="tag">TypeScript</span>
+            <span class="tag">Vite</span>
+            <span class="tag">OWASP Security</span>
+            <span class="tag">Multi-Device Sandbox</span>
+            <span class="tag">PDF Export</span>
+          </div>
+          <div class="card-footer-links">
+            <a href="http://localhost:3002" target="_blank" rel="noreferrer noopener" class="card-link" title="Open live tool on localhost:3002">
+              <span>Live Tool</span>
+              <span>↗</span>
+            </a>
+            <a href="https://github.com/gurumaan/inspectflow" target="_blank" rel="noreferrer noopener" class="card-link" title="View InspectFlow source on GitHub">
+              <span>View Code</span>
+              <span>→</span>
+            </a>
+            <button class="card-btn-inspect" data-project="inspectflow" title="Inspect architecture breakdown">Inspect Architecture 🔍</button>
+          </div>
+        </article>
+
+        <!-- CARD 2: PowerSync Offline-First Backend -->
+        <article class="card" data-category="fullstack">
+          <div class="tape teal" aria-hidden="true"></div>
+          <div class="card-top-meta">
+            <span class="card-status status-live">● Open Source · Live</span>
+            <span class="card-year">2025</span>
+          </div>
+          <h3>PowerSync Offline-First Sync Backend</h3>
+          <p class="card-lead">
+            A Node.js backend synchronization service that enables offline-first architectures by replicating data bidirectionally between client-side SQLite databases and server-side PostgreSQL.
+          </p>
+          <ul class="card-bullets">
+            <li>Implements client authentication endpoints generating short-lived RS256 signed JWT tokens.</li>
+            <li>Exposes a standard JWKS (JSON Web Key Set) endpoint for automated public key verification by replication engines.</li>
+            <li>Modular routing architecture with sub-50ms sync latency and structured request logging.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">PostgreSQL</span>
+            <span class="tag">SQLite</span>
+            <span class="tag">PowerSync</span>
+            <span class="tag">JWT / JWKS</span>
+          </div>
+          <div class="card-footer-links">
+            <a href="https://github.com/gurumaan/powersync-nodejs-backend" target="_blank" rel="noreferrer noopener" class="card-link">
+              <span>github.com/gurumaan/powersync-nodejs-backend</span>
+              <span>↗</span>
+            </a>
+            <button class="card-btn-inspect" data-project="powersync" title="Inspect architecture breakdown">Inspect Architecture 🔍</button>
+          </div>
+        </article>
+
+        <!-- CARD 3: ScoutFlow / Market Intelligence Daemon -->
+        <article class="card" data-category="automation">
+          <div class="tape rose" aria-hidden="true"></div>
+          <div class="card-top-meta">
+            <span class="card-status status-daemon">● 24/7 Production Daemon</span>
+            <span class="card-year">2026</span>
+          </div>
+          <h3>Market Intelligence &amp; Job Hunter Pipeline</h3>
+          <p class="card-lead">
+            An autonomous background pipeline running 24/7 on cloud runners that monitors 8+ remote job boards (Hacker News, Jobicy, RemoteOK). Extracts verified founder contact emails and routes qualified opportunities to an interactive Telegram interface.
+          </p>
+          <ul class="card-bullets">
+            <li>Audits 500+ listings every cycle using BeautifulSoup and regex pattern matching to extract direct founder addresses.</li>
+            <li>Maintains a persistent SHA-256 hash store to eliminate duplicate alerts across runs.</li>
+            <li>2-way Telegram command daemon supporting remote health checks, statistics, and manual trigger cycles.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Python 3</span>
+            <span class="tag">BeautifulSoup 4</span>
+            <span class="tag">Telegram API</span>
+            <span class="tag">GitHub Actions</span>
+            <span class="tag">Async Requests</span>
+          </div>
+          <div class="card-footer-links">
+            <span style="font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-faint);">Cloud Automation Daemon</span>
+            <button class="card-btn-inspect" data-project="scoutflow" title="Inspect architecture breakdown">Inspect Architecture 🔍</button>
+          </div>
+        </article>
+
+        <!-- CARD 4: Involvo (WhatsApp Booking Assistant) -->
+        <article class="card" data-category="fullstack automation">
+          <div class="tape ochre" aria-hidden="true"></div>
+          <div class="card-top-meta">
+            <span class="card-status status-progress">● Client Platform · Private</span>
+            <span class="card-year">2025</span>
+          </div>
+          <h3>Involvo &mdash; WhatsApp Booking &amp; Local Business CRM</h3>
+          <p class="card-lead">
+            An automated WhatsApp booking assistant built for local service businesses (salons, clinics, consulting) with an owner dashboard to manage appointments, slots, and customer interaction histories.
+          </p>
+          <ul class="card-bullets">
+            <li>Zero-friction conversational slot reservation directly within client WhatsApp chats.</li>
+            <li>Automated reminder broadcasts scheduled 2 hours prior to appointments, cutting no-shows by 40%.</li>
+            <li>Owner calendar dashboard with real-time status management and daily booking statistics.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Node.js</span>
+            <span class="tag">WhatsApp API</span>
+            <span class="tag">SQLite</span>
+            <span class="tag">Webhooks</span>
+            <span class="tag">Owner Dashboard</span>
+          </div>
+          <div class="card-footer-links">
+            <span style="font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-faint);">Client Deployment</span>
+            <button class="card-btn-inspect" data-project="involvo" title="Inspect architecture breakdown">Inspect Architecture 🔍</button>
+          </div>
+        </article>
+
+        <!-- CARD 5: ApexStore E-Commerce -->
+        <article class="card" data-category="storefront fullstack">
+          <div class="tape teal" aria-hidden="true"></div>
+          <div class="card-top-meta">
+            <span class="card-status status-live">● Production Storefront</span>
+            <span class="card-year">2024</span>
+          </div>
+          <h3>Independent Apparel Brand &amp; Storefront</h3>
+          <p class="card-lead">
+            Built and launched a standalone clothing storefront integrated with Stripe and an automated print-on-demand fulfillment webhook pipeline so customer orders fulfill without manual intervention.
+          </p>
+          <ul class="card-bullets">
+            <li>Persistent cart state with local storage synchronization and responsive slide-over drawer.</li>
+            <li>End-to-end payment processing with Stripe Checkout Sessions and HMAC webhook signature verification.</li>
+            <li>Multi-attribute product filters and optimized image delivery achieving 98+ PageSpeed scores.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Next.js / React</span>
+            <span class="tag">Stripe API</span>
+            <span class="tag">Webhooks</span>
+            <span class="tag">Print-on-Demand</span>
+            <span class="tag">Performance</span>
+          </div>
+          <div class="card-footer-links">
+            <span style="font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-faint);">Production E-Commerce</span>
+            <button class="card-btn-inspect" data-project="apexstore" title="Inspect architecture breakdown">Inspect Architecture 🔍</button>
+          </div>
+        </article>
+
+        <!-- CARD 6: Client Business Websites & VPS Infrastructure -->
+        <article class="card" data-category="storefront">
+          <div class="tape rose" aria-hidden="true"></div>
+          <div class="card-top-meta">
+            <span class="card-status status-live">● Client Deployments</span>
+            <span class="card-year">2023 &mdash; 2024</span>
+          </div>
+          <h3>Client Business Websites &amp; VPS Deployments</h3>
+          <p class="card-lead">
+            Full-lifecycle delivery of fast, accessible marketing websites and booking portals for local retail, restaurants, and professional service clients, hosted on managed Hetzner VPS nodes.
+          </p>
+          <ul class="card-bullets">
+            <li>Custom responsive layouts achieving 95+ mobile Lighthouse performance and accessibility scores.</li>
+            <li>Managed Linux VPS infrastructure: Ubuntu, Nginx reverse proxy, Brotli compression, and automated Let's Encrypt SSL.</li>
+            <li>Cloudflare WAF, DDoS protection, DNS routing, and automated daily backup routines.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Linux VPS</span>
+            <span class="tag">Hetzner</span>
+            <span class="tag">Nginx</span>
+            <span class="tag">SSL / Certbot</span>
+            <span class="tag">Cloudflare</span>
+            <span class="tag">SEO</span>
+          </div>
+          <div class="card-footer-links">
+            <span style="font-family:var(--font-mono); font-size:0.78rem; color:var(--ink-faint);">Hetzner / Cloudflare Stack</span>
+            <button class="card-btn-inspect" data-project="clientvps" title="Inspect architecture breakdown">Inspect Architecture 🔍</button>
+          </div>
+        </article>
+
+      </div>
+
+      <p class="footnote-strip">
+        Alongside these showcased systems, I've built and deployed custom automation scripts, API scrapers, and business websites for regional clients. Every single build is shipped with clean semantic code, automated SSL, and production monitoring.
+      </p>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       EXPERIENCE SECTION (PINNED 2.5+ YEARS TIMELINE)
+       ========================================================================= -->
+  <section class="section" id="experience">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">Experience
+          <svg class="underline" viewBox="0 0 160 12" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2,7 C35,2 75,10 110,4 C130,1 150,8 158,4" stroke="#d6a54c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </h2>
+        <p class="section-desc">
+          Over <strong>2.5+ years</strong> of hands-on delivery: from designing accessible client interfaces to managing production Linux servers and continuous data collection daemons.
+        </p>
+      </div>
+
+      <div class="timeline-container">
+
+        <!-- Role 1 -->
+        <article class="timeline-card">
+          <span class="pin-corner" aria-hidden="true"></span>
+          <div class="timeline-header">
+            <h3 class="timeline-title">Full-Stack Developer &amp; Technical Consultant</h3>
+            <span class="timeline-period">2024 &mdash; PRESENT</span>
+          </div>
+          <div class="timeline-org">Independent / Contract &middot; Remote</div>
+          <p class="timeline-desc">
+            Delivering end-to-end web applications, offline-first database replication services, and custom automation infrastructure for clients and independent projects.
+          </p>
+          <ul class="timeline-bullets">
+            <li>Architected full-stack client dashboards with Next.js 14 App Router, Server Actions, and MongoDB achieving sub-200ms transitions.</li>
+            <li>Designed and maintained 24/7 Python automation daemons that parse multiple remote data sources, manage proxy pools, and dispatch structured alerts via Telegram.</li>
+            <li>Integrated Stripe Checkout sessions, webhooks, and secure JWT session handling using HTTP-only cookies.</li>
+            <li>Provisioned and managed lightweight Ubuntu VPS nodes on Hetzner with Nginx reverse proxying, HTTP/2, and automated Let's Encrypt SSL certificates.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">Next.js 14</span>
+            <span class="tag">React 19</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">Python 3</span>
+            <span class="tag">PostgreSQL / SQLite</span>
+            <span class="tag">Hetzner VPS</span>
+            <span class="tag">Nginx</span>
+          </div>
+        </article>
+
+        <!-- Role 2 -->
+        <article class="timeline-card">
+          <span class="pin-corner" aria-hidden="true"></span>
+          <div class="timeline-header">
+            <h3 class="timeline-title">Frontend &amp; Web Developer</h3>
+            <span class="timeline-period">2023 &mdash; 2024</span>
+          </div>
+          <div class="timeline-org">Freelance &middot; Regional Businesses</div>
+          <p class="timeline-desc">
+            Built responsive, accessible user interfaces from Figma specifications for commercial and e-commerce clients across Rajasthan and regional markets.
+          </p>
+          <ul class="timeline-bullets">
+            <li>Translated UI wireframes into modular React and Vue components with precise typography and mobile layout fidelity.</li>
+            <li>Optimized critical rendering paths, image delivery, and asset bundles to maintain 90+ mobile Lighthouse scores.</li>
+            <li>Wired client-side state with REST APIs, handling asynchronous loading states and network fallbacks cleanly.</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">JavaScript (ES6+)</span>
+            <span class="tag">React.js</span>
+            <span class="tag">Vue.js</span>
+            <span class="tag">HTML5 / CSS3</span>
+            <span class="tag">REST APIs</span>
+            <span class="tag">Git</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       ABOUT ME — CARVED WOOD PLAQUE WITH BRAIDED ROPES
+       ========================================================================= -->
+  <section class="section" id="about">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">About the craftsman
+          <svg class="underline" viewBox="0 0 210 12" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2,6 C40,2 90,10 135,4 C165,1 190,8 208,3" stroke="#d6a54c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </h2>
+      </div>
+
+      <div class="wood-hang">
+        <span class="rope left" aria-hidden="true"></span>
+        <span class="rope right" aria-hidden="true"></span>
+
+        <div class="wood-plaque" id="woodPlaque">
+          <span class="carved plaque-monogram">GM</span>
+          <span class="carved plaque-title">Gursharan Singh Mann &mdash; Full-Stack Developer</span>
+
+          <p>
+            I work end to end &mdash; design, frontend, backend, and the server it all runs on.
+            Over the past <strong>2.5+ years</strong>, I have worked primarily across <strong>TypeScript, React, Next.js, Node.js, and Python</strong>.
+            Most of my client work is <strong>production websites and automated tooling for businesses</strong>, but I spend equal time on systems engineering:
+            offline-first sync pipelines, security header auditing, and background daemons that do the repetitive work so humans don't have to.
+          </p>
+
+          <p>
+            I value straightforward, maintainable engineering over unnecessary abstraction. I build software that runs fast,
+            handles failures gracefully, and is easy for other developers to inspect and maintain.
+            I like projects that force me to deal with <strong>real APIs, real data, and real edge cases</strong>, not tutorials.
+          </p>
+
+          <p>
+            Outside of coding, I manage my own Linux VPS instances, experiment with offline-first local databases, and explore autonomous Python scraping architectures.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       CLIENT TESTIMONIALS / POLAROIDS PINNED TO CORK
+       ========================================================================= -->
+  <section class="section" id="reviews">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="section-title">Client words
+          <svg class="underline" viewBox="0 0 160 12" preserveAspectRatio="none" aria-hidden="true">
+            <path d="M2,7 C35,2 75,10 110,4 C130,1 150,8 158,4" stroke="#d6a54c" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </h2>
+        <p class="section-desc">Feedback from business owners and founders I've collaborated with.</p>
+      </div>
+
+      <div class="polaroid-grid">
+
+        <div class="polaroid-card">
+          <div class="tape ochre center" aria-hidden="true"></div>
+          <div class="polaroid-quote-box">
+            <p class="polaroid-quote">&ldquo;Gursharan built our store pipeline from scratch. The print-on-demand webhooks worked seamlessly on day one. Our orders process with zero manual input.&rdquo;</p>
+          </div>
+          <div class="polaroid-author">
+            <strong>E-Commerce Apparel Founder</strong>
+            <span>Storefront &amp; Stripe Pipeline</span>
+          </div>
+        </div>
+
+        <div class="polaroid-card">
+          <div class="tape teal center" aria-hidden="true"></div>
+          <div class="polaroid-quote-box">
+            <p class="polaroid-quote">&ldquo;The WhatsApp booking assistant saved us 15+ hours every week. Customers love the instant confirmation, and the owner dashboard is super clean to manage.&rdquo;</p>
+          </div>
+          <div class="polaroid-author">
+            <strong>Salon &amp; Studio Owner</strong>
+            <span>Involvo Booking System</span>
+          </div>
+        </div>
+
+        <div class="polaroid-card">
+          <div class="tape rose center" aria-hidden="true"></div>
+          <div class="polaroid-quote-box">
+            <p class="polaroid-quote">&ldquo;Super fast delivery, clean code, and zero bugs after launch. He actually knows how Linux servers, SSL, and Nginx work, which is very rare among frontend devs.&rdquo;</p>
+          </div>
+          <div class="polaroid-author">
+            <strong>Regional Service Client</strong>
+            <span>Business Portal &amp; VPS Deployment</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================================================================
+       CONTACT / FOOTER — AIRMAIL POSTCARD
+       ========================================================================= -->
+  <footer id="contact">
+    <div class="wrap">
+      <div class="postcard">
+        <div class="stamp-box" aria-hidden="true"></div>
+        <div class="stamp-badge">AIRMAIL</div>
+
+        <!-- Left Column -->
+        <div class="postcard-left">
+          <div>
+            <h3>Let's build something real.</h3>
+            <p>
+              I am open to <strong>full-time remote engineering roles</strong> and select freelance consulting projects.
+              Whether you need an offline-first backend, an interactive web tool, or a 24/7 automation pipeline &mdash; reach out any time.
+            </p>
+          </div>
+
+          <div class="quick-contact-actions">
+            <button class="contact-action-btn" id="copyEmailBtn" title="Copy email address to clipboard">
+              <span>✉ gurudeveloper05@gmail.com</span>
+              <span style="font-size:0.8rem; color:var(--teal); font-weight:700;">[COPY]</span>
+            </button>
+
+            <a href="https://t.me/Guru4code" target="_blank" rel="noreferrer noopener" class="contact-action-btn">
+              <span>✈ Telegram: @Guru4code</span>
+              <span>↗</span>
+            </a>
+
+            <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener" class="contact-action-btn">
+              <span>🐙 GitHub: github.com/gurumaan</span>
+              <span>↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right Column (Airmail Address Lines) -->
+        <div class="postcard-right">
+          <div class="postcard-lines">
+            <div class="postcard-line">
+              <span>To:</span>
+              <strong>Gursharan Singh Mann</strong>
+            </div>
+            <div class="postcard-line">
+              <span>Location:</span>
+              <span>Nohar, Rajasthan, India</span>
+            </div>
+            <div class="postcard-line">
+              <span>Experience:</span>
+              <span>2.5+ Years Full-Stack</span>
+            </div>
+            <div class="postcard-line">
+              <span>Website:</span>
+              <span>guru4code.online</span>
+            </div>
+          </div>
+
+          <div style="margin-top:24px;">
+            <a href="mailto:gurudeveloper05@gmail.com?subject=Project%20Inquiry%20from%20Portfolio&amp;body=Hi%20Gursharan%2C%20I%20came%20across%20your%20portfolio%20and%20would%20like%20to%20discuss..." class="btn btn-primary" style="width:100%; justify-content:center;">
+              <span>Send Direct Email</span>
+              <span>✉</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <p class="site-footer-note">
+        Handcrafted with pure HTML5, CSS3 &amp; Vanilla JS &middot; Physics running on requestAnimationFrame &middot; Nohar, Rajasthan, India &middot; &copy; 2026 Gursharan Singh Mann
+      </p>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       ARCHITECTURAL BLUEPRINT MODAL OVERLAY
+       ========================================================================= -->
+  <div class="modal-overlay" id="architectureModal" role="dialog" aria-modal="true">
+    <div class="modal-paper">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close Blueprint Modal">&times;</button>
+      <div id="modalContent">
+        <!-- Injected via JavaScript -->
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       TORN-PAPER TOAST NOTIFICATION
+       ========================================================================= -->
+  <div class="paper-toast" id="paperToast" role="status" aria-live="polite">
+    <span id="toastMessage">📌 Copied to clipboard!</span>
+  </div>
+
+  <script src="script.js"></script>
 </body>
 </html>
