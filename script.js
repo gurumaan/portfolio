@@ -105,7 +105,7 @@
 
     function updateLabel(active) {
       if (tagText) {
-        tagText.textContent = active ? 'pull for daylight' : 'pull for lamp';
+        tagText.textContent = active ? 'daylight' : 'midnight';
       }
       if (tagIcon) {
         tagIcon.textContent = active ? '☀️' : '💡';

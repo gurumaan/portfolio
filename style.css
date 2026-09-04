@@ -233,133 +233,197 @@ nav.cork-nav .nav-container {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+/* --------------------------------------------------------------------------
+   Horizontal Nav Links & Actions
+   -------------------------------------------------------------------------- */
+.navlinks {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navlinks li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navlinks a {
+  color: var(--paper-alt);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 3px;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.navlinks a:hover,
+.navlinks a.active {
+  color: #fff;
+  border-bottom-color: var(--ochre);
+}
+
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
 /* ==========================================================================
-   PHYSICAL HANGING DESK LAMP PULL CORD
-   Hanging cord on the right side with brass/wood toggle
+   PHYSICAL HANGING DESK LAMP PULL CHAIN (LONG REALISTIC BALL CHAIN)
+   Handcrafted brass ball chain with turned wood/brass acorn tassel
    ========================================================================== */
 .lamp-pull-cord {
   position: fixed;
   top: 0;
-  right: 36px;
+  right: 48px;
   z-index: 150;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
   transform-origin: top center;
-  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   user-select: none;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .lamp-pull-cord:hover {
-  transform: translateY(6px);
+  animation: gentleChainSway 2.5s ease-in-out infinite;
 }
 
-.lamp-pull-cord:hover .cord-handle {
-  filter: brightness(1.2);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55);
+@keyframes gentleChainSway {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(2deg) translateY(4px); }
+  75% { transform: rotate(-2deg) translateY(4px); }
 }
 
 .lamp-pull-cord.pulling {
-  animation: pullCordAnim 0.45s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: pullCordAnim 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 @keyframes pullCordAnim {
-  0% { transform: translateY(0); }
-  35% { transform: translateY(46px); }
-  65% { transform: translateY(-8px); }
-  85% { transform: translateY(4px); }
-  100% { transform: translateY(0); }
+  0% { transform: translateY(0) scaleY(1); }
+  35% { transform: translateY(60px) scaleY(1.08); }
+  65% { transform: translateY(-12px) scaleY(0.96); }
+  85% { transform: translateY(6px) scaleY(1.02); }
+  100% { transform: translateY(0) scaleY(1); }
 }
 
+/* Ceiling Mount Escutcheon Plate */
 .cord-mount {
-  width: 18px;
-  height: 9px;
-  background: radial-gradient(ellipse at 50% 100%, #d8a852, #7a5521);
-  border-radius: 0 0 6px 6px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+  width: 22px;
+  height: 10px;
+  background: radial-gradient(ellipse at 50% 100%, #eac26e, #855f24 70%, #462f0f);
+  border-radius: 0 0 8px 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.45);
 }
 
+/* Brass Ball Chain (310px Long) */
 .cord-chain {
-  width: 3.5px;
-  height: 125px;
-  background: repeating-linear-gradient(
-    180deg,
-    #f3cb73 0px,
-    #f3cb73 4px,
-    #846020 4px,
-    #846020 6px,
-    transparent 6px,
-    transparent 7.5px
-  );
-  box-shadow: 1px 2px 4px rgba(0, 0, 0, 0.35);
-  transition: height 0.15s ease;
+  width: 5px;
+  height: 310px;
+  background-image:
+    radial-gradient(circle at 35% 30%, #fff2b2 0%, #e0b04a 45%, #7a5518 80%, #442d0a 100%);
+  background-size: 5px 8px;
+  background-repeat: repeat-y;
+  box-shadow: 1.5px 3px 5px rgba(0, 0, 0, 0.35);
+  position: relative;
 }
 
+.cord-chain::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 2px;
+  width: 1px;
+  background: rgba(80, 50, 15, 0.5);
+}
+
+/* Turned Wood & Brass Acorn Handle */
 .cord-handle {
-  width: 16px;
-  height: 32px;
-  border-radius: 4px 4px 10px 10px;
-  background: linear-gradient(135deg, #c9934c, #704719);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 235, 180, 0.7);
+  width: 20px;
+  height: 42px;
+  border-radius: 6px 6px 12px 12px;
+  background:
+    radial-gradient(ellipse at 35% 25%, rgba(255, 255, 255, 0.4), transparent 45%),
+    linear-gradient(135deg, #d49f53 0%, #8c5a24 45%, #563311 85%, #381f08 100%);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.55), inset 0 1px 2px rgba(255, 235, 180, 0.7);
   position: relative;
   transition: filter 0.15s ease, box-shadow 0.15s ease;
+  margin-top: -1px;
 }
 
+/* Top Brass Ring on Acorn */
+.cord-handle::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14px;
+  height: 5px;
+  background: linear-gradient(180deg, #fce08b, #a87e2f);
+  border-radius: 2px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Bottom Weighted Brass Finial */
 .cord-handle::after {
   content: "";
   position: absolute;
-  bottom: 4px;
+  bottom: 3px;
   left: 50%;
   transform: translateX(-50%);
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
-  background: #2b1809;
+  background: radial-gradient(circle at 35% 30%, #fde699, #9c7329 70%, #462f0a);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
 }
 
+.lamp-pull-cord:hover .cord-handle {
+  filter: brightness(1.15);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.65);
+}
+
+/* Elegant Vintage Stamped Brass / Parchment Mini Tag */
 .cord-tag {
-  position: absolute;
-  top: 85px;
-  right: 24px;
+  margin-top: 10px;
   background: var(--paper-yellow);
-  color: #4a380f;
+  color: #3f2f0a;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  font-weight: 600;
-  padding: 4px 9px;
-  border: 1px dashed #b8912e;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 3px 8px;
+  border: 1.2px dashed #9e7520;
   border-radius: 3px;
   white-space: nowrap;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.28);
-  pointer-events: none;
-  transform: rotate(-3deg);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  transform: rotate(-2deg);
+  transition: transform 0.2s ease, background-color 0.2s ease;
   display: flex;
   align-items: center;
   gap: 4px;
-  transition: all 0.2s ease;
 }
 
-.cord-tag::after {
-  content: "";
-  position: absolute;
-  top: 50%;
-  right: -5px;
-  transform: translateY(-50%);
-  border-width: 4px 0 4px 5px;
-  border-style: solid;
-  border-color: transparent transparent transparent #b8912e;
+.lamp-pull-cord:hover .cord-tag {
+  transform: rotate(0deg) scale(1.05);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 820px) {
   .lamp-pull-cord {
-    right: 14px;
+    right: 18px;
   }
   .cord-chain {
-    height: 90px;
-  }
-  .cord-tag {
-    top: 60px;
+    height: 180px;
   }
 }
 
