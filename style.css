@@ -1464,198 +1464,272 @@ h2.section-title svg.underline {
 }
 
 /* --------------------------------------------------------------------------
-   About Me — Wood Plaque with Braided Ropes
+   About Me — Artisan Workbench Dossier Board
    -------------------------------------------------------------------------- */
-.wood-hang {
+.about-dossier {
   position: relative;
-  max-width: 760px;
+  max-width: 980px;
   margin: 0 auto;
-  transform-origin: top center;
-  animation: plaqueSway 7.5s ease-in-out infinite;
-}
-
-@keyframes plaqueSway {
-  0%, 100% { transform: rotate(-0.55deg); }
-  50% { transform: rotate(0.55deg); }
-}
-
-.rope {
-  position: absolute;
-  top: -36px;
-  width: 4px;
-  height: 42px;
-  background: repeating-linear-gradient(180deg, #2c1a0f, #2c1a0f 4px, #422817 4px, #422817 8px);
-  z-index: 1;
-  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.4);
-}
-
-.rope.left { left: 10%; }
-.rope.right { right: 10%; }
-
-.rope::before {
-  content: "";
-  position: absolute;
-  top: -7px;
-  left: 50%;
-  width: 13px;
-  height: 13px;
-  border: 2px solid #241509;
-  border-radius: 50%;
-  transform: translateX(-50%);
-  background: #4a2f1c;
-}
-
-.wood-plaque {
-  position: relative;
-  padding: 56px 52px;
-  border-radius: 6px;
+  padding: 44px 40px 36px;
   background:
-    repeating-linear-gradient(95deg, rgba(255, 255, 255, 0.035) 0 2px, transparent 2px 6px),
-    repeating-linear-gradient(95deg, rgba(0, 0, 0, 0.1) 0 1px, transparent 1px 7px),
-    radial-gradient(ellipse at 18% 25%, rgba(0, 0, 0, 0.25), transparent 42%),
-    radial-gradient(ellipse at 82% 75%, rgba(0, 0, 0, 0.2), transparent 38%),
-    linear-gradient(160deg, #8a5c34, #6b4428 45%, #55341e 100%);
-  box-shadow: var(--sx, 0px) var(--sy, 24px) 42px rgba(0, 0, 0, 0.5), inset 0 0 50px rgba(0, 0, 0, 0.4);
-  --rx: 0deg;
-  --ry: 0deg;
-  transform: perspective(1000px) rotateX(var(--ry)) rotateY(var(--rx));
+    radial-gradient(circle at 50% 0%, rgba(214, 165, 76, 0.08), transparent 70%),
+    linear-gradient(175deg, #2b211a 0%, #1e1612 55%, #140e0b 100%);
+  border: 1px solid rgba(214, 165, 76, 0.28);
+  border-radius: 12px;
+  box-shadow:
+    0 24px 50px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 0 60px rgba(0, 0, 0, 0.45);
+  transform: perspective(1000px) rotateX(var(--ry, 0deg)) rotateY(var(--rx, 0deg));
   transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
 }
 
-.wood-plaque::before {
+/* Brass Corner Rivets */
+.dossier-rivet {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #ecd29b 0%, #d6a54c 45%, #7a541b 100%);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.6),
+    inset 0 1px 2px rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(60, 36, 12, 0.8);
+  z-index: 2;
+}
+
+.dossier-rivet::after {
   content: "";
   position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 30%), rgba(255, 195, 120, 0.38), transparent 55%);
-  mix-blend-mode: overlay;
-  opacity: 0;
-  transition: opacity 0.25s ease;
-  pointer-events: none;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 1.5px;
+  background: rgba(45, 25, 7, 0.7);
+  transform: translate(-50%, -50%) rotate(45deg);
 }
 
-.wood-plaque:hover::before {
-  opacity: 1;
+.dossier-rivet.top-left { top: 16px; left: 16px; }
+.dossier-rivet.top-right { top: 16px; right: 16px; }
+.dossier-rivet.bottom-left { bottom: 16px; left: 16px; }
+.dossier-rivet.bottom-right { bottom: 16px; right: 16px; }
+
+/* Dossier Header */
+.dossier-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 18px;
+  padding-bottom: 26px;
+  border-bottom: 1px dashed rgba(214, 165, 76, 0.25);
+  margin-bottom: 32px;
 }
 
-.wood-plaque::after {
-  content: "";
-  position: absolute;
-  inset: 9px;
-  border: 1px solid rgba(255, 220, 180, 0.16);
-  border-radius: 4px;
-  pointer-events: none;
+.dossier-identity {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.carved {
+.dossier-name {
   font-family: var(--font-display);
+  font-size: 1.75rem;
   font-weight: 700;
-  color: #24140b;
-  text-shadow: 0 1px 0 rgba(255, 222, 180, 0.35), 0 -1px 2px rgba(0, 0, 0, 0.75);
+  color: #faf5ee;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+  margin: 0 0 4px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
-.plaque-monogram {
-  font-size: 2.8rem;
+.dossier-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: #d6a54c;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   display: block;
-  margin-bottom: 6px;
-  letter-spacing: 0.02em;
 }
 
-.plaque-title {
-  font-size: 1.15rem;
-  font-style: italic;
-  font-weight: 500;
-  display: block;
-  margin-bottom: 28px;
-  opacity: 0.9;
+.dossier-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1.5px dashed rgba(214, 165, 76, 0.55);
+  border-radius: 4px;
+  background: rgba(214, 165, 76, 0.08);
+  color: #e5b967;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transform: rotate(-1deg);
 }
 
-.wood-plaque p {
+.stamp-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
+}
+
+/* 3-Column Craftsman Parchment Cards */
+.dossier-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
+}
+
+.dossier-card {
   position: relative;
-  z-index: 1;
-  color: #f3ebd8;
-  font-size: 1.05rem;
-  line-height: 1.65;
-  max-width: 60ch;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
-  margin: 0 0 18px;
+  background: #faf6ee;
+  background: linear-gradient(170deg, #fdfbf7 0%, #f4ede0 100%);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 30px 22px 24px;
+  box-shadow:
+    0 10px 20px rgba(0, 0, 0, 0.28),
+    0 2px 6px rgba(0, 0, 0, 0.12);
+  transition: transform 0.22s ease, box-shadow 0.22s ease;
+  display: flex;
+  flex-direction: column;
 }
 
-.wood-plaque p:last-child {
-  margin-bottom: 0;
+.dossier-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 16px 28px rgba(0, 0, 0, 0.38),
+    0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
-.wood-plaque p strong {
-  color: #ffe6b8;
+/* Washi Tapes */
+.dossier-tape {
+  position: absolute;
+  top: -10px;
+  left: 50%;
+  transform: translateX(-50%) rotate(var(--tape-rot, -1deg));
+  width: 72px;
+  height: 20px;
+  opacity: 0.88;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  clip-path: polygon(4% 0%, 96% 0%, 100% 100%, 0% 100%);
+}
+
+.dossier-tape.ochre {
+  background: rgba(217, 119, 6, 0.65);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  --tape-rot: -1.5deg;
+}
+
+.dossier-tape.teal {
+  background: rgba(13, 148, 136, 0.65);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  --tape-rot: 1deg;
+}
+
+.dossier-tape.rose {
+  background: rgba(190, 18, 60, 0.65);
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  --tape-rot: -0.8deg;
+}
+
+.dossier-num {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #8c7866;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.dossier-card-title {
+  font-family: var(--font-display);
+  font-size: 1.22rem;
+  font-weight: 700;
+  color: #1f1610;
+  letter-spacing: -0.01em;
+  margin: 0 0 12px;
+  line-height: 1.25;
+}
+
+.dossier-text {
+  font-family: var(--font-body);
+  font-size: 0.94rem;
+  line-height: 1.62;
+  color: #3b2e25;
+  margin: 0;
+  flex: 1;
+}
+
+.dossier-text strong {
+  color: #170f0a;
   font-weight: 600;
 }
 
-@media (max-width: 640px) {
-  .wood-plaque { padding: 40px 28px; }
-  .plaque-monogram { font-size: 2.2rem; }
-}
-
-/* --------------------------------------------------------------------------
-   Client Testimonials / Polaroids Pinned on Cork
-   -------------------------------------------------------------------------- */
-.polaroid-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 36px 28px;
-}
-
-.polaroid-card {
-  background: #fff;
-  padding: 16px 16px 26px;
-  box-shadow: 0 14px 26px rgba(0, 0, 0, 0.35);
-  border-radius: 2px;
-  position: relative;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  transform: rotate(var(--rot, 0deg));
-}
-
-.polaroid-card:nth-child(1) { --rot: -2deg; }
-.polaroid-card:nth-child(2) { --rot: 1.5deg; }
-.polaroid-card:nth-child(3) { --rot: -1.2deg; }
-
-.polaroid-card:hover {
-  transform: rotate(0deg) scale(1.02);
-  box-shadow: 0 20px 36px rgba(0, 0, 0, 0.45);
-  z-index: 5;
-}
-
-.polaroid-quote-box {
-  background: #fdfbf7;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  padding: 24px 20px;
-  margin-bottom: 16px;
-  min-height: 140px;
+/* Bottom Standards Ledger */
+.dossier-ledger {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 16px 20px;
+  background: rgba(15, 10, 7, 0.55);
+  border: 1px solid rgba(214, 165, 76, 0.2);
+  border-radius: 6px;
 }
 
-.polaroid-quote {
-  font-family: var(--font-display);
-  font-style: italic;
-  font-size: 0.98rem;
-  line-height: 1.5;
-  color: var(--ink);
-  margin: 0;
-}
-
-.polaroid-author {
+.ledger-label {
   font-family: var(--font-mono);
-  font-size: 0.8rem;
-  color: var(--ink-faint);
-  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #d6a54c;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
 }
 
-.polaroid-author strong {
-  color: var(--ink);
-  font-size: 0.88rem;
-  display: block;
-  font-family: var(--font-body);
+.ledger-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ledger-chip {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: #e5ded4;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 4px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 768px) {
+  .about-dossier {
+    padding: 32px 20px 24px;
+  }
+  .dossier-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .dossier-name {
+    font-size: 1.45rem;
+  }
+  .dossier-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .dossier-ledger {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
 /* --------------------------------------------------------------------------
