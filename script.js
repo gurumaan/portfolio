@@ -13,7 +13,7 @@
      1. NATIVE SYNTHESIZED WEB AUDIO ENGINE (Zero external sound files!)
      -------------------------------------------------------------------------- */
   let audioCtx = null;
-  let isSoundEnabled = localStorage.getItem('guru_sound_enabled') === 'true';
+  let isSoundEnabled = localStorage.getItem('guru_sound_enabled') !== 'false';
 
   function getAudioContext() {
     if (!audioCtx) {
@@ -95,58 +95,56 @@
   }
 
   /* --------------------------------------------------------------------------
-     2. MIDNIGHT CODING SESSION (DESK LAMP MODE) CONTROLLER
+     2. HANGING DESK LAMP PULL CORD CONTROLLER
      -------------------------------------------------------------------------- */
-  function initDeskLamp() {
-    const lampBtn = document.getElementById('lampToggleBtn');
+  function initDeskLampPullCord() {
+    const cord = document.getElementById('lampPullCord');
+    const tagText = document.getElementById('cordTagText');
+    const tagIcon = document.getElementById('cordTagIcon');
     const isLampOn = localStorage.getItem('guru_lamp_mode') === 'true';
+
+    function updateLabel(active) {
+      if (tagText) {
+        tagText.textContent = active ? 'pull for daylight' : 'pull for lamp';
+      }
+      if (tagIcon) {
+        tagIcon.textContent = active ? '☀️' : '💡';
+      }
+    }
 
     if (isLampOn) {
       document.body.classList.add('midnight-mode');
-      if (lampBtn) {
-        lampBtn.classList.add('active');
-        lampBtn.innerHTML = '<span>💡 Lamp: Midnight</span>';
-      }
+      updateLabel(true);
+    } else {
+      updateLabel(false);
     }
 
-    if (lampBtn) {
-      lampBtn.addEventListener('click', function () {
-        playTock();
-        const active = document.body.classList.toggle('midnight-mode');
-        localStorage.setItem('guru_lamp_mode', active ? 'true' : 'false');
-        lampBtn.classList.toggle('active', active);
-        lampBtn.innerHTML = active
-          ? '<span>💡 Lamp: Midnight</span>'
-          : '<span>💡 Lamp: Daylight</span>';
+    if (cord) {
+      cord.addEventListener('click', function () {
+        // Trigger realistic cord stretch recoil animation
+        cord.classList.remove('pulling');
+        void cord.offsetWidth; // force reflow
+        cord.classList.add('pulling');
+
+        // Play tactile mechanical lamp switch click
+        playStamp();
+
+        // Toggle midnight mode after slight mechanical delay (120ms)
+        setTimeout(function () {
+          const active = document.body.classList.toggle('midnight-mode');
+          localStorage.setItem('guru_lamp_mode', active ? 'true' : 'false');
+          updateLabel(active);
+        }, 120);
+      });
+
+      // Keyboard accessibility
+      cord.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          cord.click();
+        }
       });
     }
-  }
-
-  /* --------------------------------------------------------------------------
-     3. SOUND TOGGLE CONTROLLER
-     -------------------------------------------------------------------------- */
-  function initSoundToggle() {
-    const soundBtn = document.getElementById('soundToggleBtn');
-    if (!soundBtn) return;
-
-    if (isSoundEnabled) {
-      soundBtn.classList.add('active');
-      soundBtn.innerHTML = '<span>🔊 Audio: ON</span>';
-    } else {
-      soundBtn.innerHTML = '<span>🔇 Audio: OFF</span>';
-    }
-
-    soundBtn.addEventListener('click', function () {
-      isSoundEnabled = !isSoundEnabled;
-      localStorage.setItem('guru_sound_enabled', isSoundEnabled ? 'true' : 'false');
-      soundBtn.classList.toggle('active', isSoundEnabled);
-      soundBtn.innerHTML = isSoundEnabled
-        ? '<span>🔊 Audio: ON</span>'
-        : '<span>🔇 Audio: OFF</span>';
-      if (isSoundEnabled) {
-        playTock();
-      }
-    });
   }
 
   /* --------------------------------------------------------------------------
@@ -745,8 +743,7 @@ Try the full interactive tool: <a href="http://localhost:3002" target="_blank" s
      BOOTSTRAP EVERYTHING
      -------------------------------------------------------------------------- */
   document.addEventListener('DOMContentLoaded', function () {
-    initDeskLamp();
-    initSoundToggle();
+    initDeskLampPullCord();
     initDeskClock();
     initTiltEngine();
     initPendulum();

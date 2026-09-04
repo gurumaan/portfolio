@@ -23,6 +23,20 @@
 <body>
 
   <!-- =========================================================================
+       PHYSICAL HANGING DESK LAMP PULL CORD
+       Pull cord to toggle between Daylight Workshop and Midnight Coding Session
+       ========================================================================= -->
+  <div class="lamp-pull-cord" id="lampPullCord" role="button" tabindex="0" aria-label="Pull cord to toggle desk lamp" title="Pull cord to toggle desk lamp!">
+    <div class="cord-mount"></div>
+    <div class="cord-chain"></div>
+    <div class="cord-handle"></div>
+    <div class="cord-tag" id="cordTag">
+      <span id="cordTagIcon">💡</span>
+      <span id="cordTagText">pull for lamp</span>
+    </div>
+  </div>
+
+  <!-- =========================================================================
        STICKY CORK NAVIGATION BAR
        ========================================================================= -->
   <nav class="cork-nav" id="mainNav">
@@ -32,10 +46,6 @@
           <span class="brand-monogram">GM</span>
           <span>Gursharan Singh Mann</span>
         </a>
-        <div class="live-badge" title="Based in Nohar, Rajasthan (IST)">
-          <span class="pulse-dot"></span>
-          <span>Available for work · Nohar, RJ</span>
-        </div>
       </div>
 
       <ul class="navlinks">
@@ -49,14 +59,6 @@
       </ul>
 
       <div class="nav-actions">
-        <!-- Desk Lamp & Audio Control Switches -->
-        <button class="nav-action-pill" id="lampToggleBtn" title="Toggle between warm daylight workshop and moody midnight coding session">
-          <span>💡 Lamp: Daylight</span>
-        </button>
-        <button class="nav-action-pill" id="soundToggleBtn" title="Toggle tactile physical audio effects (synthesized via Web Audio API)">
-          <span>🔇 Audio: OFF</span>
-        </button>
-
         <a href="Gursharan_Singh_Resume.pdf" target="_blank" rel="noreferrer noopener" class="nav-btn-resume" title="Download Gursharan's Resume PDF">
           <span>Resume PDF</span>
           <span>📄</span>
@@ -88,7 +90,7 @@
       <!-- Damped Harmonic Pendulum Note -->
       <div class="hanging-note" id="hangingNote" title="Click or hover near the pin to swing!">
         <span class="note-pin" aria-hidden="true"></span>
-        <p>hand-coded, pixel by pixel &mdash; no templates, zero AI fluff.</p>
+        <p>Simple code runs fast, handles failures gracefully, and stays maintainable.</p>
         <span class="note-author">&mdash; Gursharan Singh</span>
       </div>
 
