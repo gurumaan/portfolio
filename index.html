@@ -1,492 +1,432 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gursharan Singh | Full-Stack Software Engineer</title>
-    <meta name="description" content="Gursharan Singh is a Full-Stack Software Engineer building scalable, performant web applications with React, Next.js, Node.js, and Python.">
+    <title>Gursharan Singh · Full-Stack Developer</title>
     
-    <!-- Open Graph -->
-    <meta property="og:title" content="Gursharan Singh | Full-Stack Software Engineer">
-    <meta property="og:description" content="Full-Stack Software Engineer building accessible, pixel-perfect web products and automation engines.">
+    <meta name="description" content="Full-Stack Developer building web applications and automation tools with React, Next.js, Node.js, and Python.">
+    <meta name="author" content="Gursharan Singh">
+    
+    <!-- Open Graph / Meta -->
+    <meta property="og:title" content="Gursharan Singh · Full-Stack Developer">
+    <meta property="og:description" content="Full-Stack Developer building web applications and automation tools with React, Next.js, Node.js, and Python.">
     <meta property="og:url" content="https://guru4code.online">
     <meta property="og:type" content="website">
-
-    <!-- Fonts: Inter + JetBrains Mono -->
+    
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
-                    },
-                    colors: {
-                        void: '#0b1120',
-                        canvas: '#0f172a',
-                        teal: {
-                            300: '#5eead4',
-                            400: '#2dd4bf',
-                            500: '#14b8a6',
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <style>
-        body {
-            background-color: #0b1120;
-            color: #94a3b8;
-            font-family: 'Inter', sans-serif;
-            line-height: 1.625;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        /* Mouse-following spotlight */
-        #spotlight {
-            pointer-events: none;
-            position: fixed;
-            inset: 0;
-            z-index: 30;
-            transition: background 0.15s ease;
-        }
-
-        /* Subtle focus styles */
-        a:focus-visible, button:focus-visible {
-            outline: 2px solid #2dd4bf;
-            outline-offset: 2px;
-        }
-
-        /* Active Nav indicator */
-        .nav-item.active .nav-indicator {
-            width: 4rem;
-            background-color: #e2e8f0;
-        }
-        .nav-item.active .nav-text {
-            color: #f8fafc;
-        }
-
-        /* Toast notification */
-        #toast {
-            opacity: 0;
-            transform: translateY(16px);
-            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-            pointer-events: none;
-        }
-        #toast.show {
-            opacity: 1;
-            transform: translateY(0);
-            pointer-events: auto;
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Handcrafted Stylesheet (Zero CDN warnings, Zero framework bloat) -->
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="relative bg-[#0b1120] leading-relaxed selection:bg-teal-300 selection:text-teal-900">
+<body>
 
-    <!-- INTERACTIVE CURSOR SPOTLIGHT -->
-    <div id="spotlight"></div>
+    <!-- Subtle interactive cursor spotlight -->
+    <div id="spotlight" aria-hidden="true"></div>
 
-    <!-- TOAST NOTIFICATION -->
-    <div id="toast" class="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-lg border border-slate-700 bg-slate-900/90 px-4 py-3 text-xs font-mono text-slate-200 shadow-2xl backdrop-blur-md">
-        <span class="h-2 w-2 rounded-full bg-teal-400"></span>
+    <!-- Notification Toast -->
+    <div id="toast" role="status" aria-live="polite">
+        <span class="toast-indicator"></span>
         <span id="toast-msg">Copied to clipboard</span>
     </div>
 
-    <!-- MAIN WRAPPER (2-COLUMN PINNED ARCHITECTURE) -->
-    <div class="mx-auto min-h-screen max-w-screen-xl px-6 py-12 md:px-12 md:py-20 lg:px-24 lg:py-0">
-        <div class="lg:flex lg:justify-between lg:gap-16">
+    <!-- Main Container -->
+    <div class="layout-container">
 
-            <!-- ==================================================== -->
-            <!-- LEFT COLUMN (FIXED / STICKY HEADER ON DESKTOP)       -->
-            <!-- ==================================================== -->
-            <header class="lg:sticky lg:top-0 lg:flex lg:max-h-screen lg:w-1/2 lg:flex-col lg:justify-between lg:py-24">
-                <div>
-                    <!-- Primary Identity -->
-                    <h1 class="text-4xl font-extrabold tracking-tight text-slate-100 sm:text-5xl">
-                        <a href="/">Gursharan Singh</a>
-                    </h1>
-                    <h2 class="mt-3 text-lg font-medium tracking-tight text-teal-300 sm:text-xl">
-                        Full-Stack Software Engineer
-                    </h2>
-                    <p class="mt-4 max-w-xs text-sm text-slate-400 leading-normal">
-                        I build accessible, scalable web applications, robust APIs, and intelligent automation systems.
-                    </p>
+        <!-- ==================================================================
+             LEFT SIDEBAR (STICKY ON DESKTOP)
+             ================================================================== -->
+        <header class="sidebar">
+            <div class="sidebar-top">
+                <h1 class="author-name">
+                    <a href="/">Gursharan Singh</a>
+                </h1>
+                
+                <h2 class="author-title">Full-Stack Developer</h2>
+                
+                <p class="author-bio">
+                    I build web applications and automation tools. Focused on TypeScript, React, Next.js, Node.js, and Python.
+                </p>
 
-                    <!-- Availability indicator -->
-                    <div class="mt-6 flex items-center gap-2 text-xs font-mono text-emerald-400">
-                        <span class="relative flex h-2 w-2">
-                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                        </span>
-                        <span>Available for Remote Roles & Contracts</span>
-                    </div>
-
-                    <!-- DESKTOP SCROLLSPY NAVIGATION -->
-                    <nav class="nav hidden lg:block" aria-label="In-page jump links">
-                        <ul class="mt-16 w-max space-y-4">
-                            <li>
-                                <a class="nav-item group flex items-center py-2 active" href="#about" data-target="about">
-                                    <span class="nav-indicator mr-4 h-px w-8 bg-slate-600 transition-all group-hover:w-16 group-hover:bg-slate-200"></span>
-                                    <span class="nav-text text-xs font-mono font-semibold uppercase tracking-widest text-slate-400 group-hover:text-slate-200">About</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-item group flex items-center py-2" href="#experience" data-target="experience">
-                                    <span class="nav-indicator mr-4 h-px w-8 bg-slate-600 transition-all group-hover:w-16 group-hover:bg-slate-200"></span>
-                                    <span class="nav-text text-xs font-mono font-semibold uppercase tracking-widest text-slate-400 group-hover:text-slate-200">Experience</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-item group flex items-center py-2" href="#projects" data-target="projects">
-                                    <span class="nav-indicator mr-4 h-px w-8 bg-slate-600 transition-all group-hover:w-16 group-hover:bg-slate-200"></span>
-                                    <span class="nav-text text-xs font-mono font-semibold uppercase tracking-widest text-slate-400 group-hover:text-slate-200">Projects</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a class="nav-item group flex items-center py-2" href="#skills" data-target="skills">
-                                    <span class="nav-indicator mr-4 h-px w-8 bg-slate-600 transition-all group-hover:w-16 group-hover:bg-slate-200"></span>
-                                    <span class="nav-text text-xs font-mono font-semibold uppercase tracking-widest text-slate-400 group-hover:text-slate-200">Skills & Tooling</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </nav>
+                <!-- Availability Badge -->
+                <div class="status-badge">
+                    <span class="status-dot"></span>
+                    <span>Available for full-time & contract work</span>
+                </div>
+                
+                <div class="location-note">
+                    Based in India (IST) · Remote worldwide
                 </div>
 
-                <!-- SOCIAL & CONTACT LINKS -->
-                <div class="mt-8 flex flex-col gap-4 lg:mt-0">
-                    <!-- Action Bar -->
-                    <div class="flex items-center gap-3">
-                        <a href="Gursharan_Singh_Resume.pdf" download class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/60 px-3.5 py-2 text-xs font-mono font-medium text-slate-200 transition hover:border-teal-400 hover:text-teal-300">
-                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
-                            <span>Resume.pdf</span>
+                <!-- Desktop Navigation -->
+                <nav class="desktop-nav" aria-label="Page sections">
+                    <ul class="nav-list">
+                        <li>
+                            <a class="nav-link active" href="#about">
+                                <span class="nav-line"></span>
+                                <span>About</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="#experience">
+                                <span class="nav-line"></span>
+                                <span>Experience</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="#projects">
+                                <span class="nav-line"></span>
+                                <span>Projects</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="#stack">
+                                <span class="nav-line"></span>
+                                <span>Stack</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="#contact">
+                                <span class="nav-line"></span>
+                                <span>Contact</span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Action Buttons & Socials -->
+            <div class="sidebar-bottom">
+                <div class="action-row">
+                    <a href="Gursharan_Singh_Resume.pdf" download class="btn" title="Download Gursharan Singh Resume (PDF)">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        <span>Resume.pdf</span>
+                    </a>
+                    
+                    <button type="button" onclick="copyEmail('gurudeveloper05@gmail.com')" class="btn" title="Copy email address">
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"/></svg>
+                        <span>Copy Email</span>
+                    </button>
+                </div>
+
+                <ul class="social-links" aria-label="Social Profiles">
+                    <li>
+                        <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener" class="social-link" title="GitHub Profile">
+                            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
                         </a>
-                        <button onclick="copyToClipboard('gurudeveloper05@gmail.com')" class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/60 px-3.5 py-2 text-xs font-mono font-medium text-slate-200 transition hover:border-teal-400 hover:text-teal-300">
-                            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
-                            <span>Copy Email</span>
-                        </button>
-                    </div>
+                    </li>
+                    <li>
+                        <a href="https://t.me/Guru4code" target="_blank" rel="noreferrer noopener" class="social-link" title="Telegram">
+                            <svg fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="mailto:gurudeveloper05@gmail.com" class="social-link" title="Email">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </header>
 
-                    <!-- Social Icons -->
-                    <ul class="flex items-center gap-5 pt-2 text-slate-400" aria-label="Social media">
-                        <li>
-                            <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener" class="block transition hover:text-slate-200" title="GitHub">
-                                <span class="sr-only">GitHub</span>
-                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="https://t.me/Guru4code" target="_blank" rel="noreferrer noopener" class="block transition hover:text-slate-200" title="Telegram">
-                                <span class="sr-only">Telegram</span>
-                                <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="mailto:gurudeveloper05@gmail.com" class="block transition hover:text-slate-200" title="Email">
-                                <span class="sr-only">Email</span>
-                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
-                            </a>
-                        </li>
-                    </ul>
+        <!-- ==================================================================
+             RIGHT CONTENT AREA (SCROLLABLE)
+             ================================================================== -->
+        <main class="main-content">
+
+            <!-- ABOUT -->
+            <section id="about" class="content-section">
+                <div class="mobile-section-header">
+                    <h2 class="section-label">About</h2>
                 </div>
-            </header>
-
-            <!-- ==================================================== -->
-            <!-- RIGHT COLUMN (SCROLLING CONTENT)                     -->
-            <!-- ==================================================== -->
-            <main class="pt-24 lg:w-1/2 lg:py-24">
-
-                <!-- SECTION: ABOUT -->
-                <section id="about" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="About me">
-                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-[#0b1120]/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-200 lg:sr-only">About</h2>
-                    </div>
-                    <div class="space-y-4 text-slate-400 text-sm sm:text-base leading-relaxed">
-                        <p>
-                            I am a software engineer focused on building robust, performant products that live at the intersection of design and engineering. My day-to-day stack revolves around <span class="text-slate-200 font-medium">React, Next.js, Node.js, and Python</span>.
-                        </p>
-                        <p>
-                            Over the past <span class="text-slate-200 font-medium">1.5+ years</span>, I’ve delivered production web applications, architected REST APIs, and built distributed web scraping & automation pipelines. I believe software should be fast, accessible, and structured with clean separation of concerns.
-                        </p>
-                        <p>
-                            When I'm not writing code, I explore distributed systems, optimize web performance metrics, and build autonomous agents that eliminate repetitive manual workflows.
-                        </p>
-                    </div>
-                </section>
-
-                <!-- SECTION: EXPERIENCE & TRACK RECORD -->
-                <section id="experience" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Work experience">
-                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-[#0b1120]/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-200 lg:sr-only">Experience</h2>
-                    </div>
-
-                    <ol class="group/list space-y-12">
-                        <!-- Role 1 -->
-                        <li class="mb-12">
-                            <div class="group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                                <div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-xl transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
-                                
-                                <header class="z-10 mb-2 mt-1 text-xs font-mono font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-label="2024 to Present">
-                                    2024 — Present
-                                </header>
-                                
-                                <div class="z-10 sm:col-span-6">
-                                    <h3 class="font-medium leading-snug text-slate-200">
-                                        <div>
-                                            <span class="inline-flex items-baseline font-semibold leading-tight text-slate-200 group-hover:text-teal-300">
-                                                <span>Full-Stack Web Developer & Consultant · </span>
-                                                <span class="inline-block font-mono text-xs text-teal-400/80 ml-1">Remote</span>
-                                            </span>
-                                        </div>
-                                    </h3>
-                                    <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-normal">
-                                        Architected and deployed full-stack web applications for early-stage founders and clients. Engineered Next.js dashboards with real-time state management, integrated Stripe payment checkouts, and built automated Python pipelines to scrape and ingest structured data.
-                                    </p>
-                                    <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Technologies used">
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">React</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Next.js 14</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Node.js</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Tailwind CSS</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Python</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">MongoDB</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-
-                        <!-- Role 2 -->
-                        <li class="mb-12">
-                            <div class="group relative grid pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                                <div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-xl transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
-                                
-                                <header class="z-10 mb-2 mt-1 text-xs font-mono font-semibold uppercase tracking-wide text-slate-500 sm:col-span-2" aria-label="2023 to 2024">
-                                    2023 — 2024
-                                </header>
-                                
-                                <div class="z-10 sm:col-span-6">
-                                    <h3 class="font-medium leading-snug text-slate-200">
-                                        <div>
-                                            <span class="inline-flex items-baseline font-semibold leading-tight text-slate-200 group-hover:text-teal-300">
-                                                <span>Frontend & Web Engineer · </span>
-                                                <span class="inline-block font-mono text-xs text-slate-400 ml-1">Independent</span>
-                                            </span>
-                                        </div>
-                                    </h3>
-                                    <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-normal">
-                                        Built responsive web frontends, UI component libraries, and client portals. Focused on cross-device compatibility, accessibility, performance optimization, and REST API integration.
-                                    </p>
-                                    <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Technologies used">
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">JavaScript (ES6+)</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">React.js</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">HTML5/CSS3</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">REST APIs</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Git</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                    </ol>
-                </section>
-
-                <!-- SECTION: FEATURED PROJECTS -->
-                <section id="projects" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Selected projects">
-                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-[#0b1120]/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-200 lg:sr-only">Projects</h2>
-                    </div>
-
-                    <ul class="group/list space-y-12">
-                        <!-- Project 1: LeadPulse CRM -->
-                        <li class="mb-12">
-                            <div class="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                                <div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-xl transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
-                                
-                                <div class="z-10 sm:col-span-8">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold leading-snug text-slate-200">
-                                            <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 text-base font-bold text-slate-100 transition group-hover:text-teal-300">
-                                                <span>LeadPulse — Client CRM & Lead Dashboard</span>
-                                                <svg class="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                            </a>
-                                        </h3>
-                                        <span class="font-mono text-xs text-slate-500">2026</span>
-                                    </div>
-                                    <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-normal">
-                                        A full-stack client relationship and pipeline management platform. Engineered with Next.js 14 App Router, Server Actions, and MongoDB. Features sub-second initial page loads via server components, HTTP-only JWT authentication, responsive Kanban lead tracking, and CSV data export.
-                                    </p>
-                                    <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Technologies used">
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Next.js 14</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">React 18</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Node.js</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">MongoDB</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Tailwind CSS</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">JWT Auth</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-
-                        <!-- Project 2: ApexStore -->
-                        <li class="mb-12">
-                            <div class="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                                <div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-xl transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
-                                
-                                <div class="z-10 sm:col-span-8">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold leading-snug text-slate-200">
-                                            <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 text-base font-bold text-slate-100 transition group-hover:text-teal-300">
-                                                <span>ApexStore — High-Performance E-Commerce Engine</span>
-                                                <svg class="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                            </a>
-                                        </h3>
-                                        <span class="font-mono text-xs text-slate-500">2026</span>
-                                    </div>
-                                    <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-normal">
-                                        A conversion-focused digital storefront built for speed and frictionless checkout. Achieved 98+ Core Web Vitals on Mobile through zero-layout-shift image loading, client-side optimistic cart drawers, and secure Stripe payment session integration.
-                                    </p>
-                                    <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Technologies used">
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">React.js</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Tailwind CSS</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Stripe API</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Node.js Express</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Vercel</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-
-                        <!-- Project 3: ScoutFlow -->
-                        <li class="mb-12">
-                            <div class="group relative grid gap-4 pb-1 transition-all sm:grid-cols-8 sm:gap-8 md:gap-4 lg:hover:!opacity-100 lg:group-hover/list:opacity-50">
-                                <div class="absolute -inset-x-4 -inset-y-4 z-0 hidden rounded-xl transition motion-reduce:transition-none lg:-inset-x-6 lg:block lg:group-hover:bg-slate-800/50 lg:group-hover:shadow-[inset_0_1px_0_0_rgba(148,163,184,0.1)] lg:group-hover:drop-shadow-lg"></div>
-                                
-                                <div class="z-10 sm:col-span-8">
-                                    <div class="flex items-center justify-between">
-                                        <h3 class="font-semibold leading-snug text-slate-200">
-                                            <a href="https://github.com/gurumaan/job-hunter" target="_blank" rel="noreferrer noopener" class="inline-flex items-center gap-1.5 text-base font-bold text-slate-100 transition group-hover:text-teal-300">
-                                                <span>ScoutFlow — Autonomous Market Intelligence Engine</span>
-                                                <svg class="h-4 w-4 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
-                                            </a>
-                                        </h3>
-                                        <span class="font-mono text-xs text-slate-500">2026</span>
-                                    </div>
-                                    <p class="mt-2 text-xs sm:text-sm text-slate-400 leading-normal">
-                                        A real-time distributed data aggregation bot that scrapes, filters, and analyzes tech opportunities across 9 platforms (HackerNews, Jobicy, RemoteOK, Remotive). Features persistent hash deduplication, 2-way interactive Telegram command listener, and automated proposal dispatch.
-                                    </p>
-                                    <ul class="mt-3 flex flex-wrap gap-1.5" aria-label="Technologies used">
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Python 3</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">BeautifulSoup 4</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">Telegram Bot API</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">SMTP Automation</li>
-                                        <li class="rounded-full bg-teal-400/10 px-3 py-1 font-mono text-xs font-medium text-teal-300">GitHub Actions</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
-                </section>
-
-                <!-- SECTION: SKILLS & TOOLING -->
-                <section id="skills" class="mb-16 scroll-mt-16 md:mb-24 lg:mb-36 lg:scroll-mt-24" aria-label="Technical skills">
-                    <div class="sticky top-0 z-20 -mx-6 mb-4 w-screen bg-[#0b1120]/75 px-6 py-5 backdrop-blur md:-mx-12 md:px-12 lg:sr-only lg:relative lg:top-auto lg:mx-auto lg:w-full lg:px-0 lg:py-0 lg:opacity-0">
-                        <h2 class="text-xs font-mono font-bold uppercase tracking-widest text-slate-200 lg:sr-only">Skills & Tooling</h2>
-                    </div>
-
-                    <div class="space-y-6 text-sm text-slate-400">
-                        <div>
-                            <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-slate-300">Languages & Frameworks</h3>
-                            <p class="mt-2 text-slate-300 font-medium">
-                                JavaScript (ES6+), TypeScript, Python, HTML5, CSS3, React.js, Next.js (App Router), Node.js, Express.js, Tailwind CSS
-                            </p>
-                        </div>
-                        <div>
-                            <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-slate-300">Databases & Architecture</h3>
-                            <p class="mt-2 text-slate-300 font-medium">
-                                MongoDB, PostgreSQL, RESTful APIs, JWT Auth, Server-Side Rendering (SSR), Server Actions
-                            </p>
-                        </div>
-                        <div>
-                            <h3 class="font-mono text-xs font-bold uppercase tracking-wider text-slate-300">Automation, DevOps & Tools</h3>
-                            <p class="mt-2 text-slate-300 font-medium">
-                                Git, GitHub Actions (CI/CD), Vercel, BeautifulSoup, Requests, Postman, VS Code, Linux CLI
-                            </p>
-                        </div>
-                    </div>
-                </section>
-
-                <!-- FOOTER / COLOPHON -->
-                <footer class="max-w-md pb-16 text-xs font-mono text-slate-500 sm:pb-0">
+                <div class="prose">
                     <p>
-                        Engineered with clean semantic HTML, Tailwind CSS, and vanilla JavaScript. Deployed on Vercel with custom domain <a href="https://guru4code.online" class="font-medium text-slate-400 hover:text-teal-300">guru4code.online</a>. Typeset in Inter and JetBrains Mono.
+                        I am Gursharan (Guru), a full-stack developer based in India. I focus on building responsive web applications and backend automation tools.
                     </p>
-                    <p class="mt-3">
-                        © 2026 Gursharan Singh. All rights reserved.
+                    <p>
+                        Over the past <strong>2 years</strong>, I have worked primarily across <strong>TypeScript, React, Next.js, Node.js, and Python</strong>. I enjoy shipping end-to-end solutions: from clean, accessible UI components and client state synchronization to database schemas and background data collection daemons.
                     </p>
-                </footer>
+                    <p>
+                        I value straightforward, maintainable engineering over unnecessary abstraction. I build software that runs fast, handles failures gracefully, and is easy for other developers to inspect and maintain.
+                    </p>
+                </div>
+            </section>
 
-            </main>
-        </div>
+            <!-- EXPERIENCE -->
+            <section id="experience" class="content-section">
+                <div class="mobile-section-header">
+                    <h2 class="section-label">Experience</h2>
+                </div>
+
+                <ul class="card-list">
+                    <!-- Role 1 -->
+                    <li class="card-item">
+                        <div class="card-header">
+                            <h3 class="card-title">Full-Stack Developer</h3>
+                            <span class="card-date">2024 — PRESENT</span>
+                        </div>
+                        <div class="card-role-org">Independent / Contract</div>
+                        <p class="card-desc">
+                            Delivering full-stack web applications and custom automation tools for clients and independent projects.
+                        </p>
+                        <ul class="card-bullets">
+                            <li class="card-bullet-item">Built full-stack client dashboards using Next.js 14 App Router, Server Actions, and MongoDB with sub-200ms page transitions.</li>
+                            <li class="card-bullet-item">Designed 24/7 Python automation daemons that parse multiple remote data sources, manage proxy pools, and dispatch structured alerts via Telegram.</li>
+                            <li class="card-bullet-item">Integrated Stripe Checkout sessions, webhooks, and JWT session handling using secure HTTP-only cookies.</li>
+                        </ul>
+                        <ul class="tag-list">
+                            <li class="tag-item">Next.js 14</li>
+                            <li class="tag-item">React</li>
+                            <li class="tag-item">Node.js</li>
+                            <li class="tag-item">Python</li>
+                            <li class="tag-item">MongoDB</li>
+                            <li class="tag-item">Tailwind CSS</li>
+                        </ul>
+                    </li>
+
+                    <!-- Role 2 -->
+                    <li class="card-item">
+                        <div class="card-header">
+                            <h3 class="card-title">Frontend Developer</h3>
+                            <span class="card-date">2023 — 2024</span>
+                        </div>
+                        <div class="card-role-org">Freelance</div>
+                        <p class="card-desc">
+                            Built responsive, accessible user interfaces from Figma specifications for client web projects.
+                        </p>
+                        <ul class="card-bullets">
+                            <li class="card-bullet-item">Translated UI wireframes into modular React components with precise typography and mobile layout fidelity.</li>
+                            <li class="card-bullet-item">Optimized critical rendering paths, image delivery, and asset bundles to maintain 90+ mobile Lighthouse scores.</li>
+                            <li class="card-bullet-item">Wired client-side state with REST APIs, handling asynchronous loading states and network fallbacks.</li>
+                        </ul>
+                        <ul class="tag-list">
+                            <li class="tag-item">JavaScript (ES6+)</li>
+                            <li class="tag-item">React.js</li>
+                            <li class="tag-item">HTML5 / CSS3</li>
+                            <li class="tag-item">REST APIs</li>
+                            <li class="tag-item">Git</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- PROJECTS -->
+            <section id="projects" class="content-section">
+                <div class="mobile-section-header">
+                    <h2 class="section-label">Projects</h2>
+                </div>
+
+                <ul class="card-list">
+                    <!-- Project 1: PowerSync Backend -->
+                    <li class="card-item">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <a href="https://github.com/gurumaan/powersync-nodejs-backend" target="_blank" rel="noreferrer noopener" class="card-title-link">
+                                    <span>PowerSync Offline-First Sync Backend</span>
+                                    <span class="external-arrow">↗</span>
+                                </a>
+                            </h3>
+                            <span class="card-date">2025</span>
+                        </div>
+                        <div class="card-badge badge-oss">Open Source · Public Repository</div>
+                        <p class="card-desc">
+                            A Node.js backend synchronization service that enables offline-first architectures by replicating data between client-side SQLite databases and server-side PostgreSQL.
+                        </p>
+                        <ul class="card-bullets">
+                            <li class="card-bullet-item">Implements client authentication endpoints that generate and sign short-lived JWT tokens.</li>
+                            <li class="card-bullet-item">Provides a JWKS (JSON Web Key Set) endpoint for automated public key verification by the PowerSync replication engine.</li>
+                            <li class="card-bullet-item">Includes structured request logging middleware, CORS configuration, and modular routing architecture.</li>
+                        </ul>
+                        <div class="card-links">
+                            <a href="https://github.com/gurumaan/powersync-nodejs-backend" target="_blank" rel="noreferrer noopener" class="card-action-link">
+                                <span>github.com/gurumaan/powersync-nodejs-backend</span>
+                                <span>↗</span>
+                            </a>
+                        </div>
+                        <ul class="tag-list">
+                            <li class="tag-item">Node.js</li>
+                            <li class="tag-item">Express</li>
+                            <li class="tag-item">PostgreSQL</li>
+                            <li class="tag-item">SQLite</li>
+                            <li class="tag-item">PowerSync</li>
+                            <li class="tag-item">JWT / JWKS</li>
+                        </ul>
+                    </li>
+
+                    <!-- Project 2: ScoutFlow / Job Hunter -->
+                    <li class="card-item">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span>Market Intelligence & Job Hunter Pipeline</span>
+                            </h3>
+                            <span class="card-date">2026</span>
+                        </div>
+                        <div class="card-badge badge-live">Production Daemon · 24/7 Automation</div>
+                        <p class="card-desc">
+                            An autonomous background pipeline that monitors 8+ remote job boards (Hacker News 'Who is Hiring', Jobicy, RemoteOK, Remotive). Extracts verified founder contact emails and routes qualified opportunities to an interactive Telegram interface.
+                        </p>
+                        <ul class="card-bullets">
+                            <li class="card-bullet-item">Parses 500+ job listings every cycle using BeautifulSoup and regex pattern matching to extract direct founder contact addresses.</li>
+                            <li class="card-bullet-item">Maintains a persistent SHA-256 hash store to eliminate duplicate alerts across runs.</li>
+                            <li class="card-bullet-item">Includes a 2-way Telegram command daemon supporting remote health checks, statistics, and manual trigger cycles.</li>
+                        </ul>
+                        <div class="card-links">
+                            <span class="card-context-note">Automated on GitHub Actions Cloud Runners</span>
+                        </div>
+                        <ul class="tag-list">
+                            <li class="tag-item">Python 3</li>
+                            <li class="tag-item">BeautifulSoup 4</li>
+                            <li class="tag-item">Telegram API</li>
+                            <li class="tag-item">GitHub Actions</li>
+                            <li class="tag-item">Async Requests</li>
+                        </ul>
+                    </li>
+
+                    <!-- Project 3: LeadPulse CRM -->
+                    <li class="card-item">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span>LeadPulse — Client CRM & Deal Tracker</span>
+                            </h3>
+                            <span class="card-date">2025</span>
+                        </div>
+                        <div class="card-badge">Client Project · Web Application</div>
+                        <p class="card-desc">
+                            A lightweight client pipeline and deal tracking application built to replace messy spreadsheets for small agency teams.
+                        </p>
+                        <ul class="card-bullets">
+                            <li class="card-bullet-item">Built with Next.js 14 App Router and Server Actions, delivering instant optimistic UI state updates.</li>
+                            <li class="card-bullet-item">Implemented drag-and-drop Kanban pipeline stages, debounced client-side filtering, and one-click CSV export.</li>
+                            <li class="card-bullet-item">Secured with HTTP-only cookie JWT session management and MongoDB schema validation.</li>
+                        </ul>
+                        <div class="card-links">
+                            <span class="card-context-note">Proprietary Code · Architecture demo available on request</span>
+                        </div>
+                        <ul class="tag-list">
+                            <li class="tag-item">Next.js 14</li>
+                            <li class="tag-item">React 18</li>
+                            <li class="tag-item">MongoDB</li>
+                            <li class="tag-item">Tailwind CSS</li>
+                            <li class="tag-item">Server Actions</li>
+                        </ul>
+                    </li>
+
+                    <!-- Project 4: ApexStore -->
+                    <li class="card-item">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <span>ApexStore — E-Commerce Storefront</span>
+                            </h3>
+                            <span class="card-date">2024</span>
+                        </div>
+                        <div class="card-badge">Full-Stack Implementation</div>
+                        <p class="card-desc">
+                            A fast digital storefront built for instant page transitions, zero layout shift, and smooth checkout conversion.
+                        </p>
+                        <ul class="card-bullets">
+                            <li class="card-bullet-item">Persistent cart state with local storage synchronization and responsive slide-over drawer.</li>
+                            <li class="card-bullet-item">End-to-end payment processing with Stripe Checkout Sessions and server-side webhook signature verification.</li>
+                            <li class="card-bullet-item">Responsive multi-attribute product filters and optimized image loading achieving 98+ PageSpeed scores.</li>
+                        </ul>
+                        <ul class="tag-list">
+                            <li class="tag-item">React.js</li>
+                            <li class="tag-item">Node.js</li>
+                            <li class="tag-item">Express</li>
+                            <li class="tag-item">Stripe API</li>
+                            <li class="tag-item">Tailwind CSS</li>
+                        </ul>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- STACK -->
+            <section id="stack" class="content-section">
+                <div class="mobile-section-header">
+                    <h2 class="section-label">Stack</h2>
+                </div>
+
+                <div class="stack-grid">
+                    <div class="stack-group">
+                        <div class="stack-group-title">Frontend</div>
+                        <div class="stack-group-items">
+                            JavaScript (ES6+), TypeScript, React.js, Next.js (App Router), HTML5, CSS3, Tailwind CSS
+                        </div>
+                    </div>
+
+                    <div class="stack-group">
+                        <div class="stack-group-title">Backend & APIs</div>
+                        <div class="stack-group-items">
+                            Node.js, Express.js, Python 3, RESTful APIs, Webhooks, JWT Authentication
+                        </div>
+                    </div>
+
+                    <div class="stack-group">
+                        <div class="stack-group-title">Databases & Storage</div>
+                        <div class="stack-group-items">
+                            PostgreSQL, MongoDB, SQLite, Redis basics
+                        </div>
+                    </div>
+
+                    <div class="stack-group">
+                        <div class="stack-group-title">Tools & Deployment</div>
+                        <div class="stack-group-items">
+                            Git, GitHub Actions, Vercel, Postman, Linux CLI, npm / pnpm
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CONTACT -->
+            <section id="contact" class="content-section">
+                <div class="mobile-section-header">
+                    <h2 class="section-label">Contact</h2>
+                </div>
+
+                <div class="contact-box">
+                    <h3 class="contact-heading">Let's talk</h3>
+                    <p class="contact-text">
+                        I am currently available for full-time remote developer positions and contract projects. If you have an opportunity or want to discuss a project, my inbox is always open.
+                    </p>
+
+                    <div class="contact-details">
+                        <div class="contact-row">
+                            <span>Email:</span>
+                            <a href="mailto:gurudeveloper05@gmail.com">gurudeveloper05@gmail.com</a>
+                            <button type="button" onclick="copyEmail('gurudeveloper05@gmail.com')" class="btn" style="padding: 0.2rem 0.5rem; font-size: 0.72rem;">Copy</button>
+                        </div>
+                        <div class="contact-row">
+                            <span>Telegram:</span>
+                            <a href="https://t.me/Guru4code" target="_blank" rel="noreferrer noopener">@Guru4code</a>
+                        </div>
+                        <div class="contact-row">
+                            <span>GitHub:</span>
+                            <a href="https://github.com/gurumaan" target="_blank" rel="noreferrer noopener">github.com/gurumaan</a>
+                        </div>
+                        <div class="contact-row">
+                            <span>Location:</span>
+                            <span style="color: var(--text-primary);">India (IST) · Open to US & Europe timezone overlaps</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FOOTER -->
+            <footer class="site-footer">
+                <p>
+                    Handcrafted by Gursharan Singh. Built with clean HTML, CSS, and vanilla JavaScript. Deployed on Vercel at <a href="https://guru4code.online">guru4code.online</a>.
+                </p>
+                <p style="margin-top: 0.4rem; color: #475569;">
+                    © 2026 Gursharan Singh. All rights reserved.
+                </p>
+            </footer>
+
+        </main>
     </div>
 
-    <!-- CLIENT JAVASCRIPT: SPOTLIGHT & SCROLLSPY -->
-    <script>
-        // 1. Mouse-following spotlight effect
-        const spotlight = document.getElementById('spotlight');
-        window.addEventListener('mousemove', (e) => {
-            spotlight.style.background = `radial-gradient(600px at ${e.clientX}px ${e.clientY}px, rgba(45, 212, 191, 0.07), transparent 80%)`;
-        });
-
-        // 2. Copy Email with Toast
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(() => {
-                showToast(`Copied ${text} to clipboard!`);
-            }).catch(() => {
-                const ta = document.createElement('textarea');
-                ta.value = text;
-                document.body.appendChild(ta);
-                ta.select();
-                document.execCommand('copy');
-                document.body.removeChild(ta);
-                showToast(`Copied ${text} to clipboard!`);
-            });
-        }
-
-        function showToast(msg) {
-            const toast = document.getElementById('toast');
-            const msgEl = document.getElementById('toast-msg');
-            msgEl.textContent = msg;
-            toast.classList.add('show');
-            setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
-
-        // 3. Desktop Scrollspy Navigation Active Highlight
-        const sections = document.querySelectorAll('section[id]');
-        const navItems = document.querySelectorAll('.nav-item');
-
-        window.addEventListener('scroll', () => {
-            let current = '';
-            sections.forEach((section) => {
-                const sectionTop = section.offsetTop;
-                const sectionHeight = section.clientHeight;
-                if (pageYOffset >= sectionTop - 200) {
-                    current = section.getAttribute('id');
-                }
-            });
-
-            navItems.forEach((item) => {
-                item.classList.remove('active');
-                if (item.getAttribute('data-target') === current) {
-                    item.classList.add('active');
-                }
-            });
-        });
-    </script>
+    <!-- Handcrafted Scripts -->
+    <script src="script.js"></script>
 </body>
 </html>
