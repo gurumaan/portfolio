@@ -23,17 +23,11 @@
 <body>
 
   <!-- =========================================================================
-       PHYSICAL HANGING DESK LAMP PULL CORD
-       Pull cord to toggle between Daylight Workshop and Midnight Coding Session
+       PHYSICAL HANGING DESK LAMP PULL CHAIN (VERLET PHYSICS ENGINE)
+       Handcrafted brass ball chain with real multi-node pendulum & spring physics
        ========================================================================= -->
-  <div class="lamp-pull-cord" id="lampPullCord" role="button" tabindex="0" aria-label="Pull cord to toggle desk lamp" title="Pull cord to toggle desk lamp!">
-    <div class="cord-mount"></div>
-    <div class="cord-chain"></div>
-    <div class="cord-handle"></div>
-    <div class="cord-tag" id="cordTag">
-      <span id="cordTagIcon">💡</span>
-      <span id="cordTagText">midnight</span>
-    </div>
+  <div class="lamp-physics-wrap" id="lampPhysicsWrap" aria-label="Physical Hanging Lamp Pull Chain" title="Pull or flick the brass chain to toggle the desk lamp!">
+    <canvas id="lampPhysicsCanvas" class="lamp-physics-canvas"></canvas>
   </div>
 
   <!-- =========================================================================
@@ -59,9 +53,15 @@
       </ul>
 
       <div class="nav-actions">
-        <a href="Gursharan_Singh_Resume.pdf" target="_blank" rel="noreferrer noopener" class="nav-btn-resume" title="Download Gursharan's Resume PDF">
-          <span>Resume PDF</span>
-          <span>📄</span>
+        <a href="Gursharan_Singh_Resume.pdf" target="_blank" rel="noreferrer noopener" class="nav-btn-resume" title="Download Gursharan Singh's Resume (PDF)">
+          <svg class="resume-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="12" y1="18" x2="12" y2="12"></line>
+            <polyline points="9 15 12 18 15 15"></polyline>
+          </svg>
+          <span class="resume-text">Resume</span>
+          <span class="resume-badge">PDF</span>
         </a>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle Navigation Menu">☰</button>
       </div>
@@ -77,7 +77,12 @@
         <li><a href="#stack">Tools &amp; Stack</a></li>
         <li><a href="#reviews">Client Reviews</a></li>
         <li><a href="#contact">Get in Touch</a></li>
-        <li><a href="Gursharan_Singh_Resume.pdf" target="_blank">Download Resume PDF (📄)</a></li>
+        <li>
+          <a href="Gursharan_Singh_Resume.pdf" target="_blank" class="mobile-resume-link">
+            <span>Download Resume (PDF)</span>
+            <span class="resume-badge">PDF</span>
+          </a>
+        </li>
       </ul>
     </div>
   </nav>
@@ -529,6 +534,20 @@
             <span class="tag">Git</span>
           </div>
         </article>
+
+        <!-- Experience Resume CTA -->
+        <div style="text-align: center; margin-top: 32px;">
+          <a href="Gursharan_Singh_Resume.pdf" target="_blank" rel="noreferrer noopener" class="nav-btn-resume" style="font-size: 0.9rem; padding: 9px 18px;" title="Download Gursharan Singh's Full Resume PDF">
+            <svg class="resume-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="12" y1="18" x2="12" y2="12"></line>
+              <polyline points="9 15 12 18 15 15"></polyline>
+            </svg>
+            <span class="resume-text">Download Full Verified Resume</span>
+            <span class="resume-badge">PDF · 2.5+ Yrs</span>
+          </a>
+        </div>
 
       </div>
     </div>
