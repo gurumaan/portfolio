@@ -939,6 +939,16 @@
       repo: 'https://github.com/gurumaan/inspectflow',
       live: 'http://localhost:3002'
     },
+    playify: {
+      title: 'Playify — Music Streaming PWA & Standalone Android App',
+      badge: 'Flagship Mobile · Cloudflare Workers Edge API',
+      problem: 'Streaming audio platforms often require heavyweight native runtimes or fail on spotty network connections. Playify provides instant streaming, offline PWA caching, and an Android APK (v64.0) deployed on serverless edge workers.',
+      topology: 'Client UI (Android WebView / PWA) ──> Service Worker Cache (sw.js) ──> Cloudflare Worker Edge (_worker.js) ──> Pure DES Stream Decryption Engine ──> Decrypted Audio Stream Buffer',
+      tradeoffs: 'Implemented a pure JavaScript DES decryption engine directly in the Cloudflare Worker to decrypt audio streams on the edge without heavy Node.js native crypto bindings.',
+      snippet: `// Pure DES Subkey Generation & Stream Decryption in Worker\ndecryptBlock(blockBytes, subkeys) {\n  const bits = this.bytesToBits(blockBytes);\n  let perm = this.permute(bits, this.IP);\n  let left = perm.slice(0, 32); let right = perm.slice(32, 64);\n  for (let r = 15; r >= 0; r--) {\n    const nextLeft = right;\n    const f = this.feistel(right, subkeys[r]);\n    const nextRight = [];\n    for (let i = 0; i < 32; i++) nextRight.push(left[i] ^ f[i]);\n    left = nextLeft; right = nextRight;\n  }\n  return this.bitsToBytes(this.permute(right.concat(left), this.FP));\n}`,
+      repo: 'https://github.com/gurumaan/playify',
+      live: 'https://peaceful-davinci.cotton-vole.workers.dev'
+    },
     powersync: {
       title: 'PowerSync Offline-First Sync Backend',
       badge: 'Open Source · Node.js & PostgreSQL',
