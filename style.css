@@ -52,37 +52,68 @@
 }
 
 /* --------------------------------------------------------------------------
-   Midnight Coding Session (Desk Lamp Mode)
+   Midnight & Daylight Themes (Desk Lamp Toggle)
    -------------------------------------------------------------------------- */
 body.midnight-mode {
-  --cork: #332316;
-  --cork-dark: #22160d;
-  --cork-light: #483120;
-  --paper: #ece4d2;
-  --paper-alt: #ded3be;
-  --paper-dark: #cdbfab;
-  --paper-yellow: #f8e592;
-  --paper-yellow-dark: #edd675;
+  --cork: #1d130a;
+  --cork-dark: #110904;
+  --cork-light: #2c1d11;
+  --cork-pattern: #0d0603;
 
-  --ink: #1a140f;
-  --ink-soft: #4a3d2e;
-  --ink-faint: #796853;
-  --shadow-soft: rgba(0, 0, 0, 0.48);
-  --shadow-hard: rgba(0, 0, 0, 0.7);
+  --paper: #ede5d5;
+  --paper-alt: #ded3bf;
+  --paper-dark: #cca48c;
+  --paper-yellow: #fde68a;
+  --paper-yellow-dark: #facc15;
+
+  --ink: #18110a;
+  --ink-soft: #423425;
+  --ink-faint: #73614d;
+  --shadow-soft: rgba(0, 0, 0, 0.58);
+  --shadow-hard: rgba(0, 0, 0, 0.82);
 }
 
+/* Overhead Incandescent Tungsten Lamp Illumination Beam (Midnight) */
 body.midnight-mode::before {
   content: "";
   position: fixed;
   top: -80px;
-  left: 50%;
-  transform: translateX(-50%);
+  right: -60px;
   width: 1400px;
-  height: 1400px;
-  background: radial-gradient(circle at 50% 25%, rgba(255, 230, 160, 0.16) 0%, rgba(255, 210, 120, 0.07) 48%, transparent 72%);
+  height: 1200px;
+  background: radial-gradient(ellipse 1100px 950px at 82% 12%, rgba(255, 226, 140, 0.32) 0%, rgba(255, 195, 95, 0.16) 38%, rgba(255, 160, 50, 0.04) 66%, transparent 84%);
   pointer-events: none;
-  z-index: 999;
+  z-index: 99;
   mix-blend-mode: screen;
+  transition: opacity 0.5s ease;
+}
+
+/* Brass Lamp Fixture Bulb Filament Halo (Top-right near pull chain) */
+body.midnight-mode::after {
+  content: "";
+  position: fixed;
+  top: -30px;
+  right: 0px;
+  width: 460px;
+  height: 460px;
+  background: radial-gradient(circle at 82% 16%, rgba(255, 238, 170, 0.46) 0%, rgba(255, 195, 80, 0.20) 40%, transparent 72%);
+  pointer-events: none;
+  z-index: 105;
+  mix-blend-mode: screen;
+  transition: opacity 0.5s ease;
+}
+
+/* Natural Warm Sunlit Workshop Ambient (Daylight) */
+body:not(.midnight-mode)::before {
+  content: "";
+  position: fixed;
+  top: -40px;
+  left: 0;
+  right: 0;
+  height: 600px;
+  background: radial-gradient(ellipse 1200px 580px at 45% 0%, rgba(255, 248, 225, 0.22) 0%, rgba(255, 238, 195, 0.08) 50%, transparent 75%);
+  pointer-events: none;
+  z-index: 99;
   transition: opacity 0.5s ease;
 }
 
@@ -183,8 +214,14 @@ nav.cork-nav {
 }
 
 body.midnight-mode nav.cork-nav {
-  background: rgba(51, 35, 22, 0.96);
-  border-bottom-color: rgba(20, 12, 6, 0.5);
+  background: rgba(28, 19, 11, 0.95);
+  border-bottom-color: rgba(214, 165, 76, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
+
+body.midnight-mode .mobile-nav-panel {
+  background: rgba(24, 16, 9, 0.98);
+  border-left-color: rgba(214, 165, 76, 0.3);
 }
 
 nav.cork-nav .nav-container {
@@ -344,9 +381,9 @@ nav.cork-nav .nav-container {
 .lamp-physics-wrap {
   position: fixed;
   top: 0;
-  right: 40px;
-  width: 180px;
-  height: 560px;
+  right: 0;
+  width: 520px;
+  height: 720px;
   z-index: 150;
   pointer-events: none;
   user-select: none;
@@ -362,9 +399,9 @@ nav.cork-nav .nav-container {
 
 @media (max-width: 820px) {
   .lamp-physics-wrap {
-    right: 8px;
-    width: 130px;
-    height: 400px;
+    right: 0;
+    width: 350px;
+    height: 560px;
   }
 }
 
