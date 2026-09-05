@@ -956,7 +956,7 @@
       topology: 'Scheduled Runners (GitHub Actions / Linux VPS) ──> Multi-Source Scraper (8+ Sites) ──> BeautifulSoup / Regex Extractor ──> SHA-256 Deduplication Hash Store ──> 2-Way Telegram Bot Interface',
       tradeoffs: 'Used persistent SHA-256 state hashing rather than a heavy remote database to keep runtime state atomic, zero-cost, and portable across cloud runners.',
       snippet: `# Resilient Extraction & State Hashing\ndef process_listing(raw_html, source_name):\n    soup = BeautifulSoup(raw_html, 'html.parser')\n    text_block = soup.get_text(separator=' ')\n    emails = re.findall(EMAIL_PATTERN, text_block)\n    \n    entry_hash = hashlib.sha256(text_block.encode('utf-8')).hexdigest()\n    if is_already_seen(entry_hash):\n        return None\n        \n    record_entry(entry_hash, source_name)\n    dispatch_telegram_alert(source_name, emails, text_block[:300])`,
-      repo: null,
+      repo: 'https://github.com/gurumaan/scoutflow',
       live: null
     },
     involvo: {
