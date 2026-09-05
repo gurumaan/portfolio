@@ -95,10 +95,27 @@
   }
 
   /* --------------------------------------------------------------------------
+     TORN-PAPER TOAST NOTIFICATION HELPER
+     -------------------------------------------------------------------------- */
+  function showToast(message) {
+    const toast = document.getElementById('paperToast');
+    const toastMsg = document.getElementById('toastMessage');
+    if (!toast) return;
+    playStamp();
+    if (toastMsg) toastMsg.textContent = message;
+    toast.classList.add('show');
+    clearTimeout(toast._timeout);
+    toast._timeout = setTimeout(function () {
+      toast.classList.remove('show');
+    }, 3400);
+  }
+
+  /* --------------------------------------------------------------------------
      2. HANGING DESK LAMP PULL CHAIN (VERLET PHYSICS ENGINE)
-     Multi-node Verlet integration with harmonic pendulum physics,
+     Handcrafted brass ball chain with multi-node harmonic pendulum physics,
      ambient room air currents, touch/hover impulse ("chune pe jhule"),
-     drag-and-release spring snap ("chodne pe jhule"), and dual-stage mechanical audio.
+     drag-and-release spring recoil ("chodne pe jhule"), wide-canvas zero-clipping,
+     turned walnut & solid brass acorn handle, hanging manila tag, and dual-stage audio.
      -------------------------------------------------------------------------- */
   function initLampPhysicsCord() {
     const wrap = document.getElementById('lampPhysicsWrap');
@@ -108,9 +125,12 @@
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    let isLampOn = localStorage.getItem('guru_lamp_mode') === 'true';
-    if (isLampOn) {
+    let isMidnight = localStorage.getItem('guru_lamp_mode') === 'midnight' ||
+                     localStorage.getItem('guru_lamp_mode') === 'true';
+    if (isMidnight) {
       document.body.classList.add('midnight-mode');
+    } else {
+      document.body.classList.remove('midnight-mode');
     }
 
     // Canvas roundRect compatibility polyfill
@@ -133,19 +153,21 @@
     }
 
     // Canvas dimensions & High DPI handling
-    let width = 180;
-    let height = 560;
+    // Generous canvas width (520px) guarantees the chain can swing wide to the left without clipping
+    let width = 520;
+    let height = 720;
     let dpr = window.devicePixelRatio || 1;
-    let mountX = width * 0.5;
-    const mountY = 14;
+    let mountX = width - 85;
+    const mountY = 12;
 
     function resizeCanvas() {
       const isMobile = window.innerWidth <= 820;
-      width = isMobile ? 130 : 180;
-      height = isMobile ? 400 : 560;
+      width = isMobile ? 350 : 520;
+      height = isMobile ? 560 : 720;
       wrap.style.width = width + 'px';
       wrap.style.height = height + 'px';
-      wrap.style.right = isMobile ? '8px' : '40px';
+      wrap.style.right = '0px';
+      wrap.style.top = '0px';
 
       dpr = window.devicePixelRatio || 1;
       canvas.width = Math.floor(width * dpr);
@@ -153,20 +175,21 @@
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.scale(dpr, dpr);
 
-      mountX = width * 0.5;
+      mountX = isMobile ? width - 55 : width - 85;
       if (typeof points !== 'undefined' && points.length > 0) {
         points[0].x = mountX;
+        points[0].y = mountY;
       }
     }
 
     // Physics Chain Configuration
     const isMobile = window.innerWidth <= 820;
-    const NUM_POINTS = isMobile ? 20 : 28;
-    const totalLength = isMobile ? 260 : 420;
+    const NUM_POINTS = isMobile ? 22 : 30;
+    const totalLength = isMobile ? 300 : 450;
     const segLen = totalLength / (NUM_POINTS - 1);
-    const GRAVITY = 0.42;
-    const DAMPING = 0.984; // realistic air resistance for heavy brass
-    const CONSTRAINT_ITERS = 14;
+    const GRAVITY = 0.44;
+    const DAMPING = 0.985;
+    const CONSTRAINT_ITERS = 16;
 
     const points = [];
     for (let i = 0; i < NUM_POINTS; i++) {
@@ -175,8 +198,7 @@
         y: mountY + i * segLen,
         oldX: mountX,
         oldY: mountY + i * segLen,
-        pinned: i === 0,
-        mass: i === NUM_POINTS - 1 ? 4.5 : 1.0 // heavy acorn handle at bottom
+        pinned: i === 0
       });
     }
 
@@ -207,7 +229,7 @@
         osc1.type = 'triangle';
         osc1.frequency.setValueAtTime(1900, t);
         osc1.frequency.exponentialRampToValueAtTime(320, t + 0.022);
-        gain1.gain.setValueAtTime(0.24, t);
+        gain1.gain.setValueAtTime(0.26, t);
         gain1.gain.exponentialRampToValueAtTime(0.001, t + 0.025);
         osc1.connect(gain1);
         gain1.connect(actx.destination);
@@ -232,9 +254,16 @@
     // Toggle lighting mode
     function toggleDeskLamp() {
       playSwitchSnap();
-      isLampOn = !document.body.classList.contains('midnight-mode');
-      document.body.classList.toggle('midnight-mode');
-      localStorage.setItem('guru_lamp_mode', isLampOn ? 'true' : 'false');
+      isMidnight = !document.body.classList.contains('midnight-mode');
+      if (isMidnight) {
+        document.body.classList.add('midnight-mode');
+        localStorage.setItem('guru_lamp_mode', 'midnight');
+        showToast('💡 Desk Lamp ON · Midnight Coding Session');
+      } else {
+        document.body.classList.remove('midnight-mode');
+        localStorage.setItem('guru_lamp_mode', 'daylight');
+        showToast('☀️ Desk Lamp OFF · Natural Daylight Studio');
+      }
     }
 
     // Screen to canvas coordinate conversion
@@ -242,24 +271,26 @@
       const rect = canvas.getBoundingClientRect();
       return {
         x: e.clientX - rect.left,
-        y: e.clientY - rect.top,
-        rawX: e.clientX,
-        rawY: e.clientY
+        y: e.clientY - rect.top
       };
     }
 
-    // Hit-testing handle and chain
+    // Hit-testing handle, tag, and chain
     function testHit(cx, cy) {
       const last = points[points.length - 1];
-      // Check acorn handle at bottom
-      const distToHandle = Math.hypot(cx - last.x, cy - (last.y + 20));
-      if (distToHandle < 36) return { type: 'handle', index: points.length - 1 };
+      // Check acorn handle at bottom (including 44px body height)
+      const distToHandle = Math.hypot(cx - last.x, cy - (last.y + 22));
+      if (distToHandle < 38) return { type: 'handle', index: points.length - 1 };
+
+      // Check tag near handle
+      const distToTag = Math.hypot(cx - (last.x + 42), cy - (last.y + 20));
+      if (distToTag < 36) return { type: 'handle', index: points.length - 1 };
 
       // Check along chain nodes
       for (let i = 1; i < points.length; i++) {
         const p = points[i];
         const dist = Math.hypot(cx - p.x, cy - p.y);
-        if (dist < 26) return { type: 'chain', index: i };
+        if (dist < 28) return { type: 'chain', index: i };
       }
       return null;
     }
@@ -275,15 +306,16 @@
       if (isDragging) {
         const last = points[points.length - 1];
         const naturalRestY = mountY + totalLength;
-        const maxY = height - 42;
-        const targetY = Math.min(Math.max(coords.y - 20, mountY + 60), maxY);
-        const targetX = Math.min(Math.max(coords.x, 15), width - 15);
+        const maxY = height - 48;
+        // Strict safe boundary clamping - ZERO CLIPPING GUARANTEE!
+        const targetX = Math.min(Math.max(coords.x, 20), width - 20);
+        const targetY = Math.min(Math.max(coords.y - 18, mountY + 60), maxY);
 
         last.x = targetX;
         last.y = targetY;
 
         const pullDelta = last.y - naturalRestY;
-        if (pullDelta > 40 && !hasTriggeredInDrag) {
+        if (pullDelta > 38 && !hasTriggeredInDrag) {
           hasTriggeredInDrag = true;
           playTock(); // click resistance feedback
         }
@@ -300,10 +332,10 @@
         for (let i = 1; i < points.length; i++) {
           const p = points[i];
           const dist = Math.hypot(coords.x - p.x, coords.y - p.y);
-          if (dist < 34) {
-            const force = (1 - dist / 34);
-            const pushX = (pointerVx * 0.35 + (p.x >= coords.x ? 2.6 : -2.6)) * force;
-            const pushY = (pointerVy * 0.18) * force;
+          if (dist < 38) {
+            const force = (1 - dist / 38);
+            const pushX = (pointerVx * 0.45 + (p.x >= coords.x ? 2.8 : -2.8)) * force;
+            const pushY = (pointerVy * 0.22) * force;
             p.x += pushX;
             p.y += pushY;
           }
@@ -342,26 +374,26 @@
       const elapsed = Date.now() - dragStartTime;
 
       // Pulled past threshold or quick-clicked on handle
-      if (pullDelta > 30 || (elapsed < 280 && Math.abs(pullDelta) < 22)) {
+      if (pullDelta > 28 || (elapsed < 300 && Math.abs(pullDelta) < 26)) {
         toggleDeskLamp();
 
-        // Recoil upward snap & vigorous pendulum sway
-        const recoilForce = Math.max(pullDelta * 0.85, 42);
+        // Recoil upward snap
+        const recoilForce = Math.max(pullDelta * 0.9, 46);
         last.oldY = last.y + recoilForce;
 
         // Dynamic lateral kick so it swings left and right with high energy ("eder uder jhule")
-        const lateralKick = (last.x - mountX) * 0.75 + (Math.random() > 0.5 ? 14 : -14);
+        const lateralKick = (last.x - mountX) * 0.85 + (Math.random() > 0.5 ? 20 : -20);
         last.oldX = last.x - lateralKick;
 
         // Ripple impulse through chain segments
-        for (let i = points.length - 2; i > points.length - 10; i--) {
-          points[i].oldY = points[i].y + recoilForce * 0.45;
-          points[i].oldX = points[i].x - lateralKick * 0.4;
+        for (let i = points.length - 2; i > points.length - 12 && i > 0; i--) {
+          points[i].oldY = points[i].y + recoilForce * 0.5;
+          points[i].oldX = points[i].x - lateralKick * 0.45;
         }
       } else {
         // Natural release with momentum
-        last.oldX = last.x - pointerVx * 0.6;
-        last.oldY = last.y - pointerVy * 0.6;
+        last.oldX = last.x - pointerVx * 0.7;
+        last.oldY = last.y - pointerVy * 0.7;
       }
     });
 
@@ -377,7 +409,7 @@
         if (isDragging && i === points.length - 1) continue;
 
         // Gentle ambient room air currents
-        const breeze = Math.sin(animTime * 0.0014 + i * 0.22) * 0.045;
+        const breeze = Math.sin(animTime * 0.0014 + i * 0.22) * 0.048;
 
         const vx = (p.x - p.oldX) * DAMPING + breeze;
         const vy = (p.y - p.oldY) * DAMPING;
@@ -387,6 +419,10 @@
 
         p.x += vx;
         p.y += vy + GRAVITY;
+
+        // ABSOLUTE CANVAS SAFE BOUNDARY — ZERO CLIPPING GUARANTEED!
+        p.x = Math.max(16, Math.min(width - 16, p.x));
+        p.y = Math.max(mountY, Math.min(height - 24, p.y));
       }
 
       // 2. Distance Constraints (Relaxation)
@@ -399,8 +435,7 @@
           const dist = Math.hypot(dx, dy);
           if (dist === 0) continue;
 
-          const targetD = segLen;
-          const diff = (dist - targetD) / dist;
+          const diff = (dist - segLen) / dist;
 
           if (p1.pinned) {
             p2.x -= dx * diff;
@@ -425,10 +460,10 @@
       // 1. Ceiling Brass Mount / Escutcheon
       ctx.save();
       ctx.shadowColor = 'rgba(0, 0, 0, 0.45)';
-      ctx.shadowBlur = 8;
+      ctx.shadowBlur = 9;
       ctx.shadowOffsetY = 3;
 
-      const flangeGrad = ctx.createLinearGradient(mountX - 16, 0, mountX + 16, 0);
+      const flangeGrad = ctx.createLinearGradient(mountX - 18, 0, mountX + 18, 0);
       flangeGrad.addColorStop(0, '#593b12');
       flangeGrad.addColorStop(0.2, '#c99a41');
       flangeGrad.addColorStop(0.5, '#fae08f');
@@ -437,32 +472,32 @@
 
       ctx.fillStyle = flangeGrad;
       ctx.beginPath();
-      ctx.roundRect(mountX - 16, 0, 32, 10, [0, 0, 6, 6]);
+      ctx.roundRect(mountX - 18, 0, 36, 11, [0, 0, 7, 7]);
       ctx.fill();
 
-      // Central eyelet bushing
-      const eyeletGrad = ctx.createLinearGradient(mountX - 5, 10, mountX + 5, 15);
+      // Central eyelet bushing bell
+      const eyeletGrad = ctx.createLinearGradient(mountX - 6, 11, mountX + 6, 18);
       eyeletGrad.addColorStop(0, '#ffd875');
       eyeletGrad.addColorStop(0.6, '#94661c');
       eyeletGrad.addColorStop(1, '#3b2508');
       ctx.fillStyle = eyeletGrad;
       ctx.beginPath();
-      ctx.roundRect(mountX - 5, 10, 10, 6, [0, 0, 3, 3]);
+      ctx.roundRect(mountX - 6, 11, 12, 7, [0, 0, 4, 4]);
       ctx.fill();
 
       // Screws
       ctx.shadowColor = 'transparent';
       ctx.fillStyle = '#3a250b';
       ctx.beginPath();
-      ctx.arc(mountX - 10, 5, 1.3, 0, Math.PI * 2);
-      ctx.arc(mountX + 10, 5, 1.3, 0, Math.PI * 2);
+      ctx.arc(mountX - 11, 5.5, 1.4, 0, Math.PI * 2);
+      ctx.arc(mountX + 11, 5.5, 1.4, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
 
-      // 2. Brass Ball Chain Wire Links
+      // 2. Brass Ball Chain Connecting Wire Core
       ctx.save();
-      ctx.strokeStyle = '#5a3d13';
-      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = '#3d2507';
+      ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.moveTo(points[0].x, points[0].y);
       for (let i = 1; i < points.length; i++) {
@@ -498,13 +533,13 @@
       ctx.save();
       for (let i = 0; i < beadPositions.length; i++) {
         const bp = beadPositions[i];
-        if (bp.y < 12) continue;
+        if (bp.y < 14) continue;
 
         ctx.save();
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.3)';
-        ctx.shadowBlur = 3;
+        ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
+        ctx.shadowBlur = 3.5;
         ctx.shadowOffsetX = 1.2;
-        ctx.shadowOffsetY = 1.8;
+        ctx.shadowOffsetY = 2;
 
         const beadGrad = ctx.createRadialGradient(
           bp.x - 1.2, bp.y - 1.2, 0.4,
@@ -520,11 +555,20 @@
         ctx.beginPath();
         ctx.arc(bp.x, bp.y, beadRadius, 0, Math.PI * 2);
         ctx.fill();
+
+        // Subtle dark hole where wire enters/exits
+        ctx.shadowColor = 'transparent';
+        ctx.fillStyle = 'rgba(40, 22, 5, 0.4)';
+        ctx.beginPath();
+        ctx.arc(bp.x, bp.y - beadRadius * 0.7, 0.7, 0, Math.PI * 2);
+        ctx.arc(bp.x, bp.y + beadRadius * 0.7, 0.7, 0, Math.PI * 2);
+        ctx.fill();
+
         ctx.restore();
       }
       ctx.restore();
 
-      // 4. Turned Hardwood & Solid Brass Acorn Handle at bottom
+      // 4. Turned Hardwood Walnut & Solid Brass Acorn Handle
       const last = points[points.length - 1];
       const prev = points[points.length - 2];
       const angle = Math.atan2(last.y - prev.y, last.x - prev.x) - Math.PI / 2;
@@ -536,11 +580,11 @@
       // Handle Drop Shadow
       ctx.save();
       ctx.shadowColor = 'rgba(0, 0, 0, 0.55)';
-      ctx.shadowBlur = 12;
-      ctx.shadowOffsetX = 3;
-      ctx.shadowOffsetY = 6;
+      ctx.shadowBlur = 14;
+      ctx.shadowOffsetX = 4;
+      ctx.shadowOffsetY = 7;
 
-      // Top Brass Collar
+      // Top Brass Collar / Ferrule
       const collarGrad = ctx.createLinearGradient(-7, 0, 7, 0);
       collarGrad.addColorStop(0, '#664212');
       collarGrad.addColorStop(0.25, '#dca946');
@@ -553,43 +597,43 @@
       ctx.roundRect(-7, 0, 14, 6, [2, 2, 1, 1]);
       ctx.fill();
 
-      // Turned Acorn Main Body (Walnut Wood & Brass Finish)
-      const bodyGrad = ctx.createLinearGradient(-10, 6, 10, 42);
-      bodyGrad.addColorStop(0, '#4e2f11');
-      bodyGrad.addColorStop(0.2, '#9a622a');
-      bodyGrad.addColorStop(0.4, '#d89b4a');
-      bodyGrad.addColorStop(0.65, '#844f1c');
-      bodyGrad.addColorStop(0.9, '#422409');
-      bodyGrad.addColorStop(1, '#251304');
+      // Turned Acorn Main Body (American Walnut Wood)
+      const bodyGrad = ctx.createLinearGradient(-11, 6, 11, 42);
+      bodyGrad.addColorStop(0, '#3c2009');
+      bodyGrad.addColorStop(0.2, '#7e4a1f');
+      bodyGrad.addColorStop(0.45, '#bc7d3b');
+      bodyGrad.addColorStop(0.7, '#6d3b14');
+      bodyGrad.addColorStop(0.9, '#3c1d06');
+      bodyGrad.addColorStop(1, '#231103');
 
       ctx.fillStyle = bodyGrad;
       ctx.beginPath();
       ctx.moveTo(-7, 6);
-      ctx.bezierCurveTo(-11, 14, -11, 28, -6, 36);
-      ctx.bezierCurveTo(-3, 40, 3, 40, 6, 36);
-      ctx.bezierCurveTo(11, 28, 11, 14, 7, 6);
+      ctx.bezierCurveTo(-11.5, 14, -11.5, 29, -6, 37);
+      ctx.bezierCurveTo(-3, 41, 3, 41, 6, 37);
+      ctx.bezierCurveTo(11.5, 29, 11.5, 14, 7, 6);
       ctx.closePath();
       ctx.fill();
 
-      // Lathe Inlay Brass Ring
+      // Lathe-cut Brass Inlay Center Ring
       ctx.strokeStyle = '#ffd875';
-      ctx.lineWidth = 1.4;
+      ctx.lineWidth = 1.6;
       ctx.beginPath();
-      ctx.moveTo(-9.5, 18);
-      ctx.quadraticCurveTo(0, 20, 9.5, 18);
+      ctx.moveTo(-10, 19);
+      ctx.quadraticCurveTo(0, 21.5, 10, 19);
       ctx.stroke();
 
-      // Specular Highlight Glint
+      // Specular Wood Curvature Glint
       const glintGrad = ctx.createLinearGradient(-7, 10, -2, 30);
       glintGrad.addColorStop(0, 'rgba(255, 255, 255, 0.45)');
       glintGrad.addColorStop(1, 'rgba(255, 255, 255, 0.0)');
       ctx.fillStyle = glintGrad;
       ctx.beginPath();
-      ctx.ellipse(-4.5, 22, 2.5, 9, -0.15, 0, Math.PI * 2);
+      ctx.ellipse(-5, 23, 2.6, 9.5, -0.15, 0, Math.PI * 2);
       ctx.fill();
 
       // Bottom Weighted Brass Finial Ball
-      const finialGrad = ctx.createRadialGradient(-1.2, 41, 0.5, 0, 42, 4.5);
+      const finialGrad = ctx.createRadialGradient(-1.2, 42, 0.5, 0, 43, 4.5);
       finialGrad.addColorStop(0, '#ffffff');
       finialGrad.addColorStop(0.3, '#fce18b');
       finialGrad.addColorStop(0.7, '#b88127');
@@ -597,42 +641,57 @@
 
       ctx.fillStyle = finialGrad;
       ctx.beginPath();
-      ctx.arc(0, 42, 4.2, 0, Math.PI * 2);
+      ctx.arc(0, 43, 4.4, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore(); // restore handle shadow
 
-      // 5. Stamped Vintage Parchment Tag
+      // 5. Hanging Rustic Manila Tag tied with Twine
       ctx.save();
-      ctx.translate(14, 20);
-      ctx.rotate(0.08 + Math.sin(animTime * 0.002) * 0.04);
 
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.35)';
-      ctx.shadowBlur = 7;
-      ctx.shadowOffsetX = 2;
-      ctx.shadowOffsetY = 3;
-
-      const tagW = 72;
-      const tagH = 22;
-      ctx.fillStyle = isLampOn ? '#f7e4b5' : '#faf1dc';
-      ctx.strokeStyle = '#9c7324';
+      // Twisted Hemp / Twine String Loop
+      ctx.strokeStyle = '#7c5828';
       ctx.lineWidth = 1.2;
       ctx.beginPath();
-      ctx.roundRect(0, -tagH / 2, tagW, tagH, 3);
+      ctx.moveTo(6, 4);
+      ctx.quadraticCurveTo(12, 10, 15, 20);
+      ctx.stroke();
+
+      ctx.translate(15, 20);
+      ctx.rotate(0.09 + Math.sin(animTime * 0.0022) * 0.05);
+
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.36)';
+      ctx.shadowBlur = 8;
+      ctx.shadowOffsetX = 2.5;
+      ctx.shadowOffsetY = 3.5;
+
+      const tagW = 76;
+      const tagH = 23;
+      ctx.fillStyle = isMidnight ? '#f5e4b6' : '#fcf5e5';
+      ctx.strokeStyle = '#8f6820';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(0, -tagH / 2, tagW, tagH, 3.5);
       ctx.fill();
       ctx.stroke();
 
-      ctx.fillStyle = '#6b4712';
+      // Brass Eyelet / Grommet
+      ctx.fillStyle = '#65420d';
       ctx.beginPath();
-      ctx.arc(6, 0, 2, 0, Math.PI * 2);
+      ctx.arc(6, 0, 2.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#fcf5e5';
+      ctx.beginPath();
+      ctx.arc(6, 0, 1.1, 0, Math.PI * 2);
       ctx.fill();
 
+      // Tag Label (Accurate to current state)
       ctx.shadowColor = 'transparent';
-      ctx.fillStyle = '#3a2807';
+      ctx.fillStyle = '#322105';
       ctx.font = 'bold 9.5px monospace';
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
-      const tagLabel = isLampOn ? '☀️ DAYLIGHT' : '💡 MIDNIGHT';
-      ctx.fillText(tagLabel, 11, 0);
+      const tagLabel = isMidnight ? 'PULL ☀️ DAY' : 'PULL 💡 NIGHT';
+      ctx.fillText(tagLabel, 11, 0.5);
 
       ctx.restore(); // restore tag
       ctx.restore(); // restore acorn transform
@@ -1003,15 +1062,6 @@
     const toast = document.getElementById('paperToast');
     const toastMsg = document.getElementById('toastMessage');
 
-    function showToast(message) {
-      if (!toast) return;
-      playStamp();
-      if (toastMsg) toastMsg.textContent = message;
-      toast.classList.add('show');
-      setTimeout(function () {
-        toast.classList.remove('show');
-      }, 3400);
-    }
 
     const copyEmailBtn = document.getElementById('copyEmailBtn');
     if (copyEmailBtn) {
