@@ -786,7 +786,7 @@
     }
   });
 
-  document.querySelectorAll('.wc-option-btn').forEach(btn => {
+  document.querySelectorAll('.wc-option-btn, .service-reason-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const reason = btn.dataset.reason;
       waiterCallModal?.classList.remove('active');
@@ -1208,9 +1208,9 @@
   }
 
   // Station Filter Buttons
-  document.querySelectorAll('.station-tab-btn').forEach(btn => {
+  document.querySelectorAll('.station-tab-btn, .stn-filter-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.station-tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.station-tab-btn, .stn-filter-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.activeStation = btn.dataset.station;
       playTapSound();
@@ -1473,24 +1473,24 @@
   }
 
   // --- 15. TOP NAVIGATION & VIEW SWITCHER ---
-  document.querySelectorAll('.view-btn').forEach(btn => {
+  document.querySelectorAll('.view-btn, .nav-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.view-btn, .nav-tab-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       const mode = btn.dataset.view;
       state.viewMode = mode;
 
       const appEl = document.getElementById('dineflowApp');
       if (appEl) {
-        appEl.className = 'dineflow-app mode-' + mode;
+        appEl.className = 'df-workspace-container dineflow-app mode-' + mode;
       }
       playTapSound();
     });
   });
 
-  document.querySelectorAll('.cat-pill').forEach(btn => {
+  document.querySelectorAll('.cat-pill, .cat-chip').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.cat-pill, .cat-chip').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       state.activeCategory = btn.dataset.category;
       playTapSound();
@@ -1536,12 +1536,12 @@
       const requestedView = urlParams.get('view');
       if (requestedView && ['split', 'customer', 'kds', 'stats'].includes(requestedView)) {
         state.viewMode = requestedView;
-        document.querySelectorAll('.view-btn').forEach(b => {
+        document.querySelectorAll('.view-btn, .nav-tab-btn').forEach(b => {
           b.classList.toggle('active', b.dataset.view === requestedView);
         });
         const appEl = document.getElementById('dineflowApp');
         if (appEl) {
-          appEl.className = 'dineflow-app mode-' + requestedView;
+          appEl.className = 'df-workspace-container dineflow-app mode-' + requestedView;
         }
       }
     } catch (e) {}
