@@ -3,345 +3,288 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DineFlow — Enterprise Hospitality OS &amp; Real-Time Multi-Station KDS</title>
+  <title>DineFlow — Real-Time Table Ordering &amp; Kitchen Display System (KDS)</title>
   
-  <!-- Typography (Fraunces Luxury Serif, Plus Jakarta Sans, JetBrains Mono) -->
+  <!-- Modern Clean Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;1,9..144,500;1,9..144,600&family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
 </head>
-<body class="df-studio-body">
+<body class="df-app-body">
 
   <!-- =========================================================================
-       TOP GLOBAL NAVIGATION & STUDIO CONTROLLER
+       CLEAN MINIMALIST TOP BAR
        ========================================================================= -->
-  <header class="df-studio-navbar">
-    <div class="df-nav-inner">
+  <header class="df-header">
+    <div class="df-header-inner">
       
-      <!-- Brand & Telemetry Pulse -->
-      <div class="df-brand-group">
-        <div class="df-logo-mark">
-          <span class="logo-letter">D</span>
-          <span class="logo-spark">✦</span>
+      <!-- Brand Identity -->
+      <div class="df-brand">
+        <div class="df-logo-icon">
+          <span class="logo-ember"></span>
         </div>
-        <div class="brand-text-wrap">
-          <div class="brand-title-row">
-            <h1 class="df-brand-title">DineFlow</h1>
-            <span class="df-os-badge">ENTERPRISE OS 2.4</span>
-          </div>
-          <span class="df-brand-sub">Toast &bull; Square Tier Dual-Screen Hospitality Architecture</span>
+        <div class="df-brand-text">
+          <span class="df-brand-name">DineFlow</span>
+          <span class="df-badge-pill">HOSPITALITY OS</span>
         </div>
       </div>
 
-      <!-- Viewport Segmented Mode Controller -->
-      <nav class="df-view-switcher" aria-label="Application Viewport Mode">
-        <button class="view-btn active" data-view="split" title="Side-by-side interactive laboratory">
-          <span class="btn-indicator-dot"></span>
-          <span>⚡ Split Live Lab</span>
+      <!-- Segmented View Switcher -->
+      <nav class="df-nav-tabs" aria-label="View Switcher">
+        <button class="nav-tab-btn active" data-view="split">
+          <span class="tab-dot"></span>
+          <span>Dual Lab (Split)</span>
         </button>
-        <button class="view-btn" data-view="customer" title="Customer mobile table ordering experience">
-          <span class="btn-indicator-dot"></span>
-          <span>📱 iPhone Guest</span>
+        <button class="nav-tab-btn" data-view="customer">
+          <span class="tab-dot"></span>
+          <span>Guest Mobile</span>
         </button>
-        <button class="view-btn" data-view="kds" title="Chef commercial kitchen display terminal">
-          <span class="btn-indicator-dot"></span>
-          <span>👨‍🍳 Expedite KDS</span>
+        <button class="nav-tab-btn" data-view="kds">
+          <span class="tab-dot"></span>
+          <span>Kitchen KDS</span>
         </button>
-        <button class="view-btn" data-view="stats" title="POS revenue &amp; 86'd stock controls">
-          <span class="btn-indicator-dot"></span>
-          <span>📊 POS &amp; Stock</span>
+        <button class="nav-tab-btn" data-view="stats">
+          <span class="tab-dot"></span>
+          <span>Floor &amp; Stock</span>
         </button>
       </nav>
 
-      <!-- Context Actions & Studio Triggers -->
-      <div class="df-nav-actions">
-        <div class="df-table-selector-wrap">
-          <span class="table-lbl">TABLE:</span>
-          <select id="tableSelect" class="df-select-table"></select>
+      <!-- Right Controls -->
+      <div class="df-header-actions">
+        <div class="df-table-selector">
+          <label for="tableSelect" class="table-label">Table:</label>
+          <select id="tableSelect" class="table-dropdown"></select>
         </div>
-        <button class="btn-rush-hour" id="btnSimulateRush" title="Simulate real-time dinner rush by firing 2 live tickets to KDS">
-          <span>🔥</span> Rush Demo
+        <button class="btn-action-outline" id="btnSimulateRush" title="Simulate dinner rush by adding 2 live tickets to KDS">
+          <span>⚡</span> Rush Demo
         </button>
-        <a href="../" class="btn-portfolio-return">← Back to Portfolio</a>
+        <a href="../" class="btn-return-link">← Portfolio</a>
       </div>
 
     </div>
   </header>
 
   <!-- =========================================================================
-       MAIN DINEFLOW WORKSPACE
+       MAIN APPLICATION WORKSPACE
        ========================================================================= -->
-  <main class="dineflow-app mode-split" id="dineflowApp">
-    <div class="df-workspace">
+  <main class="df-workspace-container mode-split" id="dineflowApp">
+    <div class="df-workspace-grid">
 
       <!-- ---------------------------------------------------------------------
-           CUSTOMER DINING VIEWPORT (Precision iPhone 16 Pro Max Chassis)
+           CUSTOMER DINING VIEWPORT (Centered Clean Mobile View)
            --------------------------------------------------------------------- -->
-      <section class="df-customer-section" aria-label="Guest Table Ordering">
-        
-        <div class="device-ambient-glow"></div>
-
-        <div class="iphone-pro-frame">
+      <section class="df-guest-panel" aria-label="Customer Table Ordering">
+        <div class="guest-device-viewport">
           
-          <!-- Outer Titanium Rim & Antenna Lines -->
-          <div class="iphone-antenna top-left"></div>
-          <div class="iphone-antenna top-right"></div>
-          <div class="iphone-antenna bottom-left"></div>
-          <div class="iphone-antenna bottom-right"></div>
+          <!-- Subtle Device Header Bar -->
+          <div class="device-status-strip">
+            <span class="device-clock" id="deviceClock">13:35</span>
+            <div class="device-notch-pill" id="dynamicIsland">
+              <span class="notch-lens"></span>
+              <div class="notch-active-pill" id="islandExpanded" style="display: none;">
+                <span class="notch-fire">🔥</span>
+                <span id="islandStatusText">Cooking</span>
+                <span class="notch-timer" id="islandTimer">04:12</span>
+              </div>
+            </div>
+            <div class="device-icons">
+              <span>5G</span>
+              <span>📶</span>
+              <span class="battery-icon"><span class="battery-level"></span></span>
+            </div>
+          </div>
 
-          <!-- Glass Screen Bezel Container -->
-          <div class="iphone-screen-chassis">
+          <!-- Scrollable Dining Menu Surface -->
+          <div class="guest-screen-scroll" id="phoneScreen">
             
-            <!-- Dynamic Island & Apple Status Bar -->
-            <div class="phone-status-bar">
-              <span class="status-clock" id="deviceClock">13:35</span>
-              
-              <!-- Interactive Dynamic Island Pill -->
-              <div class="dynamic-island" id="dynamicIsland" title="Interactive Dynamic Island">
-                <div class="island-camera-lens"></div>
-                <div class="island-sensor-dot"></div>
-                <div class="island-expanded-state" id="islandExpanded" style="display: none;">
-                  <span class="island-flame">🔥</span>
-                  <span class="island-title" id="islandStatusText">Kitchen Firing</span>
-                  <span class="island-pill-timer" id="islandTimer">04:12</span>
-                </div>
-              </div>
+            <!-- Restaurant Banner -->
+            <div class="restaurant-banner-card">
+              <div class="restaurant-tagline">Artisanal Wood-Fired Kitchen &amp; Roastery</div>
+              <h2 class="restaurant-name">The Rusty Copper</h2>
+              <div class="restaurant-location">★ 4.9 &bull; Connaught Place, New Delhi</div>
 
-              <div class="status-icons">
-                <span class="status-net">5G</span>
-                <span class="status-wifi">📶</span>
-                <span class="status-battery"><span class="battery-fill"></span></span>
+              <!-- Table Service Action Row -->
+              <div class="table-service-bar">
+                <div class="table-active-pill">
+                  <span class="pill-dot"></span>
+                  <span id="currentTableBadge">Table 04</span>
+                  <span class="pill-sub">Terrace</span>
+                </div>
+                <button class="btn-service-call" id="btnOpenWaiterCall">
+                  <span>🛎️</span> Call Waiter
+                </button>
               </div>
             </div>
 
-            <!-- Scrollable Mobile Dining Viewport -->
-            <div class="phone-scroll-canvas" id="phoneScreen">
-              
-              <!-- Restaurant Editorial Cover Header -->
-              <div class="restaurant-hero-banner">
-                <div class="hero-cover-overlay"></div>
-                <div class="hero-content">
-                  <div class="hero-crest">MICHELIN &bull; 2026 CURATION</div>
-                  <h2 class="hero-restaurant-title">The Rusty Copper</h2>
-                  <p class="hero-restaurant-tagline">Artisanal Wood-Fired Kitchen &amp; Specialty Roastery</p>
-                  
-                  <div class="hero-meta-strip">
-                    <span class="meta-rating">★ 4.9 (420+ reviews)</span>
-                    <span class="meta-sep">&bull;</span>
-                    <span>Connaught Place, New Delhi</span>
-                  </div>
-
-                  <!-- Table Status & Action Pills -->
-                  <div class="table-action-strip">
-                    <div class="table-tag-active">
-                      <span class="table-dot"></span>
-                      <span id="currentTableBadge">Table 04</span>
-                      <span class="tag-sub">Garden Terrace</span>
-                    </div>
-                    <div class="quick-call-actions">
-                      <button class="btn-call-waiter" id="btnOpenWaiterCall" title="Call floor staff to table">
-                        <span>🛎️</span> Call Server
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Curated Category Rail -->
-              <div class="category-pills-row" role="tablist">
-                <button class="cat-pill active" data-category="all">
-                  <span class="cat-dot"></span> All Curations
-                </button>
-                <button class="cat-pill" data-category="starters">
-                  <span class="cat-dot"></span> Small Plates
-                </button>
-                <button class="cat-pill" data-category="mains">
-                  <span class="cat-dot"></span> Wood-Fired Mains
-                </button>
-                <button class="cat-pill" data-category="beverages">
-                  <span class="cat-dot"></span> Specialty Coffee
-                </button>
-                <button class="cat-pill" data-category="desserts">
-                  <span class="cat-dot"></span> Pastry Counter
-                </button>
-              </div>
-
-              <!-- Menu Items Editorial Grid -->
-              <div class="menu-grid-container" id="menuGrid"></div>
-
-              <!-- Floating Bottom Order Bar -->
-              <div class="customer-tray-bar" id="customerTrayBar" role="button" aria-label="View order tray">
-                <div class="tray-left">
-                  <span class="tray-badge" id="trayItemCount">0 items</span>
-                  <span class="tray-hint">Review Order Tray</span>
-                </div>
-                <div class="tray-right">
-                  <span class="tray-total" id="trayTotalAmount">₹0.00</span>
-                  <span class="tray-arrow">→</span>
-                </div>
-              </div>
-
-              <!-- Active Live Order Floating Island Banner -->
-              <div class="active-order-pill-banner" id="activeOrderPillBanner" style="display: none;">
-                <div class="aop-left">
-                  <span class="aop-pulse"></span>
-                  <div class="aop-info">
-                    <strong id="aopTitle">Order #DF-8842 Firing</strong>
-                    <span id="aopSubtitle">Chef preparing wood-fired mains</span>
-                  </div>
-                </div>
-                <button class="aop-btn-track" id="btnTrackActiveOrder">Track Live</button>
-              </div>
-
+            <!-- Category Pills Rail -->
+            <div class="category-rail" role="tablist">
+              <button class="cat-chip active" data-category="all">All Curations</button>
+              <button class="cat-chip" data-category="starters">Small Plates</button>
+              <button class="cat-chip" data-category="mains">Wood-Fired Mains</button>
+              <button class="cat-chip" data-category="beverages">Specialty Coffee</button>
+              <button class="cat-chip" data-category="desserts">Pastry Counter</button>
             </div>
 
-            <!-- Apple Home Indicator Swipe Bar -->
-            <div class="phone-home-strip">
-              <div class="phone-home-indicator"></div>
+            <!-- Menu Cards Container -->
+            <div class="menu-list-wrap" id="menuGrid"></div>
+
+            <!-- Floating Order Tray Bar -->
+            <div class="floating-tray-bar" id="customerTrayBar" role="button" aria-label="Open current order tray">
+              <div class="tray-info">
+                <span class="tray-pill-count" id="trayItemCount">0 items</span>
+                <span class="tray-view-text">Review Order Tray</span>
+              </div>
+              <div class="tray-price-group">
+                <span class="tray-total-val" id="trayTotalAmount">₹0.00</span>
+                <span class="tray-arrow-icon">&rarr;</span>
+              </div>
+            </div>
+
+            <!-- Live Active Order Notification Pill -->
+            <div class="live-order-pill" id="activeOrderPillBanner" style="display: none;">
+              <div class="lop-left">
+                <span class="lop-pulse"></span>
+                <div>
+                  <strong id="aopTitle">Order In Preparation</strong>
+                  <span id="aopSubtitle">Chef firing dishes on grill line</span>
+                </div>
+              </div>
+              <button class="btn-lop-track" id="btnTrackActiveOrder">Track</button>
             </div>
 
           </div>
+
+          <!-- Bottom Device Indicator -->
+          <div class="device-home-strip">
+            <span class="home-indicator-bar"></span>
+          </div>
+
         </div>
       </section>
 
       <!-- ---------------------------------------------------------------------
-           KITCHEN DISPLAY SYSTEM (Commercial Stainless Steel Ticket Rail)
+           KITCHEN DISPLAY SYSTEM (Commercial Expediter Station)
            --------------------------------------------------------------------- -->
-      <section class="df-kds-section" aria-label="Commercial Kitchen Display System">
+      <section class="df-kds-panel" aria-label="Kitchen Display System">
         
-        <!-- Waiter Service Request Audio/Visual Alert Banner -->
-        <div class="kds-service-alert-banner" id="kdsServiceAlertBanner" style="display: none;">
-          <div class="alert-content">
-            <span class="alert-bell-anim">🛎️</span>
+        <!-- Waiter Service Alert Banner -->
+        <div class="service-alert-banner" id="kdsServiceAlertBanner" style="display: none;">
+          <div class="alert-meta-group">
+            <span class="alert-icon">🛎️</span>
             <div>
-              <strong id="alertTableText">TABLE 04 REQUESTED: Extra Cutlery &amp; Napkins</strong>
-              <span class="alert-time" id="alertTimestamp">Service call received just now</span>
+              <strong id="alertTableText">TABLE 04: Extra Cutlery &amp; Napkins Requested</strong>
+              <span class="alert-time-text" id="alertTimestamp">Just now</span>
             </div>
           </div>
-          <button class="btn-ack-service" id="btnAckService">✓ Acknowledge</button>
+          <button class="btn-service-ack" id="btnAckService">✓ Acknowledge</button>
         </div>
 
-        <!-- Master Industrial Stainless Steel Rail Header -->
-        <div class="kds-rail-header">
+        <!-- Clean Industrial KDS Header -->
+        <div class="kds-console-header">
           
-          <!-- Top Row: Station Identity & Hardware Audio -->
-          <div class="kds-header-top">
-            <div class="kds-title-wrap">
-              <div class="kds-screen-badge">STATION EXPEDITE #1</div>
-              <h2 class="kds-title">KITCHEN DISPLAY SYSTEM</h2>
-              <div class="kds-bus-pill">
-                <span class="bus-dot"></span>
-                <span>W3C BROADCAST BUS</span>
-              </div>
+          <!-- Top Row: Identity & Hardware Tools -->
+          <div class="console-top-row">
+            <div class="console-identity">
+              <span class="console-tag">EXPEDITER STATION</span>
+              <h2 class="console-title">Kitchen Display System</h2>
+              <span class="console-status-live">
+                <span class="live-pulse-dot"></span> Live Bus
+              </span>
             </div>
 
-            <div class="kds-hardware-tools">
-              <div class="kds-stat-block">
-                <span class="stat-lbl">AVG PREP SLA</span>
-                <span class="stat-val">8.4 min</span>
+            <div class="console-metrics-strip">
+              <div class="metric-pill">
+                <span class="metric-lbl">AVG PREP:</span>
+                <span class="metric-val">8.4m</span>
               </div>
-              <div class="kds-stat-block">
-                <span class="stat-lbl">ACTIVE TICKETS</span>
-                <span class="stat-val" id="kdsActiveCount">0</span>
+              <div class="metric-pill">
+                <span class="metric-lbl">ACTIVE TICKETS:</span>
+                <span class="metric-val" id="kdsActiveCount">0</span>
               </div>
-              <button class="btn-bell-chime" id="btnTestBell" title="Test synthesized 1.8kHz brass service bell audio">
-                <span class="bell-icon">🔔</span>
-                <span>Ring Service Bell</span>
+              <button class="btn-counter-bell" id="btnTestBell" title="Play 1.8kHz acoustic service counter bell">
+                <span>🔔</span> Test Bell
               </button>
             </div>
           </div>
 
-          <!-- Bottom Row: Station Routing Segmented Control -->
-          <div class="kds-stations-nav" role="tablist">
-            <button class="station-tab-btn active" data-station="all">
-              <span class="stn-icon">🍽️</span>
-              <span class="stn-name">All Stations (Pass)</span>
-              <span class="stn-badge" id="badgeStnAll">0</span>
+          <!-- Station Line Filter Tabs -->
+          <div class="station-filter-bar" role="tablist">
+            <button class="stn-filter-btn active" data-station="all">
+              <span>All Kitchen Lines</span>
+              <span class="stn-count" id="badgeStnAll">0</span>
             </button>
-            <button class="station-tab-btn" data-station="grill">
-              <span class="stn-icon">🔥</span>
-              <span class="stn-name">Grill &amp; Sauté Line</span>
-              <span class="stn-badge" id="badgeStnGrill">0</span>
+            <button class="stn-filter-btn" data-station="grill">
+              <span>🔥 Grill &amp; Sauté</span>
+              <span class="stn-count" id="badgeStnGrill">0</span>
             </button>
-            <button class="station-tab-btn" data-station="larder">
-              <span class="stn-icon">🥗</span>
-              <span class="stn-name">Larder &amp; Starters</span>
-              <span class="stn-badge" id="badgeStnLarder">0</span>
+            <button class="stn-filter-btn" data-station="larder">
+              <span>🥗 Larder &amp; Starters</span>
+              <span class="stn-count" id="badgeStnLarder">0</span>
             </button>
-            <button class="station-tab-btn" data-station="barista">
-              <span class="stn-icon">☕</span>
-              <span class="stn-name">Barista &amp; Craft Bar</span>
-              <span class="stn-badge" id="badgeStnBarista">0</span>
+            <button class="stn-filter-btn" data-station="barista">
+              <span>☕ Barista &amp; Bar</span>
+              <span class="stn-count" id="badgeStnBarista">0</span>
             </button>
-            <button class="station-tab-btn" data-station="pastry">
-              <span class="stn-icon">🍰</span>
-              <span class="stn-name">Pastry Counter</span>
-              <span class="stn-badge" id="badgeStnPastry">0</span>
+            <button class="stn-filter-btn" data-station="pastry">
+              <span>🍰 Pastry Counter</span>
+              <span class="stn-count" id="badgeStnPastry">0</span>
             </button>
-          </div>
-
-          <!-- Stainless Steel Simulated Ticket Rail Bar with Clips -->
-          <div class="ticket-rail-groove">
-            <span class="rail-clip"></span>
-            <span class="rail-clip"></span>
-            <span class="rail-clip"></span>
-            <span class="rail-clip"></span>
           </div>
 
         </div>
 
-        <!-- 4-Stage Kanban Ticket Rail Board -->
-        <div class="kds-kanban-board">
+        <!-- 4-Column Commercial Ticket Board -->
+        <div class="kds-board-grid">
           
           <!-- Column 1: Incoming -->
-          <div class="kds-column col-incoming">
-            <div class="kds-col-header">
-              <div class="col-title-group">
-                <span class="col-dot dot-incoming"></span>
-                <span class="kds-col-title">1. Incoming Queue</span>
+          <div class="kds-board-col col-incoming">
+            <div class="col-head-bar">
+              <div class="col-title-wrap">
+                <span class="col-status-indicator indicator-incoming"></span>
+                <span class="col-label">1. Incoming Queue</span>
               </div>
-              <span class="kds-col-count" id="countIncoming">0</span>
+              <span class="col-badge" id="countIncoming">0</span>
             </div>
-            <div class="kds-col-tickets" id="kdsColIncoming"></div>
+            <div class="col-ticket-feed" id="kdsColIncoming"></div>
           </div>
 
           <!-- Column 2: In Preparation -->
-          <div class="kds-column col-cooking">
-            <div class="kds-col-header">
-              <div class="col-title-group">
-                <span class="col-dot dot-cooking"></span>
-                <span class="kds-col-title">2. In Preparation</span>
+          <div class="kds-board-col col-cooking">
+            <div class="col-head-bar">
+              <div class="col-title-wrap">
+                <span class="col-status-indicator indicator-cooking"></span>
+                <span class="col-label">2. In Preparation</span>
               </div>
-              <span class="kds-col-count" id="countCooking">0</span>
+              <span class="col-badge" id="countCooking">0</span>
             </div>
-            <div class="kds-col-tickets" id="kdsColCooking"></div>
+            <div class="col-ticket-feed" id="kdsColCooking"></div>
           </div>
 
           <!-- Column 3: Ready for Window -->
-          <div class="kds-column col-ready">
-            <div class="kds-col-header">
-              <div class="col-title-group">
-                <span class="col-dot dot-ready"></span>
-                <span class="kds-col-title">3. Ready for Window</span>
+          <div class="kds-board-col col-ready">
+            <div class="col-head-bar">
+              <div class="col-title-wrap">
+                <span class="col-status-indicator indicator-ready"></span>
+                <span class="col-label">3. Ready for Pass</span>
               </div>
-              <span class="kds-col-count" id="countReady">0</span>
+              <span class="col-badge" id="countReady">0</span>
             </div>
-            <div class="kds-col-tickets" id="kdsColReady"></div>
+            <div class="col-ticket-feed" id="kdsColReady"></div>
           </div>
 
           <!-- Column 4: Served & Settled -->
-          <div class="kds-column col-served">
-            <div class="kds-col-header">
-              <div class="col-title-group">
-                <span class="col-dot dot-served"></span>
-                <span class="kds-col-title">4. Served &amp; Settled</span>
+          <div class="kds-board-col col-served">
+            <div class="col-head-bar">
+              <div class="col-title-wrap">
+                <span class="col-status-indicator indicator-served"></span>
+                <span class="col-label">4. Served &amp; Settled</span>
               </div>
-              <span class="kds-col-count" id="countServed">0</span>
+              <span class="col-badge" id="countServed">0</span>
             </div>
-            <div class="kds-col-tickets" id="kdsColServed"></div>
+            <div class="col-ticket-feed" id="kdsColServed"></div>
           </div>
 
         </div>
@@ -350,54 +293,54 @@
       <!-- ---------------------------------------------------------------------
            STATS & POS TELEMETRY SECTION
            --------------------------------------------------------------------- -->
-      <section class="df-stats-section" aria-label="POS Telemetry and Stock Control">
+      <section class="df-stats-panel" aria-label="POS Telemetry and Stock Control">
         
-        <!-- Metrics Row -->
-        <div class="stats-grid-row">
-          <div class="stat-box">
-            <div class="stat-label">TODAY'S GROSS SALES</div>
-            <div class="stat-number" id="statTotalRevenue">₹0</div>
-            <div class="stat-sub">↑ 18.4% vs last Thursday</div>
+        <!-- Key Metrics Cards -->
+        <div class="telemetry-grid">
+          <div class="telemetry-card">
+            <div class="tel-label">TODAY'S GROSS TURNOVER</div>
+            <div class="tel-val" id="statTotalRevenue">₹0</div>
+            <div class="tel-delta">↑ 18.4% vs benchmark</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">ACTIVE KITCHEN LOAD</div>
-            <div class="stat-number" id="statActiveTickets">0</div>
-            <div class="stat-sub">Real-time load index</div>
+          <div class="telemetry-card">
+            <div class="tel-label">ACTIVE KITCHEN LOAD</div>
+            <div class="tel-val" id="statActiveTickets">0</div>
+            <div class="tel-delta">Real-time tickets in queue</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">AVERAGE TICKET SLA</div>
-            <div class="stat-number" id="statAvgPrepTime">8.4m</div>
-            <div class="stat-sub">Target &lt;12m benchmark</div>
+          <div class="telemetry-card">
+            <div class="tel-label">AVERAGE TICKET SLA</div>
+            <div class="tel-val" id="statAvgPrepTime">8.4m</div>
+            <div class="tel-delta">Target: &lt;12.0m standard</div>
           </div>
-          <div class="stat-box">
-            <div class="stat-label">COMPLETED COVERS</div>
-            <div class="stat-number" id="statCompletedOrders">0</div>
-            <div class="stat-sub">Archived to thermal audit log</div>
+          <div class="telemetry-card">
+            <div class="tel-label">COMPLETED COVERS</div>
+            <div class="tel-val" id="statCompletedOrders">0</div>
+            <div class="tel-delta">Archived to thermal audit log</div>
           </div>
         </div>
 
-        <!-- Floor Plan Status Grid -->
-        <div class="floor-plan-card">
-          <div class="card-header-row">
+        <!-- Dining Floor Plan -->
+        <div class="panel-card-block">
+          <div class="block-header">
             <div>
-              <h3 class="stock-card-title">Dining Floor Table Telemetry</h3>
-              <p class="stock-card-desc">Real-time status of active guest dining covers, current open checks, and session states.</p>
+              <h3 class="block-title">Dining Room Floor Status</h3>
+              <p class="block-desc">Real-time occupancy states, seating covers, and active table checks.</p>
             </div>
-            <span class="floor-badge">5 Tables Active</span>
+            <span class="block-badge">5 Tables Active</span>
           </div>
-          <div class="floor-grid" id="floorPlanGrid"></div>
+          <div class="floor-tables-row" id="floorPlanGrid"></div>
         </div>
 
-        <!-- 86'd Out-of-Stock Management -->
-        <div class="stock-manager-card">
-          <div class="card-header-row">
+        <!-- 86'd Stock Management -->
+        <div class="panel-card-block">
+          <div class="block-header">
             <div>
-              <h3 class="stock-card-title">Chef's 86'd Out-of-Stock Board</h3>
-              <p class="stock-card-desc">Instantly mark sold-out items to prevent guest orders across mobile menus in real-time.</p>
+              <h3 class="block-title">Chef's 86'd Stock Control</h3>
+              <p class="block-desc">Instantly disable exhausted dishes to prevent guest ordering across mobile menus.</p>
             </div>
-            <span class="stock-badge" id="stockSoldOutBadge">0 Items Sold Out</span>
+            <span class="block-badge" id="stockSoldOutBadge">0 Items Sold Out</span>
           </div>
-          <div class="stock-toggles-grid" id="stockTogglesList"></div>
+          <div class="stock-items-grid" id="stockTogglesList"></div>
         </div>
 
       </section>
@@ -406,173 +349,164 @@
   </main>
 
   <!-- =========================================================================
-       MODALS, DRAWERS & HARDWARE SIMULATORS
+       CLEAN PRODUCT MODALS & DRAWERS
        ========================================================================= -->
 
-  <!-- 1. Dish Modifiers & Add-ons Bottom Sheet -->
-  <div class="df-modal-overlay" id="modifierModal" role="dialog" aria-modal="true" aria-labelledby="modalItemTitle">
-    <div class="modifier-modal-card">
-      <div class="mod-header">
-        <div class="mod-header-info">
-          <h3 class="mod-title" id="modalItemTitle">Customize Dish</h3>
-          <span class="mod-price" id="modalBasePrice">₹0</span>
+  <!-- 1. Dish Modifiers Bottom Sheet -->
+  <div class="modal-backdrop" id="modifierModal" role="dialog" aria-modal="true" aria-labelledby="modalItemTitle">
+    <div class="modal-dialog-card">
+      <div class="modal-card-head">
+        <div>
+          <h3 class="modal-item-title" id="modalItemTitle">Customize Dish</h3>
+          <span class="modal-item-price" id="modalBasePrice">₹0</span>
         </div>
-        <button class="btn-close-modal" id="btnCloseModModal" aria-label="Close modal">&times;</button>
+        <button class="btn-modal-close" id="btnCloseModModal" aria-label="Close modal">&times;</button>
       </div>
-      <div class="mod-body">
-        <p class="mod-item-desc" id="modalItemDesc"></p>
+      <div class="modal-card-body">
+        <p class="modal-dish-desc" id="modalItemDesc"></p>
         <div id="modalModifiersBody"></div>
-        <div class="mod-notes-wrap">
-          <label for="modalChefNotes" class="mod-notes-label">Chef Notes &amp; Allergies</label>
-          <textarea id="modalChefNotes" class="mod-notes-input" rows="2" placeholder="e.g., Dressing on the side, extra hot garnish, allergy note..."></textarea>
+        <div class="mod-notes-box">
+          <label for="modalChefNotes" class="notes-label">Chef Notes &amp; Special Requests</label>
+          <textarea id="modalChefNotes" class="notes-textarea" rows="2" placeholder="e.g., Dressing on the side, extra crispy, allergy notice..."></textarea>
         </div>
       </div>
-      <div class="mod-footer">
-        <button class="btn-modal-cancel" id="btnDismissModal">Cancel</button>
-        <button class="btn-modal-confirm" id="btnConfirmAddToCart">Add to Tray</button>
+      <div class="modal-card-foot">
+        <button class="btn-secondary-flat" id="btnDismissModal">Cancel</button>
+        <button class="btn-primary-solid" id="btnConfirmAddToCart">Add to Tray</button>
       </div>
     </div>
   </div>
 
-  <!-- 2. Customer Order Tray Slide-in Drawer -->
-  <aside class="cart-drawer-panel" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Current Order Tray">
-    <div class="cart-drawer-head">
-      <div class="drawer-title-group">
-        <h3 class="cart-drawer-title">Order Tray</h3>
-        <span class="drawer-table-tag" id="drawerTableTag">Table 04</span>
+  <!-- 2. Customer Order Tray Slide Drawer -->
+  <aside class="drawer-tray-panel" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Current Order Tray">
+    <div class="drawer-header">
+      <div class="drawer-title-wrap">
+        <h3 class="drawer-heading">Your Order Tray</h3>
+        <span class="drawer-table-pill" id="drawerTableTag">Table 04</span>
       </div>
-      <button class="btn-close-drawer" id="btnCloseCartDrawer" aria-label="Close Order Tray">&times;</button>
+      <button class="btn-drawer-close" id="btnCloseCartDrawer" aria-label="Close tray">&times;</button>
     </div>
     
-    <div class="cart-items-scroll" id="cartItemsList"></div>
+    <div class="drawer-items-scroll" id="cartItemsList"></div>
     
-    <div class="cart-drawer-foot">
-      <div class="cart-totals-row">
-        <span>Items Subtotal:</span>
+    <div class="drawer-footer">
+      <div class="receipt-summary-line">
+        <span>Items Subtotal</span>
         <span id="cartSubtotal">₹0.00</span>
       </div>
-      <div class="cart-totals-row">
-        <span>CGST (2.5%):</span>
+      <div class="receipt-summary-line">
+        <span>CGST (2.5%)</span>
         <span id="cartCgst">₹0.00</span>
       </div>
-      <div class="cart-totals-row">
-        <span>SGST (2.5%):</span>
+      <div class="receipt-summary-line">
+        <span>SGST (2.5%)</span>
         <span id="cartSgst">₹0.00</span>
       </div>
-      <div class="cart-totals-row">
-        <span>Service Charge (5%):</span>
+      <div class="receipt-summary-line">
+        <span>Service Charge (5%)</span>
         <span id="cartServiceCharge">₹0.00</span>
       </div>
-      <div class="cart-totals-row grand">
-        <span>Total Payable:</span>
+      <div class="receipt-summary-line total-line">
+        <span>Total Payable</span>
         <span id="cartGrandTotal">₹0.00</span>
       </div>
 
-      <div class="cart-action-buttons-group">
-        <button class="btn-submit-order" id="btnSubmitOrder">🔥 Send Ticket to Kitchen</button>
-        <button class="btn-settle-pay" id="btnOpenPaymentModal">💳 Settle Bill &amp; Pay (UPI / Card)</button>
+      <div class="drawer-actions-stack">
+        <button class="btn-fire-order" id="btnSubmitOrder">🔥 Send Ticket to Kitchen</button>
+        <button class="btn-settle-checkout" id="btnOpenPaymentModal">💳 Settle Bill &amp; Pay (UPI / Card)</button>
       </div>
     </div>
   </aside>
 
-  <!-- 3. Table Waiter Service Request Modal -->
-  <div class="df-modal-overlay" id="waiterCallModal" role="dialog" aria-modal="true">
-    <div class="waiter-call-card">
-      <div class="wc-header">
-        <div class="wc-icon">🛎️</div>
-        <div>
-          <h3 class="wc-title">Call Table Server</h3>
-          <p class="wc-sub">Table 04 &bull; Garden Terrace</p>
+  <!-- 3. Table Waiter Service Modal -->
+  <div class="modal-backdrop" id="waiterCallModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog-card modal-compact">
+      <div class="modal-card-head">
+        <div class="service-call-title-group">
+          <span class="service-emoji">🛎️</span>
+          <div>
+            <h3 class="modal-item-title">Call Table Server</h3>
+            <span class="service-sub">Table 04 &bull; Terrace Station</span>
+          </div>
         </div>
-        <button class="btn-close-modal" id="btnCloseWaiterModal">&times;</button>
+        <button class="btn-modal-close" id="btnCloseWaiterModal">&times;</button>
       </div>
-      <p class="wc-prompt">Select what you need and our floor team will assist immediately:</p>
-      
-      <div class="wc-options-grid">
-        <button class="wc-option-btn" data-reason="Water Refill">
-          <span class="wc-opt-emoji">💧</span>
-          <span class="wc-opt-text">Water Refill</span>
-        </button>
-        <button class="wc-option-btn" data-reason="Extra Cutlery &amp; Napkins">
-          <span class="wc-opt-emoji">🍴</span>
-          <span class="wc-opt-text">Extra Cutlery</span>
-        </button>
-        <button class="wc-option-btn" data-reason="Clear / Clean Table">
-          <span class="wc-opt-emoji">🧹</span>
-          <span class="wc-opt-text">Clear Plates</span>
-        </button>
-        <button class="wc-option-btn" data-reason="Menu Recommendations">
-          <span class="wc-opt-emoji">📖</span>
-          <span class="wc-opt-text">Chef Specials</span>
-        </button>
-        <button class="wc-option-btn" data-reason="Talk to Floor Server">
-          <span class="wc-opt-emoji">🙋‍♂️</span>
-          <span class="wc-opt-text">Talk to Server</span>
-        </button>
-        <button class="wc-option-btn" data-reason="Physical Bill Request">
-          <span class="wc-opt-emoji">🧾</span>
-          <span class="wc-opt-text">Paper Check</span>
-        </button>
+      <div class="modal-card-body">
+        <p class="service-prompt">Tap an option to notify floor staff immediately:</p>
+        <div class="service-reasons-grid">
+          <button class="service-reason-btn" data-reason="Water Refill">
+            <span class="sr-icon">💧</span>
+            <span class="sr-label">Water Refill</span>
+          </button>
+          <button class="service-reason-btn" data-reason="Extra Cutlery &amp; Napkins">
+            <span class="sr-icon">🍴</span>
+            <span class="sr-label">Extra Cutlery</span>
+          </button>
+          <button class="service-reason-btn" data-reason="Clear Plates &amp; Table">
+            <span class="sr-icon">🧹</span>
+            <span class="sr-label">Clear Table</span>
+          </button>
+          <button class="service-reason-btn" data-reason="Chef Recommendations">
+            <span class="sr-icon">📖</span>
+            <span class="sr-label">Menu Help</span>
+          </button>
+          <button class="service-reason-btn" data-reason="Talk to Floor Server">
+            <span class="sr-icon">🙋‍♂️</span>
+            <span class="sr-label">Talk to Server</span>
+          </button>
+          <button class="service-reason-btn" data-reason="Request Paper Bill">
+            <span class="sr-icon">🧾</span>
+            <span class="sr-label">Paper Bill</span>
+          </button>
+        </div>
       </div>
-
-      <div class="wc-footer">
-        <button class="btn-modal-cancel" id="btnCancelWaiterCall">Cancel</button>
+      <div class="modal-card-foot">
+        <button class="btn-secondary-flat" id="btnCancelWaiterCall">Cancel</button>
       </div>
     </div>
   </div>
 
-  <!-- 4. Interactive POS Payment Simulation Gateway Modal (UPI Laser Scan & Card) -->
-  <div class="df-modal-overlay" id="paymentModal" role="dialog" aria-modal="true">
-    <div class="payment-modal-card">
-      <div class="pm-head">
-        <div class="pm-brand">
-          <span class="pm-lock">🔒</span>
-          <strong>DineFlow Secure Checkout Gateway</strong>
+  <!-- 4. Interactive POS Payment Simulation Gateway Modal (Stripe/Apple Style) -->
+  <div class="modal-backdrop" id="paymentModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog-card modal-compact">
+      <div class="modal-card-head">
+        <div class="checkout-brand-title">
+          <span class="lock-icon">🔒</span>
+          <strong>Secure Guest Checkout</strong>
         </div>
-        <button class="btn-close-modal" id="btnClosePaymentModal">&times;</button>
+        <button class="btn-modal-close" id="btnClosePaymentModal">&times;</button>
       </div>
 
-      <!-- Payment Steps Wrapper -->
-      <div id="paymentContentStep">
+      <!-- Step 1: Payment Method & QR Code -->
+      <div id="paymentContentStep" class="modal-card-body">
         
-        <!-- Total Due Badge -->
-        <div class="pm-amount-strip">
-          <span class="pm-amt-label">Total Amount Due (Table 04):</span>
-          <span class="pm-amt-val" id="pmAmountValue">₹0.00</span>
+        <!-- Total Due Box -->
+        <div class="due-amount-banner">
+          <span class="due-lbl">Total Due (Table 04):</span>
+          <span class="due-sum" id="pmAmountValue">₹0.00</span>
         </div>
 
-        <!-- Payment Method Tabs -->
-        <div class="pm-tabs-row" role="tablist">
-          <button class="pm-tab active" id="tabUpi">
-            <span>📱</span> UPI QR Code
-          </button>
-          <button class="pm-tab" id="tabCard">
-            <span>💳</span> Tap to Pay / Card
-          </button>
+        <!-- Method Tabs -->
+        <div class="payment-tabs-row" role="tablist">
+          <button class="pay-tab-btn active" id="tabUpi">📱 UPI QR Code</button>
+          <button class="pay-tab-btn" id="tabCard">💳 Tap to Pay / Card</button>
         </div>
 
-        <!-- UPI Tab View with Laser Scanning Animation -->
-        <div class="pm-tab-pane active" id="paneUpi">
-          <div class="upi-qr-box">
-            <div class="qr-laser-wrapper">
-              <div class="qr-laser-line"></div>
-              <!-- High-Contrast Precision SVG QR Code -->
-              <svg class="upi-qr-svg" viewBox="0 0 160 160" width="160" height="160">
-                <rect width="160" height="160" fill="#ffffff" rx="10"/>
-                <!-- Corner finder markers -->
+        <!-- UPI Tab Content -->
+        <div class="pay-tab-view active" id="paneUpi">
+          <div class="upi-display-wrap">
+            <div class="qr-clean-container">
+              <svg class="qr-svg-clean" viewBox="0 0 160 160" width="150" height="150">
+                <rect width="160" height="160" fill="#ffffff" rx="8"/>
                 <rect x="15" y="15" width="38" height="38" fill="#181A1D" rx="4"/>
                 <rect x="22" y="22" width="24" height="24" fill="#ffffff" rx="2"/>
                 <rect x="28" y="28" width="12" height="12" fill="#181A1D" rx="1"/>
-                
                 <rect x="107" y="15" width="38" height="38" fill="#181A1D" rx="4"/>
                 <rect x="114" y="22" width="24" height="24" fill="#ffffff" rx="2"/>
                 <rect x="120" y="28" width="12" height="12" fill="#181A1D" rx="1"/>
-                
                 <rect x="15" y="107" width="38" height="38" fill="#181A1D" rx="4"/>
                 <rect x="22" y="114" width="24" height="24" fill="#ffffff" rx="2"/>
                 <rect x="28" y="120" width="12" height="12" fill="#181A1D" rx="1"/>
-                
-                <!-- Data cells -->
                 <rect x="65" y="15" width="8" height="8" fill="#181A1D"/>
                 <rect x="80" y="15" width="12" height="8" fill="#181A1D"/>
                 <rect x="65" y="30" width="18" height="8" fill="#181A1D"/>
@@ -599,122 +533,114 @@
               </svg>
             </div>
             
-            <div class="upi-apps-row">
-              <span class="upi-tag">GPay</span>
-              <span class="upi-tag">PhonePe</span>
-              <span class="upi-tag">Paytm</span>
-              <span class="upi-tag">BHIM</span>
-              <span class="upi-tag">Apple Pay</span>
+            <div class="upi-partners-row">
+              <span class="upi-chip">GPay</span>
+              <span class="upi-chip">PhonePe</span>
+              <span class="upi-chip">Paytm</span>
+              <span class="upi-chip">BHIM</span>
             </div>
-            <p class="upi-hint">Scan with any camera app, or trigger simulated bank approval below:</p>
-            <button class="btn-simulate-pay" id="btnSimulateUpiPay">
-              <span>⚡</span> Simulate Instant UPI Payment Approval
+            <p class="upi-instruction">Scan with any smartphone camera or simulate instant approval below:</p>
+            <button class="btn-confirm-payment" id="btnSimulateUpiPay">
+              <span>⚡</span> Simulate Instant Payment Approval
             </button>
           </div>
         </div>
 
-        <!-- Card Tab View -->
-        <div class="pm-tab-pane" id="paneCard">
-          <div class="card-sim-box">
-            <div class="smart-card-mockup">
-              <div class="card-chip"></div>
-              <div class="card-contactless">📶</div>
-              <div class="card-number">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4288</div>
-              <div class="card-meta-row">
-                <span>VALUED DINING GUEST</span>
+        <!-- Card Tab Content -->
+        <div class="pay-tab-view" id="paneCard">
+          <div class="card-display-wrap">
+            <div class="modern-card-graphic">
+              <div class="card-chip-gold"></div>
+              <div class="card-nfc-wave">📶</div>
+              <div class="card-masked-num">&bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; &bull;&bull;&bull;&bull; 4288</div>
+              <div class="card-holder-row">
+                <span>DINING GUEST</span>
                 <span>08/29</span>
               </div>
             </div>
-            <button class="btn-simulate-pay" id="btnSimulateCardPay">
-              <span>💳</span> Simulate Contactless NFC Tap &amp; Pay
+            <button class="btn-confirm-payment" id="btnSimulateCardPay">
+              <span>💳</span> Simulate Contactless Card Tap
             </button>
           </div>
         </div>
 
       </div>
 
-      <!-- Payment Processing Step -->
-      <div id="paymentProcessingStep" style="display: none;" class="pm-step-center">
-        <div class="pm-spinner"></div>
-        <h4 class="pm-status-title">Authorizing with Gateway...</h4>
-        <p class="pm-status-sub">Connecting to banking payment switch</p>
+      <!-- Step 2: Processing Spinner -->
+      <div id="paymentProcessingStep" style="display: none;" class="payment-step-feedback">
+        <div class="circular-spinner"></div>
+        <h4 class="feedback-heading">Contacting Gateway...</h4>
+        <p class="feedback-desc">Verifying bank settlement token</p>
       </div>
 
-      <!-- Payment Success Animated Checkmark View -->
-      <div id="paymentSuccessStep" style="display: none;" class="pm-step-center">
-        <div class="pm-success-badge">
-          <svg viewBox="0 0 52 52" class="checkmark-svg">
-            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
-            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-          </svg>
-        </div>
-        <h3 class="pm-success-title">Payment Approved!</h3>
-        <p class="pm-success-sub" id="pmSuccessText">₹0.00 settled successfully</p>
-        <span class="pm-ref-badge" id="pmRefBadge">TXN-UPI-88429184</span>
-        <button class="btn-view-thermal-done" id="btnViewReceiptAfterPay">🖨️ View &amp; Print Thermal Tax Invoice</button>
+      <!-- Step 3: Success Confirmation -->
+      <div id="paymentSuccessStep" style="display: none;" class="payment-step-feedback">
+        <div class="success-checkmark-circle">✓</div>
+        <h3 class="success-heading">Payment Approved!</h3>
+        <p class="success-desc" id="pmSuccessText">₹0.00 settled successfully</p>
+        <span class="txn-reference-tag" id="pmRefBadge">TXN-UPI-88429184</span>
+        <button class="btn-print-after-pay" id="btnViewReceiptAfterPay">🖨️ View &amp; Print Thermal Receipt</button>
       </div>
 
     </div>
   </div>
 
   <!-- 5. Customer Live Order Status Stepper Modal -->
-  <div class="df-modal-overlay" id="customerOrderTrackerModal" role="dialog" aria-modal="true">
-    <div class="tracker-modal-card">
-      <div class="tracker-tag-row">
-        <span id="trackerTableName">Table 04</span>
-        <span>&bull;</span>
-        <span id="trackerOrderId">#DF-8842</span>
+  <div class="modal-backdrop" id="customerOrderTrackerModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog-card modal-compact">
+      <div class="modal-card-head">
+        <div>
+          <span class="tracker-meta" id="trackerTableName">Table 04</span>
+          <span class="tracker-order-num" id="trackerOrderId">#DF-8842</span>
+        </div>
+        <button class="btn-modal-close" id="btnDismissTracker">&times;</button>
       </div>
-      <h3 class="tracker-status-title" id="trackerStatusTitle">Order Received</h3>
-      <p class="tracker-status-desc" id="trackerStatusDesc">Your ticket has landed on the kitchen display system.</p>
+      <div class="modal-card-body">
+        <h3 class="tracker-main-title" id="trackerStatusTitle">Order Received</h3>
+        <p class="tracker-main-desc" id="trackerStatusDesc">Ticket is currently queued at the kitchen expediter terminal.</p>
 
-      <div class="tracker-stepper">
-        <div class="tracker-step active" id="stepReceived">
-          <div class="step-circle">1</div>
-          <span class="step-label">Received</span>
-        </div>
-        <div class="tracker-step" id="stepCooking">
-          <div class="step-circle">2</div>
-          <span class="step-label">Cooking</span>
-        </div>
-        <div class="tracker-step" id="stepReady">
-          <div class="step-circle">3</div>
-          <span class="step-label">Ready</span>
-        </div>
-        <div class="tracker-step" id="stepServed">
-          <div class="step-circle">4</div>
-          <span class="step-label">Served</span>
+        <!-- Stepper Progress Line -->
+        <div class="stepper-horizontal">
+          <div class="stepper-item active" id="stepReceived">
+            <div class="step-num">1</div>
+            <span class="step-txt">Received</span>
+          </div>
+          <div class="stepper-item" id="stepCooking">
+            <div class="step-num">2</div>
+            <span class="step-txt">Cooking</span>
+          </div>
+          <div class="stepper-item" id="stepReady">
+            <div class="step-num">3</div>
+            <span class="step-txt">Ready</span>
+          </div>
+          <div class="stepper-item" id="stepServed">
+            <div class="step-num">4</div>
+            <span class="step-txt">Served</span>
+          </div>
         </div>
       </div>
-
-      <div class="tracker-actions-row">
-        <button class="btn-secondary" id="btnDismissTracker">Dismiss</button>
-        <button class="btn-primary" id="btnViewReceiptFromTracker">🖨️ View Receipt</button>
+      <div class="modal-card-foot">
+        <button class="btn-secondary-flat" id="btnDismissTrackerFoot">Dismiss</button>
+        <button class="btn-primary-solid" id="btnViewReceiptFromTracker">🖨️ View Receipt</button>
       </div>
     </div>
   </div>
 
-  <!-- 6. Thermal Receipt Modal with Animated POS Printer Slot -->
-  <div class="df-modal-overlay" id="thermalReceiptModal" role="dialog" aria-modal="true">
-    <div class="thermal-modal-card">
-      <!-- Simulated POS Printer Slot -->
-      <div class="pos-printer-chassis-top">
-        <div class="pos-feed-slot"></div>
-      </div>
-      <div class="thermal-paper-feed">
-        <div class="thermal-paper" id="receiptPaperContent"></div>
-      </div>
-      <div class="thermal-action-bar">
-        <button class="btn-thermal-print" id="btnPrintReceipt">🖨️ Print Receipt</button>
-        <button class="btn-thermal-dismiss" id="btnDismissReceipt">Close</button>
+  <!-- 6. Thermal Receipt Modal (80mm Dot-Matrix Tax Invoice) -->
+  <div class="modal-backdrop" id="thermalReceiptModal" role="dialog" aria-modal="true">
+    <div class="receipt-paper-card">
+      <div class="receipt-content-body" id="receiptPaperContent"></div>
+      <div class="receipt-action-toolbar">
+        <button class="btn-primary-solid" id="btnPrintReceipt">🖨️ Print Receipt</button>
+        <button class="btn-secondary-flat" id="btnDismissReceipt">Close</button>
       </div>
     </div>
   </div>
 
-  <!-- Toast Notification Container -->
-  <div class="toast-container" id="toastContainer" aria-live="polite"></div>
+  <!-- Toast Notification Host -->
+  <div class="toast-hub" id="toastContainer" aria-live="polite"></div>
 
-  <!-- Scripts -->
+  <!-- Core Scripts -->
   <script src="menu_data.js"></script>
   <script src="app.js"></script>
 </body>
