@@ -181,7 +181,7 @@
 
   // --- 3. APPLICATION STATE ---
   const state = {
-    viewMode: 'split',
+    viewMode: 'customer',
     currentTable: 'T-04',
     activeCategory: 'all',
     activeStation: 'all',
