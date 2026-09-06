@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DineFlow 2.0 — Enterprise Hospitality Operating System &amp; Real-Time KDS</title>
+  <meta name="description" content="Commercial restaurant guest dining, multi-station kitchen display system (KDS), table floorplan management, and 80mm thermal receipt generator.">
+  
+  <!-- Refined Typography: Playfair Display + Plus Jakarta Sans + JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="df-body">
+
+  <!-- =========================================================================
+       TOP HOSPITALITY MASTHEAD & WORKSPACE SWITCHER
+       ========================================================================= -->
+  <header class="df-navbar">
+    <div class="df-nav-brand">
+      <a href="../" class="df-back-link" title="Return to Portfolio">← Portfolio</a>
+      <div class="df-logo-group">
+        <span class="df-brand-crest">⚜️</span>
+        <div class="df-brand-text">
+          <span class="df-brand-title">DineFlow</span>
+          <span class="df-brand-sub">L'OASIS BISTRO &bull; EST. 2024</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- WORKSPACE MODE SWITCHER (FULL VIEWPORTS, ZERO SPLIT SCREENS) -->
+    <nav class="df-view-switcher" aria-label="Workspace View">
+      <button class="df-tab-btn active" id="btnViewGuest" data-view="guest">
+        <span class="tab-icon">🍽️</span>
+        <span>Guest Dining</span>
+      </button>
+      <button class="df-tab-btn" id="btnViewKds" data-view="kds">
+        <span class="tab-icon">👨‍🍳</span>
+        <span>Kitchen KDS</span>
+        <span class="ticket-pulse-badge" id="navKdsBadge">3</span>
+      </button>
+      <button class="df-tab-btn" id="btnViewFloor" data-view="floor">
+        <span class="tab-icon">📋</span>
+        <span>Floor &amp; POS</span>
+      </button>
+    </nav>
+
+    <!-- RIGHT CONTROL ACTIONS -->
+    <div class="df-nav-actions">
+      <!-- TABLE SELECTOR -->
+      <div class="df-table-pill" id="tablePill">
+        <span class="pill-dot"></span>
+        <span id="activeTableLabel">Table 04 · Terrace</span>
+        <select id="tableSelectorDropdown" class="hidden-select" aria-label="Select Table">
+          <!-- Injected from menu_data.js -->
+        </select>
+      </div>
+
+      <!-- AUDIO CHIME TOGGLE -->
+      <button class="df-btn-icon" id="audioToggleBtn" title="Toggle Web Audio counter bell sound">
+        <span id="audioIcon">🔔</span>
+      </button>
+
+      <!-- CART / TRAY BUTTON -->
+      <button class="df-btn-tray" id="cartOpenBtn">
+        <span class="tray-icon">🛒</span>
+        <span class="tray-label">Order Tray</span>
+        <span class="tray-count" id="cartCountBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       VIEW 1: GUEST DIGITAL DINING & ORDERING EXPERIENCE
+       ========================================================================= -->
+  <main class="df-workspace df-view-guest active" id="workspaceGuest">
+    <!-- RESTAURANT ATMOSPHERE HERO BANNER -->
+    <section class="df-guest-hero">
+      <div class="guest-hero-content">
+        <span class="hero-eyebrow">TABLE 04 &bull; GARDEN TERRACE &bull; CHEF SEBASTIAN CHEN</span>
+        <h1 class="hero-title">Artisanal Mediterranean &amp; Woodfired Fare</h1>
+        <p class="hero-desc">
+          Crafted from 48-hour slow-fermented wild doughs, seasonal market produce, and charcoal-kissed prime cuts. Select dishes below to customize and send directly to the line chefs.
+        </p>
+      </div>
+      <div class="guest-hero-telemetry">
+        <div class="telemetry-pill">
+          <span class="tele-val">&lt; 15 min</span>
+          <span class="tele-lbl">Avg Line Prep</span>
+        </div>
+        <div class="telemetry-pill">
+          <span class="tele-val">100%</span>
+          <span class="tele-lbl">Instant Kitchen Dispatch</span>
+        </div>
+        <button class="btn-call-waiter" id="btnCallServer">
+          <span>🛎️</span> Call Waiter
+        </button>
+      </div>
+    </section>
+
+    <!-- STICKY CATEGORY NAVIGATION & DIETARY FILTERS -->
+    <nav class="df-categories-bar" id="categoriesBar">
+      <div class="categories-scroll" id="categoriesList">
+        <!-- Injected from DINEFLOW_CATEGORIES -->
+      </div>
+    </nav>
+
+    <!-- SEARCH & DIETARY FILTER ROW -->
+    <div class="df-filter-row">
+      <div class="df-search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="dishSearchInput" placeholder="Search dishes, ingredients, or allergens..." spellcheck="false">
+      </div>
+      <div class="df-dietary-pills" id="dietaryPills">
+        <button class="diet-pill active" data-diet="all">All Items</button>
+        <button class="diet-pill" data-diet="veg">🌱 Vegetarian</button>
+        <button class="diet-pill" data-diet="vegan">🌿 Vegan</button>
+        <button class="diet-pill" data-diet="gluten-free">🌾 Gluten-Free</button>
+        <button class="diet-pill" data-diet="spicy">🌶️ Spicy</button>
+      </div>
+    </div>
+
+    <!-- CULINARY MENU GRID -->
+    <section class="df-menu-grid" id="menuGrid">
+      <!-- Dish Cards Injected Dynamically by App.js -->
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 2: COMMERCIAL KITCHEN DISPLAY SYSTEM (KDS TERMINAL)
+       ========================================================================= -->
+  <main class="df-workspace df-view-kds" id="workspaceKds" style="display: none;">
+    <!-- KDS CONTROL BAR -->
+    <header class="kds-header-bar">
+      <div class="kds-stations-tabs" id="kdsStationsTabs">
+        <!-- Station buttons injected from DINEFLOW_STATIONS -->
+      </div>
+      <div class="kds-meta-stats">
+        <div class="kds-stat-item">
+          <span class="kds-stat-label">ACTIVE TICKETS</span>
+          <span class="kds-stat-val highlight-amber" id="kdsActiveCount">3</span>
+        </div>
+        <div class="kds-stat-item">
+          <span class="kds-stat-label">AVG DISPATCH</span>
+          <span class="kds-stat-val" id="kdsAvgTime">8.4m</span>
+        </div>
+        <button class="kds-action-btn" id="btnToggle86Drawer">
+          <span>🚫</span> 86'd Items (<span id="count86Items">0</span>)
+        </button>
+        <button class="kds-action-btn btn-simulate-rush" id="btnSimulateRush">
+          <span>⚡</span> Inject Live Order
+        </button>
+      </div>
+    </header>
+
+    <!-- KDS 4-STAGE EXPEDITE BOARD -->
+    <section class="kds-kanban-board">
+      <!-- COLUMN 1: INCOMING -->
+      <div class="kds-column col-incoming" data-stage="incoming">
+        <div class="col-header">
+          <div class="col-title-group">
+            <span class="col-indicator dot-incoming"></span>
+            <h2 class="col-title">Incoming</h2>
+          </div>
+          <span class="col-badge" id="badgeIncoming">1</span>
+        </div>
+        <div class="col-tickets-list" id="listIncoming">
+          <!-- Injected by KdsRenderer -->
+        </div>
+      </div>
+
+      <!-- COLUMN 2: IN PREPARATION -->
+      <div class="kds-column col-prep" data-stage="in_prep">
+        <div class="col-header">
+          <div class="col-title-group">
+            <span class="col-indicator dot-prep"></span>
+            <h2 class="col-title">Cooking / Line</h2>
+          </div>
+          <span class="col-badge" id="badgePrep">1</span>
+        </div>
+        <div class="col-tickets-list" id="listPrep">
+          <!-- Injected by KdsRenderer -->
+        </div>
+      </div>
+
+      <!-- COLUMN 3: READY TO PASS -->
+      <div class="kds-column col-ready" data-stage="ready">
+        <div class="col-header">
+          <div class="col-title-group">
+            <span class="col-indicator dot-ready"></span>
+            <h2 class="col-title">Pass / Plated</h2>
+          </div>
+          <span class="col-badge" id="badgeReady">1</span>
+        </div>
+        <div class="col-tickets-list" id="listReady">
+          <!-- Injected by KdsRenderer -->
+        </div>
+      </div>
+
+      <!-- COLUMN 4: COMPLETED -->
+      <div class="kds-column col-completed" data-stage="completed">
+        <div class="col-header">
+          <div class="col-title-group">
+            <span class="col-indicator dot-completed"></span>
+            <h2 class="col-title">Served / Settle</h2>
+          </div>
+          <span class="col-badge" id="badgeCompleted">0</span>
+        </div>
+        <div class="col-tickets-list" id="listCompleted">
+          <!-- Injected by KdsRenderer -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- =========================================================================
+       VIEW 3: TABLE FLOORPLAN & 80MM THERMAL POS TERMINAL
+       ========================================================================= -->
+  <main class="df-workspace df-view-floor" id="workspaceFloor" style="display: none;">
+    <div class="floor-layout-container">
+      <!-- LEFT: TABLE OCCUPANCY MAP -->
+      <section class="floor-tables-panel">
+        <div class="panel-section-header">
+          <div>
+            <h2 class="section-heading">Dining Room &amp; Terrace Floorplan</h2>
+            <p class="section-sub">10 Tables Configured &bull; Live Billing Status</p>
+          </div>
+          <div class="table-legend">
+            <span class="leg-item"><span class="leg-dot dot-vacant"></span>Vacant</span>
+            <span class="leg-item"><span class="leg-dot dot-dining"></span>Active Dining</span>
+            <span class="leg-item"><span class="leg-dot dot-billed"></span>Billed / Settle</span>
+          </div>
+        </div>
+
+        <div class="floor-tables-grid" id="floorTablesGrid">
+          <!-- Injected by FloorRenderer -->
+        </div>
+      </section>
+
+      <!-- RIGHT: TABLE DETAIL & 80MM THERMAL RECEIPT TERMINAL -->
+      <section class="floor-pos-panel">
+        <div class="panel-section-header">
+          <div>
+            <h2 class="section-heading">Table POS Checkout Terminal</h2>
+            <p class="section-sub" id="posTableHeading">Select a table to inspect bill</p>
+          </div>
+          <button class="btn-thermal-print" id="btnPrintReceipt">
+            <span>🖨️</span> Print 80mm Thermal Receipt
+          </button>
+        </div>
+
+        <!-- POS RECEIPT CONTAINER (AUTHENTIC 80MM RECEIPT PREVIEW) -->
+        <div class="thermal-receipt-paper" id="thermalReceiptBox">
+          <div class="receipt-header">
+            <h3 class="rcpt-brand">L'OASIS BISTRO &amp; BAR</h3>
+            <p class="rcpt-line">14 Rue de la Paix, Paris &bull; Connaught Place</p>
+            <p class="rcpt-line">GSTIN: 07AAACL1482E1Z8 &bull; FSSAI: 10019011006542</p>
+            <div class="rcpt-divider">================================</div>
+            <div class="rcpt-meta-row">
+              <span id="rcptTableId">TABLE: T04 (Terrace)</span>
+              <span id="rcptTime">TIME: 15:10</span>
+            </div>
+            <div class="rcpt-meta-row">
+              <span id="rcptServer">SERVER: Sebastian C.</span>
+              <span id="rcptInvoice">INV: #INV-8842</span>
+            </div>
+            <div class="rcpt-divider">--------------------------------</div>
+          </div>
+
+          <!-- RECEIPT ITEMS TABLE -->
+          <div class="rcpt-items-list" id="rcptItemsList">
+            <!-- Injected by POS Renderer -->
+          </div>
+
+          <div class="rcpt-divider">--------------------------------</div>
+
+          <!-- RECEIPT TOTALS BREAKDOWN -->
+          <div class="rcpt-totals">
+            <div class="rcpt-t-row">
+              <span>SUBTOTAL:</span>
+              <span id="rcptSubtotal">₹1,350.00</span>
+            </div>
+            <div class="rcpt-t-row">
+              <span>CGST (2.5%):</span>
+              <span id="rcptCgst">₹33.75</span>
+            </div>
+            <div class="rcpt-t-row">
+              <span>SGST (2.5%):</span>
+              <span id="rcptSgst">₹33.75</span>
+            </div>
+            <div class="rcpt-t-row">
+              <span>SERVICE CHARGE (5%):</span>
+              <span id="rcptService">₹67.50</span>
+            </div>
+            <div class="rcpt-divider">================================</div>
+            <div class="rcpt-t-row rcpt-grand-total">
+              <span>TOTAL PAYABLE:</span>
+              <span id="rcptGrandTotal">₹1,485.00</span>
+            </div>
+            <div class="rcpt-divider">================================</div>
+          </div>
+
+          <div class="rcpt-footer">
+            <p class="rcpt-center">THANK YOU FOR DINING WITH US!</p>
+            <p class="rcpt-center">Scan below for feedback &amp; rewards</p>
+            <div class="rcpt-barcode">||| ||||| |||| |||||||| ||||| ||||</div>
+            <p class="rcpt-center rcpt-tiny">Powered by DineFlow Hospitality OS</p>
+          </div>
+        </div>
+
+        <div class="pos-actions-footer">
+          <button class="btn-pos-settle" id="btnSettleTable">
+            <span>💳</span> Settle Bill &amp; Release Table
+          </button>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       MODAL 1: DISH CUSTOMIZER & MODIFIERS DIALOG
+       ========================================================================= -->
+  <div class="df-modal-backdrop" id="dishModalBackdrop">
+    <div class="df-modal-sheet" id="dishModalSheet">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close">✕</button>
+
+      <div class="modal-hero-img-wrap">
+        <img id="modalDishImg" src="" alt="Dish preview" class="modal-dish-img">
+        <div class="modal-img-gradient"></div>
+        <div class="modal-badge-group">
+          <span class="diet-tag" id="modalDietTag">🌱 Veg</span>
+          <span class="prep-tag" id="modalPrepTag">12 min</span>
+        </div>
+      </div>
+
+      <div class="modal-body-scroll">
+        <div class="modal-head">
+          <h3 class="modal-dish-title" id="modalDishTitle">Margherita Verace D.O.P.</h3>
+          <span class="modal-dish-price" id="modalDishPrice">₹720</span>
+        </div>
+        <p class="modal-dish-desc" id="modalDishDesc">San Marzano D.O.P. tomatoes, Mozzarella di Bufala Campana, wild Genovese basil.</p>
+
+        <!-- DYNAMIC MODIFIER GROUPS -->
+        <div class="modifier-groups-container" id="modifierGroupsContainer">
+          <!-- Injected dynamically -->
+        </div>
+
+        <!-- SPECIAL CHEF INSTRUCTIONS -->
+        <div class="chef-note-box">
+          <label for="chefNotesInput" class="chef-note-label">Special Requests for the Chef Line:</label>
+          <input type="text" id="chefNotesInput" placeholder="e.g. Extra crisp crust, dressing on the side..." spellcheck="false">
+        </div>
+      </div>
+
+      <!-- MODAL FOOTER ACTION -->
+      <div class="modal-footer-bar">
+        <div class="qty-counter">
+          <button type="button" class="qty-btn" id="modalQtyMinus">−</button>
+          <span class="qty-number" id="modalQtyVal">1</span>
+          <button type="button" class="qty-btn" id="modalQtyPlus">+</button>
+        </div>
+        <button type="button" class="btn-add-to-tray" id="modalAddBtn">
+          <span>Add to Table Order &bull; </span>
+          <span id="modalTotalCalc">₹720</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =========================================================================
+       MODAL 2: SLIDE-OUT CART / ORDER TRAY DRAWER
+       ========================================================================= -->
+  <aside class="df-cart-drawer" id="cartDrawer" aria-label="Current Order Tray">
+    <div class="cart-header">
+      <div class="cart-title-group">
+        <h3 class="cart-title">Table 04 Order Tray</h3>
+        <span class="cart-subtitle" id="cartItemsSummary">0 items queued</span>
+      </div>
+      <button class="cart-close-btn" id="cartCloseBtn" aria-label="Close Tray">✕</button>
+    </div>
+
+    <!-- CART ITEMS LIST -->
+    <div class="cart-items-scroll" id="cartItemsList">
+      <div class="cart-empty-state" id="cartEmptyState">
+        <span class="empty-icon">🍽️</span>
+        <h4>Your tray is currently empty</h4>
+        <p>Explore the culinary menu and add dishes to send to the kitchen.</p>
+      </div>
+      <!-- Injected by CartRenderer -->
+    </div>
+
+    <!-- CART FOOTER & INSTANT CHECKOUT -->
+    <div class="cart-footer">
+      <div class="bill-summary-box">
+        <div class="bill-row">
+          <span>Subtotal</span>
+          <span id="traySubtotal">₹0.00</span>
+        </div>
+        <div class="bill-row">
+          <span>Taxes (5% GST)</span>
+          <span id="trayTax">₹0.00</span>
+        </div>
+        <div class="bill-row">
+          <span>Service Charge (5%)</span>
+          <span id="trayService">₹0.00</span>
+        </div>
+        <div class="bill-row bill-grand-total">
+          <span>Total Payable</span>
+          <span id="trayGrandTotal">₹0.00</span>
+        </div>
+      </div>
+
+      <button class="btn-dispatch-order" id="btnDispatchOrder" disabled>
+        <span class="dispatch-icon">🔥</span>
+        <span>Send Order to Kitchen ➔</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- =========================================================================
+       MODAL 3: 86'D INVENTORY QUICK DRAWER (KDS)
+       ========================================================================= -->
+  <div class="df-modal-backdrop" id="drawer86Backdrop">
+    <div class="df-modal-sheet sheet-86" id="drawer86Sheet">
+      <div class="modal-head">
+        <div>
+          <h3 class="modal-dish-title">Chef's 86'd Out-of-Stock Board</h3>
+          <p class="modal-dish-desc">Disabling an item here immediately prevents guest ordering across all active tablet sessions.</p>
+        </div>
+        <button class="modal-close-btn" id="close86Btn">✕</button>
+      </div>
+      <div class="list-86-container" id="list86Container">
+        <!-- Injected dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="df-toast" id="dfToast" aria-live="polite"></div>
+
+  <!-- SCRIPTS -->
+  <script src="menu_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
