@@ -6,7 +6,7 @@
 (function() {
   'use strict';
 
-  // --- AUDIO SYNTHESIZER ENGINE (Web Audio API) ---
+  // --- 1. AUDIO SYNTHESIZER ENGINE (Web Audio API) ---
   let audioCtx = null;
   function getAudioContext() {
     if (!audioCtx) {
@@ -26,7 +26,7 @@
       if (!ctx) return;
       const t = ctx.currentTime;
 
-      // 1st Ping (Higher Harmonic)
+      // 1st Harmonic Ping
       [1760, 3520, 5280].forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
@@ -99,8 +99,31 @@
     } catch (e) {}
   }
 
-  // --- CROSS-TAB SYNC BUS (BroadcastChannel + LocalStorage) ---
-  const SYNC_KEY = 'dineflow_channel_events';
+  // POS Payment Settlement Cash Register Chime ('Ka-Ching!')
+  function playPaymentSuccessChime() {
+    try {
+      const ctx = getAudioContext();
+      if (!ctx) return;
+      const t = ctx.currentTime;
+
+      // Register Bell
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(2093, t); // C7
+      osc.frequency.setValueAtTime(2637, t + 0.08); // E7
+      osc.frequency.setValueAtTime(3136, t + 0.16); // G7
+      gain.gain.setValueAtTime(0.3, t);
+      gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start(t);
+      osc.stop(t + 1.25);
+    } catch (e) {}
+  }
+
+  // --- 2. CROSS-TAB & MULTI-VIEW BROADCAST BUS ---
+  const SYNC_KEY = 'dineflow_channel_events_v2';
   let broadcastChannel = null;
   try {
     if ('BroadcastChannel' in window) {
@@ -118,216 +141,167 @@
     }
   });
 
-  function broadcastEvent(type, payload) {
-    const packet = { type, payload, timestamp: Date.now() };
+  function broadcastEvent(action, payload) {
+    const event = { action, payload, timestamp: Date.now() };
     if (broadcastChannel) {
-      try { broadcastChannel.postMessage(packet); } catch (e) {}
+      try { broadcastChannel.postMessage(event); } catch (e) {}
     }
     try {
-      localStorage.setItem(SYNC_KEY, JSON.stringify(packet));
+      localStorage.setItem(SYNC_KEY, JSON.stringify(event));
     } catch (e) {}
   }
 
-  function handleIncomingSyncEvent(packet) {
-    if (!packet || !packet.type) return;
-    if (packet.type === 'NEW_ORDER') {
-      const exists = state.orders.some(o => o.id === packet.payload.id);
-      if (!exists) {
-        state.orders.unshift(packet.payload);
-        saveOrders();
-        playServiceBell();
-        renderKDS();
-        renderStats();
-      }
-    } else if (packet.type === 'STATUS_UPDATE') {
-      const target = state.orders.find(o => o.id === packet.payload.id);
-      if (target) {
-        target.status = packet.payload.status;
-        target.updatedAt = packet.payload.updatedAt;
-        saveOrders();
-        renderKDS();
-        renderCustomerOrderStatus();
-      }
-    } else if (packet.type === 'STOCK_TOGGLE') {
-      state.outOfStock = packet.payload;
-      saveStock();
-      renderCustomerMenu();
+  function handleIncomingSyncEvent(evt) {
+    if (!evt || !evt.action) return;
+    if (evt.action === 'NEW_ORDER') {
+      playServiceBell();
+      loadOrders();
       renderKDS();
+      renderStats();
+      showToast('New ticket incoming from ' + evt.payload.tableName);
+    } else if (evt.action === 'STATUS_UPDATE') {
+      loadOrders();
+      renderKDS();
+      renderCustomerOrderStatus();
+      renderStats();
+    } else if (evt.action === 'WAITER_CALL') {
+      playServiceBell();
+      displayKdsServiceAlert(evt.payload);
+    } else if (evt.action === 'STOCK_TOGGLE') {
+      loadOutOfStock();
+      renderCustomerMenu();
+      renderStockToggles();
+    } else if (evt.action === 'PAYMENT_SETTLED') {
+      playPaymentSuccessChime();
+      loadOrders();
+      renderKDS();
+      renderCustomerOrderStatus();
+      renderStats();
     }
   }
 
-  // --- APPLICATION STATE ---
-  const DEFAULT_INITIAL_ORDERS = [
-    {
-      id: 'DF-8841',
-      tableId: 'T-02',
-      tableName: 'Table 02',
-      status: 'cooking',
-      createdAt: Date.now() - 340000, // ~5.5 mins ago
-      items: [
-        {
-          name: 'Hand-Cut Tagliatelle Ragu',
-          qty: 1,
-          price: 680,
-          modifiers: ['Chili Heat: Calabrian Kick', 'Extra 24-mo Pecorino (+₹50)']
-        },
-        {
-          name: 'Artisan Oat Flat White',
-          qty: 2,
-          price: 240,
-          modifiers: ['Oatly Barista Edition', 'Standard Double Ristretto']
-        }
-      ],
-      notes: 'Customer allergic to shellfish; please keep kitchen station wiped.',
-      subtotal: 1210,
-      tax: 60.5,
-      serviceCharge: 60.5,
-      total: 1331
-    },
-    {
-      id: 'DF-8839',
-      tableId: 'T-07',
-      tableName: 'Table 07',
-      status: 'ready',
-      createdAt: Date.now() - 720000, // ~12 mins ago
-      items: [
-        {
-          name: 'Wood-Fired Burrata Pizza',
-          qty: 1,
-          price: 640,
-          modifiers: ['Garlic Herb Infused Brush (+₹30)', 'Spicy Hot Honey Cup (+₹40)']
-        },
-        {
-          name: 'Cascara & Grapefruit Spritz',
-          qty: 1,
-          price: 260,
-          modifiers: ['Hand-Cut Clear Ice Block']
-        }
-      ],
-      notes: '',
-      subtotal: 970,
-      tax: 48.5,
-      serviceCharge: 48.5,
-      total: 1067
-    }
-  ];
-
+  // --- 3. APPLICATION STATE ---
   const state = {
-    viewMode: 'split', // 'split' | 'customer' | 'kds' | 'stats'
-    activeCategory: 'all',
+    viewMode: 'split',
     currentTable: 'T-04',
+    activeCategory: 'all',
+    activeStation: 'all',
     cart: [],
-    orders: loadOrders(),
-    outOfStock: loadStock(),
     modalItem: null,
+    orders: [],
+    outOfStock: [],
     customerActiveOrder: null,
-    selectedReceiptOrder: null
+    activeWaiterAlert: null
   };
 
-  function loadOrders() {
-    try {
-      const saved = localStorage.getItem('dineflow_orders_v1');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {}
-    return DEFAULT_INITIAL_ORDERS;
+  // Seed sample realistic tickets if storage is fresh
+  function initializeDefaultOrders() {
+    const existing = localStorage.getItem('dineflow_orders_v2');
+    if (existing) {
+      try {
+        state.orders = JSON.parse(existing);
+        return;
+      } catch (e) {}
+    }
+
+    const now = Date.now();
+    state.orders = [
+      {
+        id: 'DF-8842',
+        tableId: 'T-04',
+        tableName: 'Table 04',
+        status: 'cooking',
+        createdAt: now - (6 * 60 * 1000 + 40 * 1000), // 6m 40s ago
+        items: [
+          { name: 'Slow-Braised Short Rib Tagliatelle', qty: 1, price: 680, modifiers: ['Calabrian Chili Kick', 'Fresh Shaved 24-mo Pecorino'], notes: 'Extra hot garnish' },
+          { name: 'Burrata & Charred Peach Salad', qty: 1, price: 490, modifiers: ['Hot Chili Wildflower Honey'], notes: '' },
+          { name: 'Nitro Cold Brew Float', qty: 2, price: 580, modifiers: ['Ethiopia Yirgacheffe'], notes: '' }
+        ],
+        notes: 'Guest celebrating anniversary',
+        subtotal: 1750,
+        tax: 87.5,
+        serviceCharge: 87.5,
+        total: 1925
+      },
+      {
+        id: 'DF-8840',
+        tableId: 'T-02',
+        tableName: 'Table 02',
+        status: 'ready',
+        createdAt: now - (11 * 60 * 1000 + 10 * 1000), // 11m 10s ago
+        items: [
+          { name: 'Truffle Mushroom Sourdough Toast', qty: 1, price: 380, modifiers: ['36h Country Sourdough', 'Poached Free-Range Egg'], notes: '' },
+          { name: 'Artisan Oat Flat White', qty: 1, price: 240, modifiers: ['Oatly Barista', 'Double Ristretto'], notes: '' }
+        ],
+        notes: '',
+        subtotal: 620,
+        tax: 31,
+        serviceCharge: 31,
+        total: 682
+      },
+      {
+        id: 'DF-8837',
+        tableId: 'T-07',
+        tableName: 'Table 07',
+        status: 'served',
+        createdAt: now - (28 * 60 * 1000),
+        items: [
+          { name: 'Wood-Fired Neapolitan Burrata Pizza', qty: 1, price: 640, modifiers: ['Leopard Char Crust'], notes: '' },
+          { name: 'Cascara & Grapefruit Botanicals', qty: 1, price: 260, modifiers: ['Clear Ice Block'], notes: '' }
+        ],
+        notes: '',
+        subtotal: 900,
+        tax: 45,
+        serviceCharge: 45,
+        total: 990
+      }
+    ];
+    saveOrders();
   }
 
   function saveOrders() {
     try {
-      localStorage.setItem('dineflow_orders_v1', JSON.stringify(state.orders));
+      localStorage.setItem('dineflow_orders_v2', JSON.stringify(state.orders));
     } catch (e) {}
   }
 
-  function loadStock() {
+  function loadOrders() {
     try {
-      const saved = localStorage.getItem('dineflow_stock_v1');
-      if (saved) return JSON.parse(saved);
+      const data = localStorage.getItem('dineflow_orders_v2');
+      if (data) state.orders = JSON.parse(data);
     } catch (e) {}
-    return [];
   }
 
-  function saveStock() {
+  function loadOutOfStock() {
     try {
-      localStorage.setItem('dineflow_stock_v1', JSON.stringify(state.outOfStock));
+      const data = localStorage.getItem('dineflow_out_of_stock');
+      if (data) state.outOfStock = JSON.parse(data);
     } catch (e) {}
   }
 
-  // --- INITIALIZATION ---
-  window.addEventListener('DOMContentLoaded', () => {
-    initViewControls();
-    initTableSelector();
-    initCategoryTabs();
-    renderCustomerMenu();
-    renderKDS();
-    renderStats();
-    startKDSTimerInterval();
-
-    // Check URL parameters for direct view routing
-    const params = new URLSearchParams(window.location.search);
-    if (params.get('view') === 'kds') {
-      setViewMode('kds');
-    } else if (params.get('view') === 'customer') {
-      setViewMode('customer');
-    } else {
-      setViewMode('split');
-    }
-  });
-
-  // --- VIEW MODE SWITCHER ---
-  function initViewControls() {
-    document.querySelectorAll('.view-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        playTapSound();
-        const mode = btn.dataset.view;
-        setViewMode(mode);
-      });
-    });
+  function saveOutOfStock() {
+    try {
+      localStorage.setItem('dineflow_out_of_stock', JSON.stringify(state.outOfStock));
+    } catch (e) {}
   }
 
-  function setViewMode(mode) {
-    state.viewMode = mode;
-    document.querySelectorAll('.view-btn').forEach(b => {
-      b.classList.toggle('active', b.dataset.view === mode);
-    });
-
-    const rootApp = document.getElementById('dineflowApp');
-    if (rootApp) {
-      rootApp.className = 'dineflow-app mode-' + mode;
-    }
+  // --- 4. TOAST NOTIFICATION UTILITY ---
+  function showToast(msg) {
+    const container = document.getElementById('toastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'df-toast';
+    toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(10px)';
+      toast.style.transition = 'all 0.3s ease';
+      setTimeout(() => toast.remove(), 300);
+    }, 3200);
   }
 
-  // --- TABLE SELECTION ---
-  function initTableSelector() {
-    const selector = document.getElementById('tableSelect');
-    if (!selector || !window.DINEFLOW_TABLES) return;
-
-    selector.innerHTML = window.DINEFLOW_TABLES.map(t => 
-      `<option value="${t.id}" ${t.id === state.currentTable ? 'selected' : ''}>${t.name} (${t.type})</option>`
-    ).join('');
-
-    selector.addEventListener('change', (e) => {
-      state.currentTable = e.target.value;
-      const tInfo = window.DINEFLOW_TABLES.find(t => t.id === state.currentTable);
-      const label = document.getElementById('currentTableBadge');
-      if (label && tInfo) label.textContent = tInfo.name;
-    });
-  }
-
-  // --- CATEGORY TABS ---
-  function initCategoryTabs() {
-    const tabs = document.querySelectorAll('.cat-pill');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        playTapSound();
-        tabs.forEach(t => t.classList.remove('active'));
-        tab.classList.add('active');
-        state.activeCategory = tab.dataset.category;
-        renderCustomerMenu();
-      });
-    });
-  }
-
-  // --- RENDER CUSTOMER MENU ---
+  // --- 5. RENDER CUSTOMER MENU ---
   function renderCustomerMenu() {
     const container = document.getElementById('menuGrid');
     if (!container || !window.DINEFLOW_MENU) return;
@@ -339,28 +313,39 @@
 
     container.innerHTML = filtered.map(item => {
       const is86 = state.outOfStock.includes(item.id);
+      const dietClass = item.diet === 'veg' ? 'diet-veg' : 'diet-nonveg';
+      const dietTitle = item.diet === 'veg' ? 'Vegetarian' : 'Non-Vegetarian';
+      const specialTag = item.tags.find(t => t.includes('Signature') || t.includes('Special'));
+
       return `
         <article class="menu-card ${is86 ? 'is-soldout' : ''}" data-id="${item.id}">
-          <div class="menu-img-wrap">
-            <img src="${item.image}" alt="${item.name}" loading="lazy" class="menu-img" />
-            <div class="badge-cluster">
-              ${item.tags.map(tag => `<span class="dish-badge">${tag}</span>`).join('')}
-              ${is86 ? '<span class="dish-badge badge-soldout">86\'d / Sold Out</span>' : ''}
-            </div>
-            <span class="dish-time">⏱ ${item.prepTime}</span>
-          </div>
           <div class="menu-content">
             <div class="menu-header-row">
+              <span class="diet-indicator ${dietClass}" title="${dietTitle}"></span>
               <h4 class="dish-title">${item.name}</h4>
-              <span class="dish-price">₹${item.price}</span>
             </div>
             <p class="dish-desc">${item.description}</p>
             <div class="menu-footer-row">
-              <span class="dish-cal">${item.calories}</span>
+              <div>
+                <span class="dish-price">₹${item.price}</span>
+                <span class="dish-cal">&bull; ${item.calories}</span>
+              </div>
               <button class="btn-customize-add" data-id="${item.id}" ${is86 ? 'disabled' : ''}>
-                ${is86 ? 'Sold Out' : '+ Customize & Add'}
+                ${is86 ? 'Sold Out' : '+ Add'}
               </button>
             </div>
+          </div>
+
+          <div class="menu-img-wrap">
+            <img 
+              src="${item.image}" 
+              alt="${item.name}" 
+              loading="lazy" 
+              class="menu-img"
+              onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&auto=format&fit=crop&q=80';" 
+            />
+            ${specialTag ? `<span class="badge-tag-special">${specialTag}</span>` : ''}
+            <span class="dish-time-badge">⏱ ${item.prepTime}</span>
           </div>
         </article>
       `;
@@ -370,13 +355,12 @@
     container.querySelectorAll('.btn-customize-add').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
-        const id = btn.dataset.id;
-        openModifierModal(id);
+        openModifierModal(btn.dataset.id);
       });
     });
   }
 
-  // --- MODIFIER MODAL ---
+  // --- 6. MODIFIERS & CUSTOMIZATION MODAL ---
   function openModifierModal(itemId) {
     const item = window.DINEFLOW_MENU.find(m => m.id === itemId);
     if (!item) return;
@@ -396,8 +380,7 @@
     desc.textContent = item.description;
     if (notesInput) notesInput.value = '';
 
-    // Render Modifiers Groups
-    body.innerHTML = (item.modifiers || []).map((grp, gIdx) => {
+    body.innerHTML = (item.modifiers || []).map((grp) => {
       return `
         <div class="mod-group" data-group-id="${grp.id}">
           <div class="mod-group-head">
@@ -426,7 +409,6 @@
 
     updateModalCalculatedPrice();
 
-    // Listen to changes in options to update price
     body.querySelectorAll('.mod-input').forEach(input => {
       input.addEventListener('change', updateModalCalculatedPrice);
     });
@@ -448,14 +430,17 @@
     }
   }
 
-  // Close modal button
-  const closeModalBtn = document.getElementById('btnDismissModal');
-  if (closeModalBtn) {
-    closeModalBtn.addEventListener('click', () => {
-      document.getElementById('modifierModal').classList.remove('active');
-      state.modalItem = null;
-    });
-  }
+  // Dismiss modifier modal
+  const dismissModBtn = document.getElementById('btnDismissModal');
+  const closeModBtn = document.getElementById('btnCloseModModal');
+  [dismissModBtn, closeModBtn].forEach(b => {
+    if (b) {
+      b.addEventListener('click', () => {
+        document.getElementById('modifierModal')?.classList.remove('active');
+        state.modalItem = null;
+      });
+    }
+  });
 
   // Confirm Add to Tray
   const confirmAddBtn = document.getElementById('btnConfirmAddToCart');
@@ -464,136 +449,142 @@
       if (!state.modalItem) return;
       playTapSound();
 
-      const selectedModifiers = [];
-      let totalItemPrice = state.modalItem.price;
+      const selectedMods = [];
+      let calculatedPrice = state.modalItem.price;
 
       document.querySelectorAll('#modalModifiersBody .mod-input:checked').forEach(inp => {
-        const extra = parseFloat(inp.dataset.price || 0);
-        totalItemPrice += extra;
-        selectedModifiers.push(inp.value + (extra > 0 ? ` (+₹${extra})` : ''));
+        selectedMods.push(inp.value);
+        calculatedPrice += parseFloat(inp.dataset.price || 0);
       });
 
-      const notes = (document.getElementById('modalChefNotes')?.value || '').trim();
+      const notes = document.getElementById('modalChefNotes')?.value.trim() || '';
 
-      state.cart.push({
+      const cartEntry = {
         cartItemId: 'c_' + Date.now() + '_' + Math.random().toString(36).substr(2, 4),
         id: state.modalItem.id,
         name: state.modalItem.name,
+        station: state.modalItem.station || 'grill',
         basePrice: state.modalItem.price,
-        totalPrice: totalItemPrice,
-        modifiers: selectedModifiers,
+        totalPrice: calculatedPrice,
+        modifiers: selectedMods,
         notes: notes,
         qty: 1
-      });
+      };
 
-      document.getElementById('modifierModal').classList.remove('active');
+      state.cart.push(cartEntry);
+      document.getElementById('modifierModal')?.classList.remove('active');
       state.modalItem = null;
+
       renderCart();
+      showToast(`${cartEntry.name} added to tray`);
     });
   }
 
-  // --- CART / TRAY RENDERING ---
+  // --- 7. CART & ORDER TRAY MANAGEMENT ---
   function renderCart() {
-    const trayBar = document.getElementById('customerTrayBar');
     const trayCount = document.getElementById('trayItemCount');
     const trayTotal = document.getElementById('trayTotalAmount');
-    const drawerList = document.getElementById('cartItemsList');
+    const cartList = document.getElementById('cartItemsList');
     const subtotalEl = document.getElementById('cartSubtotal');
     const taxEl = document.getElementById('cartTax');
-    const grandTotalEl = document.getElementById('cartGrandTotal');
+    const serviceEl = document.getElementById('cartServiceCharge');
+    const grandEl = document.getElementById('cartGrandTotal');
 
-    const totalQty = state.cart.reduce((sum, item) => sum + item.qty, 0);
-    const subtotal = state.cart.reduce((sum, item) => sum + (item.totalPrice * item.qty), 0);
-    const tax = Math.round(subtotal * 0.05 * 100) / 100; // 5% GST
-    const service = Math.round(subtotal * 0.05 * 100) / 100; // 5% Service charge
+    const totalQty = state.cart.reduce((sum, i) => sum + i.qty, 0);
+    const subtotal = state.cart.reduce((sum, i) => sum + (i.totalPrice * i.qty), 0);
+    const tax = Math.round(subtotal * 0.05 * 100) / 100;
+    const service = Math.round(subtotal * 0.05 * 100) / 100;
     const grandTotal = subtotal + tax + service;
 
-    if (trayBar) {
-      if (totalQty > 0) {
-        trayBar.classList.add('visible');
-        if (trayCount) trayCount.textContent = `${totalQty} item${totalQty > 1 ? 's' : ''}`;
-        if (trayTotal) trayTotal.textContent = `₹${grandTotal.toFixed(2)}`;
-      } else {
-        trayBar.classList.remove('visible');
-      }
-    }
-
-    if (drawerList) {
-      if (state.cart.length === 0) {
-        drawerList.innerHTML = `<div class="empty-cart-msg">Your order tray is currently empty. Tap any dish above to customize and add!</div>`;
-      } else {
-        drawerList.innerHTML = state.cart.map(item => `
-          <div class="cart-item-row" data-cart-id="${item.cartItemId}">
-            <div class="cart-item-main">
-              <div class="cart-item-name">${item.name}</div>
-              ${item.modifiers.length > 0 ? `<div class="cart-item-mods">${item.modifiers.join(', ')}</div>` : ''}
-              ${item.notes ? `<div class="cart-item-notes">Note: "${item.notes}"</div>` : ''}
-              <div class="cart-item-price">₹${(item.totalPrice * item.qty).toFixed(2)}</div>
-            </div>
-            <div class="cart-qty-ctrl">
-              <button class="btn-qty-minus" data-cart-id="${item.cartItemId}">-</button>
-              <span class="cart-qty-num">${item.qty}</span>
-              <button class="btn-qty-plus" data-cart-id="${item.cartItemId}">+</button>
-            </div>
-          </div>
-        `).join('');
-
-        // Attach quantity buttons
-        drawerList.querySelectorAll('.btn-qty-minus').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const cId = btn.dataset.cartId;
-            const target = state.cart.find(i => i.cartItemId === cId);
-            if (target) {
-              target.qty--;
-              if (target.qty <= 0) {
-                state.cart = state.cart.filter(i => i.cartItemId !== cId);
-              }
-              renderCart();
-            }
-          });
-        });
-
-        drawerList.querySelectorAll('.btn-qty-plus').forEach(btn => {
-          btn.addEventListener('click', () => {
-            const cId = btn.dataset.cartId;
-            const target = state.cart.find(i => i.cartItemId === cId);
-            if (target) {
-              target.qty++;
-              renderCart();
-            }
-          });
-        });
-      }
-    }
+    if (trayCount) trayCount.textContent = `${totalQty} item${totalQty !== 1 ? 's' : ''}`;
+    if (trayTotal) trayTotal.textContent = `₹${grandTotal.toFixed(2)}`;
 
     if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-    if (taxEl) taxEl.textContent = `₹${(tax + service).toFixed(2)} (5% GST + 5% Svc)`;
-    if (grandTotalEl) grandTotalEl.textContent = `₹${grandTotal.toFixed(2)}`;
+    if (taxEl) taxEl.textContent = `₹${tax.toFixed(2)}`;
+    if (serviceEl) serviceEl.textContent = `₹${service.toFixed(2)}`;
+    if (grandEl) grandEl.textContent = `₹${grandTotal.toFixed(2)}`;
+
+    // Update payment modal amount if open
+    const pmAmt = document.getElementById('pmAmountValue');
+    if (pmAmt) pmAmt.textContent = `₹${grandTotal.toFixed(2)}`;
+
+    if (!cartList) return;
+
+    if (state.cart.length === 0) {
+      cartList.innerHTML = `<div class="kds-empty-col">Your order tray is empty.<br/>Browse the menu to add dishes.</div>`;
+      return;
+    }
+
+    cartList.innerHTML = state.cart.map(item => `
+      <div class="cart-item-card" data-cid="${item.cartItemId}">
+        <div class="ci-info">
+          <div class="ci-name">${item.name}</div>
+          ${item.modifiers.length > 0 ? `<div class="ci-mods">${item.modifiers.join(', ')}</div>` : ''}
+          ${item.notes ? `<div class="ci-notes">"${item.notes}"</div>` : ''}
+        </div>
+        <div class="ci-right">
+          <div class="ci-price">₹${(item.totalPrice * item.qty).toFixed(2)}</div>
+          <div class="ci-qty-stepper">
+            <button class="ci-btn-step btn-minus" data-cid="${item.cartItemId}">-</button>
+            <span class="ci-qty-val">${item.qty}</span>
+            <button class="ci-btn-step btn-plus" data-cid="${item.cartItemId}">+</button>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    // Attach step listeners
+    cartList.querySelectorAll('.btn-minus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cid = btn.dataset.cid;
+        const entry = state.cart.find(i => i.cartItemId === cid);
+        if (!entry) return;
+        if (entry.qty > 1) {
+          entry.qty -= 1;
+        } else {
+          state.cart = state.cart.filter(i => i.cartItemId !== cid);
+        }
+        renderCart();
+      });
+    });
+
+    cartList.querySelectorAll('.btn-plus').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const cid = btn.dataset.cid;
+        const entry = state.cart.find(i => i.cartItemId === cid);
+        if (entry) {
+          entry.qty += 1;
+          renderCart();
+        }
+      });
+    });
   }
 
-  // Tray Bar Click -> Open Tray Drawer
+  // Open/Close Cart Drawer
   const trayBar = document.getElementById('customerTrayBar');
-  const trayDrawer = document.getElementById('cartDrawer');
-  const closeDrawerBtn = document.getElementById('btnCloseCartDrawer');
+  const cartDrawer = document.getElementById('cartDrawer');
+  const closeCartBtn = document.getElementById('btnCloseCartDrawer');
 
-  if (trayBar && trayDrawer) {
+  if (trayBar) {
     trayBar.addEventListener('click', () => {
-      playTapSound();
-      trayDrawer.classList.add('active');
+      cartDrawer?.classList.add('active');
+    });
+  }
+  if (closeCartBtn) {
+    closeCartBtn.addEventListener('click', () => {
+      cartDrawer?.classList.remove('active');
     });
   }
 
-  if (closeDrawerBtn && trayDrawer) {
-    closeDrawerBtn.addEventListener('click', () => {
-      trayDrawer.classList.remove('active');
-    });
-  }
+  // --- 8. SUBMIT ORDER TO KITCHEN ---
+  const submitOrderBtn = document.getElementById('btnSubmitOrder');
+  if (submitOrderBtn) {
+    submitOrderBtn.addEventListener('click', () => {
+      if (state.cart.length === 0) {
+        showToast('Your tray is empty! Add items first.');
+        return;
+      }
 
-  // Confirm Order Action
-  const btnFireOrder = document.getElementById('btnSubmitOrder');
-  if (btnFireOrder) {
-    btnFireOrder.addEventListener('click', () => {
-      if (state.cart.length === 0) return;
       playServiceBell();
 
       const tableObj = (window.DINEFLOW_TABLES || []).find(t => t.id === state.currentTable) || { name: 'Table 04' };
@@ -610,6 +601,7 @@
         createdAt: Date.now(),
         items: state.cart.map(i => ({
           name: i.name,
+          station: i.station || 'grill',
           qty: i.qty,
           price: i.totalPrice,
           modifiers: i.modifiers,
@@ -622,43 +614,86 @@
         total: subtotal + tax + service
       };
 
-      // Add to State
       state.orders.unshift(newOrder);
       saveOrders();
 
-      // Broadcast to other tabs & KDS
       broadcastEvent('NEW_ORDER', newOrder);
 
-      // Customer view tracks this new order
       state.customerActiveOrder = newOrder;
       state.cart = [];
       renderCart();
 
-      if (trayDrawer) trayDrawer.classList.remove('active');
+      cartDrawer?.classList.remove('active');
 
       renderCustomerOrderStatus();
       renderKDS();
       renderStats();
+      showToast(`Ticket #${newOrder.id} dispatched to kitchen!`);
     });
   }
 
-  // --- CUSTOMER LIVE ORDER STATUS MODAL ---
+  // --- 9. CUSTOMER LIVE ORDER TRACKER & DYNAMIC ISLAND ---
   function renderCustomerOrderStatus() {
-    const modal = document.getElementById('customerOrderTrackerModal');
-    if (!modal) return;
+    const banner = document.getElementById('activeOrderPillBanner');
+    const islandPill = document.getElementById('islandPill');
+    const aopTitle = document.getElementById('aopTitle');
+    const aopSub = document.getElementById('aopSubtitle');
 
     if (!state.customerActiveOrder) {
-      modal.classList.remove('active');
+      if (banner) banner.style.display = 'none';
+      if (islandPill) islandPill.style.display = 'none';
       return;
     }
 
-    // Refresh order from state
     const current = state.orders.find(o => o.id === state.customerActiveOrder.id) || state.customerActiveOrder;
 
+    if (banner) banner.style.display = 'flex';
+    if (islandPill) islandPill.style.display = 'flex';
+
+    let statusText = 'Received';
+    let subText = 'Sent to kitchen display';
+
+    if (current.status === 'incoming') {
+      statusText = 'Received';
+      subText = 'Order ticket queued at chef station';
+    } else if (current.status === 'cooking') {
+      statusText = 'Cooking';
+      subText = 'Chef is preparing your meal 🔥';
+    } else if (current.status === 'ready') {
+      statusText = 'Plated & Ready';
+      subText = 'Dishes ready at service window 🛎️';
+    } else if (current.status === 'served') {
+      statusText = 'Served & Settled';
+      subText = 'Hope you enjoyed your meal! ✨';
+    }
+
+    if (aopTitle) aopTitle.textContent = `#${current.id} — ${statusText}`;
+    if (aopSub) aopSub.textContent = subText;
+    const islandText = islandPill?.querySelector('.island-text');
+    if (islandText) islandText.textContent = statusText;
+  }
+
+  // Track Live Modal open
+  const trackBtn = document.getElementById('btnTrackActiveOrder');
+  const trackerModal = document.getElementById('customerOrderTrackerModal');
+  const dismissTrackerBtn = document.getElementById('btnDismissTracker');
+
+  if (trackBtn) {
+    trackBtn.addEventListener('click', () => {
+      openTrackerModal();
+    });
+  }
+
+  function openTrackerModal() {
+    if (!state.customerActiveOrder) return;
+    const current = state.orders.find(o => o.id === state.customerActiveOrder.id) || state.customerActiveOrder;
+
+    const modal = document.getElementById('customerOrderTrackerModal');
     const orderIdEl = document.getElementById('trackerOrderId');
     const tableEl = document.getElementById('trackerTableName');
-    const statusTextEl = document.getElementById('trackerStatusTitle');
-    const statusDescEl = document.getElementById('trackerStatusDesc');
+    const titleEl = document.getElementById('trackerStatusTitle');
+    const descEl = document.getElementById('trackerStatusDesc');
+
     const stepReceived = document.getElementById('stepReceived');
     const stepCooking = document.getElementById('stepCooking');
     const stepReady = document.getElementById('stepReady');
@@ -667,55 +702,277 @@
     if (orderIdEl) orderIdEl.textContent = '#' + current.id;
     if (tableEl) tableEl.textContent = current.tableName;
 
-    // Reset steps
     [stepReceived, stepCooking, stepReady, stepServed].forEach(s => s && s.classList.remove('active', 'completed'));
 
     if (current.status === 'incoming') {
-      if (statusTextEl) statusTextEl.textContent = 'Order Placed at Kitchen Counter';
-      if (statusDescEl) statusDescEl.textContent = 'Ticket sent to Chef Station. Standby for preparation confirmation.';
+      if (titleEl) titleEl.textContent = 'Order Queued in Kitchen';
+      if (descEl) descEl.textContent = 'Ticket sent to Chef Terminal. Waiting for prep confirmation.';
       if (stepReceived) stepReceived.classList.add('active');
     } else if (current.status === 'cooking') {
-      if (statusTextEl) statusTextEl.textContent = 'Chef is Preparing Your Meal 🔥';
-      if (statusDescEl) statusDescEl.textContent = 'Your dishes are currently in preparation on the wood-fired grill and sauté line.';
+      if (titleEl) titleEl.textContent = 'Chef is Preparing Your Meal 🔥';
+      if (descEl) descEl.textContent = 'Dishes are currently sizzling on the wood-fired grill line.';
       if (stepReceived) stepReceived.classList.add('completed');
       if (stepCooking) stepCooking.classList.add('active');
     } else if (current.status === 'ready') {
-      if (statusTextEl) statusTextEl.textContent = 'Ready for Pickup / Serving 🛎️';
-      if (statusDescEl) statusDescEl.textContent = 'Your dishes are plated and ready at the service window!';
+      if (titleEl) titleEl.textContent = 'Dishes Ready for Pickup 🛎️';
+      if (descEl) descEl.textContent = 'Plated and ready at the service expediting pass.';
       if (stepReceived) stepReceived.classList.add('completed');
       if (stepCooking) stepCooking.classList.add('completed');
       if (stepReady) stepReady.classList.add('active');
     } else if (current.status === 'served') {
-      if (statusTextEl) statusTextEl.textContent = 'Served & Settled ✨';
-      if (statusDescEl) statusDescEl.textContent = 'Hope you had a remarkable meal! Tap below to view your thermal receipt.';
+      if (titleEl) titleEl.textContent = 'Served & Settled ✨';
+      if (descEl) descEl.textContent = 'Thank you for dining with us! View your thermal tax invoice below.';
       if (stepReceived) stepReceived.classList.add('completed');
       if (stepCooking) stepCooking.classList.add('completed');
       if (stepReady) stepReady.classList.add('completed');
       if (stepServed) stepServed.classList.add('active');
     }
 
-    modal.classList.add('active');
+    modal?.classList.add('active');
   }
 
-  // Dismiss status modal
-  const dismissTrackerBtn = document.getElementById('btnDismissTracker');
   if (dismissTrackerBtn) {
     dismissTrackerBtn.addEventListener('click', () => {
-      document.getElementById('customerOrderTrackerModal')?.classList.remove('active');
+      trackerModal?.classList.remove('active');
     });
   }
 
   // View receipt from tracker
-  const viewReceiptFromTrackerBtn = document.getElementById('btnViewReceiptFromTracker');
-  if (viewReceiptFromTrackerBtn) {
-    viewReceiptFromTrackerBtn.addEventListener('click', () => {
+  const trackerReceiptBtn = document.getElementById('btnViewReceiptFromTracker');
+  if (trackerReceiptBtn) {
+    trackerReceiptBtn.addEventListener('click', () => {
+      trackerModal?.classList.remove('active');
       if (state.customerActiveOrder) {
         openThermalReceipt(state.customerActiveOrder.id);
       }
     });
   }
 
-  // --- KITCHEN DISPLAY SYSTEM (KDS) RENDERING ---
+  // --- 10. WAITER SERVICE REQUEST CALL ---
+  const openWaiterCallBtn = document.getElementById('btnOpenWaiterCall');
+  const waiterCallModal = document.getElementById('waiterCallModal');
+  const closeWaiterBtn = document.getElementById('btnCloseWaiterModal');
+  const cancelWaiterBtn = document.getElementById('btnCancelWaiterCall');
+
+  if (openWaiterCallBtn) {
+    openWaiterCallBtn.addEventListener('click', () => {
+      waiterCallModal?.classList.add('active');
+    });
+  }
+
+  [closeWaiterBtn, cancelWaiterBtn].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        waiterCallModal?.classList.remove('active');
+      });
+    }
+  });
+
+  document.querySelectorAll('.wc-option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const reason = btn.dataset.reason;
+      waiterCallModal?.classList.remove('active');
+      playTapSound();
+
+      const payload = {
+        tableId: state.currentTable,
+        tableName: 'Table 04',
+        reason: reason,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      };
+
+      broadcastEvent('WAITER_CALL', payload);
+      displayKdsServiceAlert(payload);
+      showToast(`Server notified for "${reason}" at Table 04`);
+    });
+  });
+
+  function displayKdsServiceAlert(payload) {
+    const banner = document.getElementById('kdsServiceAlertBanner');
+    const textEl = document.getElementById('alertTableText');
+    const timeEl = document.getElementById('alertTimestamp');
+    if (!banner || !textEl) return;
+
+    textEl.textContent = `${payload.tableName} requested: ${payload.reason}`;
+    if (timeEl) timeEl.textContent = `At ${payload.time}`;
+    banner.style.display = 'flex';
+  }
+
+  const ackServiceBtn = document.getElementById('btnAckService');
+  if (ackServiceBtn) {
+    ackServiceBtn.addEventListener('click', () => {
+      const banner = document.getElementById('kdsServiceAlertBanner');
+      if (banner) banner.style.display = 'none';
+      playBumpSound();
+      showToast('Service call acknowledged');
+    });
+  }
+
+  // --- 11. INTERACTIVE PAYMENT SIMULATION (UPI QR & CARD) ---
+  const openPaymentBtn = document.getElementById('btnOpenPaymentModal');
+  const paymentModal = document.getElementById('paymentModal');
+  const closePaymentBtn = document.getElementById('btnClosePaymentModal');
+
+  if (openPaymentBtn) {
+    openPaymentBtn.addEventListener('click', () => {
+      cartDrawer?.classList.remove('active');
+      openPaymentGateway();
+    });
+  }
+
+  if (closePaymentBtn) {
+    closePaymentBtn.addEventListener('click', () => {
+      paymentModal?.classList.remove('active');
+    });
+  }
+
+  function openPaymentGateway() {
+    const modal = document.getElementById('paymentModal');
+    const contentStep = document.getElementById('paymentContentStep');
+    const procStep = document.getElementById('paymentProcessingStep');
+    const succStep = document.getElementById('paymentSuccessStep');
+    const pmAmt = document.getElementById('pmAmountValue');
+
+    if (!modal) return;
+
+    // Reset steps
+    if (contentStep) contentStep.style.display = 'block';
+    if (procStep) procStep.style.display = 'none';
+    if (succStep) succStep.style.display = 'none';
+
+    // Calculate due amount
+    let totalDue = 0;
+    if (state.cart.length > 0) {
+      const subtotal = state.cart.reduce((sum, i) => sum + (i.totalPrice * i.qty), 0);
+      totalDue = subtotal + (subtotal * 0.1); // +10% taxes/charges
+    } else if (state.customerActiveOrder) {
+      totalDue = state.customerActiveOrder.total;
+    } else {
+      totalDue = 1925; // fallback demo check for Table 04
+    }
+
+    if (pmAmt) pmAmt.textContent = `₹${totalDue.toFixed(2)}`;
+
+    modal.classList.add('active');
+  }
+
+  // Switch tabs in payment modal
+  const tabUpi = document.getElementById('tabUpi');
+  const tabCard = document.getElementById('tabCard');
+  const paneUpi = document.getElementById('paneUpi');
+  const paneCard = document.getElementById('paneCard');
+
+  if (tabUpi && tabCard) {
+    tabUpi.addEventListener('click', () => {
+      tabUpi.classList.add('active');
+      tabCard.classList.remove('active');
+      paneUpi?.classList.add('active');
+      paneCard?.classList.remove('active');
+    });
+
+    tabCard.addEventListener('click', () => {
+      tabCard.classList.add('active');
+      tabUpi.classList.remove('active');
+      paneCard?.classList.add('active');
+      paneUpi?.classList.remove('active');
+    });
+  }
+
+  // Simulate Payments
+  const simulateUpiBtn = document.getElementById('btnSimulateUpiPay');
+  const simulateCardBtn = document.getElementById('btnSimulateCardPay');
+
+  [simulateUpiBtn, simulateCardBtn].forEach(btn => {
+    if (btn) {
+      btn.addEventListener('click', () => {
+        executePaymentSimulation(btn.id === 'btnSimulateUpiPay' ? 'UPI' : 'Card');
+      });
+    }
+  });
+
+  function executePaymentSimulation(method) {
+    const contentStep = document.getElementById('paymentContentStep');
+    const procStep = document.getElementById('paymentProcessingStep');
+    const succStep = document.getElementById('paymentSuccessStep');
+    const successText = document.getElementById('pmSuccessText');
+    const refBadge = document.getElementById('pmRefBadge');
+
+    if (contentStep) contentStep.style.display = 'none';
+    if (procStep) procStep.style.display = 'flex';
+
+    // Simulate 1.2s bank network latency
+    setTimeout(() => {
+      playPaymentSuccessChime();
+
+      if (procStep) procStep.style.display = 'none';
+      if (succStep) succStep.style.display = 'flex';
+
+      const txnRef = `TXN-${method.toUpperCase()}-${Math.floor(10000000 + Math.random() * 90000000)}`;
+      if (refBadge) refBadge.textContent = txnRef;
+
+      // Settle active order or cart
+      let settledOrder = state.customerActiveOrder;
+      if (!settledOrder && state.cart.length > 0) {
+        // Automatically create and settle
+        const subtotal = state.cart.reduce((sum, item) => sum + (item.totalPrice * item.qty), 0);
+        const tax = Math.round(subtotal * 0.05 * 100) / 100;
+        const service = Math.round(subtotal * 0.05 * 100) / 100;
+        settledOrder = {
+          id: 'DF-' + Math.floor(1000 + Math.random() * 9000),
+          tableId: state.currentTable,
+          tableName: 'Table 04',
+          status: 'served',
+          createdAt: Date.now(),
+          settledAt: Date.now(),
+          paymentMethod: method,
+          txnRef: txnRef,
+          items: [...state.cart],
+          subtotal: subtotal,
+          tax: tax,
+          serviceCharge: service,
+          total: subtotal + tax + service
+        };
+        state.orders.unshift(settledOrder);
+        state.cart = [];
+        renderCart();
+      } else if (settledOrder) {
+        settledOrder.status = 'served';
+        settledOrder.paymentMethod = method;
+        settledOrder.txnRef = txnRef;
+        settledOrder.settledAt = Date.now();
+      } else if (state.orders.length > 0) {
+        settledOrder = state.orders[0];
+        settledOrder.status = 'served';
+        settledOrder.paymentMethod = method;
+        settledOrder.txnRef = txnRef;
+      }
+
+      saveOrders();
+      broadcastEvent('PAYMENT_SETTLED', { orderId: settledOrder?.id, txnRef });
+
+      if (successText && settledOrder) {
+        successText.textContent = `₹${settledOrder.total.toFixed(2)} successfully settled via ${method}`;
+      }
+
+      state.customerActiveOrder = settledOrder;
+      renderKDS();
+      renderCustomerOrderStatus();
+      renderStats();
+    }, 1200);
+  }
+
+  // View Receipt After Pay
+  const viewReceiptAfterPayBtn = document.getElementById('btnViewReceiptAfterPay');
+  if (viewReceiptAfterPayBtn) {
+    viewReceiptAfterPayBtn.addEventListener('click', () => {
+      document.getElementById('paymentModal')?.classList.remove('active');
+      if (state.customerActiveOrder) {
+        openThermalReceipt(state.customerActiveOrder.id);
+      }
+    });
+  }
+
+  // --- 12. KITCHEN DISPLAY SYSTEM (KDS) RENDERING & MULTI-STATION ROUTING ---
   function renderKDS() {
     const colIncoming = document.getElementById('kdsColIncoming');
     const colCooking = document.getElementById('kdsColCooking');
@@ -724,11 +981,22 @@
 
     if (!colIncoming || !colCooking || !colReady || !colServed) return;
 
+    // Filter by Active Station
+    const filteredOrders = state.orders.filter(order => {
+      if (state.activeStation === 'all') return true;
+      // Match if any item in order belongs to this station
+      return order.items.some(it => {
+        const menuItem = (window.DINEFLOW_MENU || []).find(m => m.name === it.name);
+        const itemStation = it.station || menuItem?.station || 'grill';
+        return itemStation === state.activeStation;
+      });
+    });
+
     const ordersByStatus = {
-      incoming: state.orders.filter(o => o.status === 'incoming'),
-      cooking: state.orders.filter(o => o.status === 'cooking'),
-      ready: state.orders.filter(o => o.status === 'ready'),
-      served: state.orders.filter(o => o.status === 'served')
+      incoming: filteredOrders.filter(o => o.status === 'incoming'),
+      cooking: filteredOrders.filter(o => o.status === 'cooking'),
+      ready: filteredOrders.filter(o => o.status === 'ready'),
+      served: filteredOrders.filter(o => o.status === 'served')
     };
 
     // Update column badge counters
@@ -737,11 +1005,40 @@
     document.getElementById('countReady')?.replaceChildren(document.createTextNode(ordersByStatus.ready.length));
     document.getElementById('countServed')?.replaceChildren(document.createTextNode(ordersByStatus.served.length));
 
-    // Render cards in each column
+    // Update active tickets in top tools
+    const totalActive = ordersByStatus.incoming.length + ordersByStatus.cooking.length + ordersByStatus.ready.length;
+    const activeCountEl = document.getElementById('kdsActiveCount');
+    if (activeCountEl) activeCountEl.textContent = totalActive;
+
+    // Update Station Badge Counts
+    updateStationBadges();
+
+    // Render Cards
     renderKDSColumn(colIncoming, ordersByStatus.incoming, 'incoming');
     renderKDSColumn(colCooking, ordersByStatus.cooking, 'cooking');
     renderKDSColumn(colReady, ordersByStatus.ready, 'ready');
-    renderKDSColumn(colServed, ordersByStatus.served.slice(0, 5), 'served'); // keep last 5 completed
+    renderKDSColumn(colServed, ordersByStatus.served.slice(0, 5), 'served');
+  }
+
+  function updateStationBadges() {
+    const stations = ['all', 'grill', 'larder', 'barista', 'pastry'];
+    stations.forEach(stn => {
+      const badge = document.getElementById(`badgeStn${stn.charAt(0).toUpperCase() + stn.slice(1)}`);
+      if (!badge) return;
+      if (stn === 'all') {
+        const count = state.orders.filter(o => o.status !== 'served').length;
+        badge.textContent = count;
+      } else {
+        const count = state.orders.filter(o => {
+          if (o.status === 'served') return false;
+          return o.items.some(it => {
+            const menuItem = (window.DINEFLOW_MENU || []).find(m => m.name === it.name);
+            return (it.station || menuItem?.station) === stn;
+          });
+        }).length;
+        badge.textContent = count;
+      }
+    });
   }
 
   function renderKDSColumn(container, orders, columnStatus) {
@@ -756,14 +1053,12 @@
       const elapsedRemSec = elapsedSec % 60;
       const formattedTime = `${String(elapsedMin).padStart(2, '0')}:${String(elapsedRemSec).padStart(2, '0')}`;
 
-      // Urgency Alert Styling
       let alertClass = 'urgency-normal';
       if (order.status !== 'served') {
         if (elapsedMin >= 12) alertClass = 'urgency-delayed';
         else if (elapsedMin >= 8) alertClass = 'urgency-warning';
       }
 
-      // Action Button Configuration
       let actionBtnHtml = '';
       if (columnStatus === 'incoming') {
         actionBtnHtml = `<button class="kds-bump-btn btn-fire" data-action="cooking" data-id="${order.id}">🔥 Start Cooking</button>`;
@@ -788,17 +1083,19 @@
           </div>
 
           <div class="ticket-items-list">
-            ${order.items.map(item => `
-              <div class="t-item">
-                <div class="t-item-line">
-                  <span class="t-qty">${item.qty}×</span>
-                  <span class="t-name">${item.name}</span>
+            ${order.items.map(item => {
+              return `
+                <div class="t-item">
+                  <div class="t-item-line">
+                    <span class="t-qty">${item.qty}×</span>
+                    <span class="t-name">${item.name}</span>
+                  </div>
+                  ${item.modifiers && item.modifiers.length > 0 ? `
+                    <div class="t-mods">${item.modifiers.join(', ')}</div>
+                  ` : ''}
                 </div>
-                ${item.modifiers && item.modifiers.length > 0 ? `
-                  <div class="t-mods">${item.modifiers.join(', ')}</div>
-                ` : ''}
-              </div>
-            `).join('')}
+              `;
+            }).join('')}
           </div>
 
           ${order.notes ? `
@@ -809,7 +1106,7 @@
 
           <div class="ticket-actions">
             ${actionBtnHtml}
-            <button class="btn-quick-receipt" data-id="${order.id}" title="Print Thermal Receipt">🖨️</button>
+            <button class="btn-quick-receipt" data-id="${order.id}" title="Print Thermal Tax Invoice">🖨️</button>
           </div>
         </div>
       `;
@@ -837,7 +1134,7 @@
     });
   }
 
-  // Bump Order to Next Stage
+  // Bump Order Status
   function bumpOrderStatus(orderId, newStatus) {
     playBumpSound();
     const order = state.orders.find(o => o.id === orderId);
@@ -847,18 +1144,15 @@
     order.updatedAt = Date.now();
     saveOrders();
 
-    broadcastEvent('STATUS_UPDATE', {
-      id: order.id,
-      status: newStatus,
-      updatedAt: order.updatedAt
-    });
+    broadcastEvent('STATUS_UPDATE', { id: order.id, status: newStatus });
 
     renderKDS();
     renderCustomerOrderStatus();
     renderStats();
+    showToast(`Order #${order.id} moved to "${newStatus}"`);
   }
 
-  // KDS Active Elapsed Seconds Interval
+  // Interval for KDS active seconds
   function startKDSTimerInterval() {
     setInterval(() => {
       const now = Date.now();
@@ -873,7 +1167,6 @@
           timerEl.textContent = `⏱ ${String(elapsedMin).padStart(2, '0')}:${String(elapsedRemSec).padStart(2, '0')}`;
         }
 
-        // Live urgency warning shifts
         if (elapsedMin >= 12) {
           ticket.classList.remove('urgency-normal', 'urgency-warning');
           ticket.classList.add('urgency-delayed');
@@ -885,7 +1178,27 @@
     }, 1000);
   }
 
-  // --- STATS & METRICS DASHBOARD ---
+  // Station Filter Buttons Click
+  document.querySelectorAll('.station-tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.station-tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.activeStation = btn.dataset.station;
+      playTapSound();
+      renderKDS();
+    });
+  });
+
+  // Test Bell Chime Button
+  const testBellBtn = document.getElementById('btnTestBell');
+  if (testBellBtn) {
+    testBellBtn.addEventListener('click', () => {
+      playServiceBell();
+      showToast('Synthesized 1.8kHz brass service bell triggered');
+    });
+  }
+
+  // --- 13. STATS, TELEMETRY & FLOOR MANAGEMENT ---
   function renderStats() {
     const totalRevenue = state.orders.reduce((sum, o) => sum + (o.total || 0), 0);
     const completedOrders = state.orders.filter(o => o.status === 'served');
@@ -898,119 +1211,172 @@
 
     if (revEl) revEl.textContent = '₹' + totalRevenue.toLocaleString('en-IN', { maximumFractionDigits: 0 });
     if (activeEl) activeEl.textContent = activeOrders.length;
-    if (avgPrepEl) avgPrepEl.textContent = '8.4 min';
     if (completedEl) completedEl.textContent = completedOrders.length;
 
-    // Render 86'd / Out of stock management grid
-    renderStockManager();
+    renderFloorPlan();
+    renderStockToggles();
   }
 
-  function renderStockManager() {
-    const listEl = document.getElementById('stockTogglesList');
-    if (!listEl || !window.DINEFLOW_MENU) return;
+  function renderFloorPlan() {
+    const grid = document.getElementById('floorPlanGrid');
+    if (!grid || !window.DINEFLOW_TABLES) return;
 
-    listEl.innerHTML = window.DINEFLOW_MENU.map(item => {
+    grid.innerHTML = window.DINEFLOW_TABLES.map(table => {
+      const activeOrderForTable = state.orders.find(o => o.tableId === table.id && o.status !== 'served');
+      const hasActive = !!activeOrderForTable;
+      const statusClass = hasActive ? 'status-active-session' : (table.status === 'Occupied' ? 'status-occupied' : 'status-available');
+      const statusLabel = hasActive ? 'Active Order' : table.status;
+      const runningBill = activeOrderForTable ? `₹${activeOrderForTable.total.toFixed(0)}` : '₹0';
+
+      return `
+        <div class="table-floor-card ${hasActive ? 'is-active' : ''}">
+          <div class="tfc-head">
+            <span class="tfc-name">${table.name}</span>
+            <span class="tfc-status-pill ${statusClass}">${statusLabel}</span>
+          </div>
+          <div class="tfc-meta">${table.type} &bull; ${table.capacity} seats</div>
+          <div class="tfc-bill">Check: ${runningBill}</div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  function renderStockToggles() {
+    const list = document.getElementById('stockTogglesList');
+    const countBadge = document.getElementById('stockSoldOutBadge');
+    if (!list || !window.DINEFLOW_MENU) return;
+
+    if (countBadge) {
+      countBadge.textContent = `${state.outOfStock.length} Item${state.outOfStock.length !== 1 ? 's' : ''} Sold Out`;
+    }
+
+    list.innerHTML = window.DINEFLOW_MENU.map(item => {
       const isOut = state.outOfStock.includes(item.id);
       return `
-        <div class="stock-item-pill ${isOut ? 'is-out' : 'is-in'}">
-          <span class="stock-dish-name">${item.name}</span>
-          <button class="btn-toggle-86" data-id="${item.id}">
-            ${isOut ? 'Restock (In Stock)' : '86\'d (Out of Stock)'}
-          </button>
+        <div class="stock-toggle-item">
+          <div class="stock-item-info">
+            <span class="stock-item-name">${item.name}</span>
+            <span class="stock-item-cat">${item.category} &bull; ₹${item.price}</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" class="stock-chk" data-id="${item.id}" ${!isOut ? 'checked' : ''} />
+            <span class="slider"></span>
+          </label>
         </div>
       `;
     }).join('');
 
-    listEl.querySelectorAll('.btn-toggle-86').forEach(btn => {
-      btn.addEventListener('click', () => {
-        playTapSound();
-        const id = btn.dataset.id;
-        if (state.outOfStock.includes(id)) {
-          state.outOfStock = state.outOfStock.filter(x => x !== id);
+    list.querySelectorAll('.stock-chk').forEach(chk => {
+      chk.addEventListener('change', () => {
+        const id = chk.dataset.id;
+        if (!chk.checked) {
+          if (!state.outOfStock.includes(id)) state.outOfStock.push(id);
         } else {
-          state.outOfStock.push(id);
+          state.outOfStock = state.outOfStock.filter(x => x !== id);
         }
-        saveStock();
-        broadcastEvent('STOCK_TOGGLE', state.outOfStock);
-        renderStockManager();
+        saveOutOfStock();
+        broadcastEvent('STOCK_TOGGLE', { id, available: chk.checked });
         renderCustomerMenu();
+        if (countBadge) {
+          countBadge.textContent = `${state.outOfStock.length} Item${state.outOfStock.length !== 1 ? 's' : ''} Sold Out`;
+        }
+        playTapSound();
+        showToast(`Stock updated: ${chk.checked ? 'Available' : "86'd (Sold Out)"}`);
       });
     });
   }
 
-  // --- THERMAL RECEIPT MODAL & PRINTING ---
+  // --- 14. THERMAL DOT-MATRIX TAX INVOICE GENERATOR (80mm) ---
   function openThermalReceipt(orderId) {
-    const order = state.orders.find(o => o.id === orderId);
+    const order = state.orders.find(o => o.id === orderId) || state.orders[0];
     if (!order) return;
-    playTapSound();
 
     const modal = document.getElementById('thermalReceiptModal');
-    const receiptPaper = document.getElementById('receiptPaperContent');
-    if (!modal || !receiptPaper) return;
+    const paper = document.getElementById('receiptPaperContent');
+    if (!modal || !paper) return;
 
-    const dateStr = new Date(order.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-    const timeStr = new Date(order.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+    const dateStr = new Date(order.createdAt).toLocaleDateString('en-IN', {
+      day: '2-digit', month: 'short', year: 'numeric'
+    });
+    const timeStr = new Date(order.createdAt).toLocaleTimeString('en-IN', {
+      hour: '2-digit', minute: '2-digit'
+    });
 
-    receiptPaper.innerHTML = `
-      <div class="thermal-header">
-        <div class="thermal-logo">THE RUSTY COPPER</div>
-        <div class="thermal-sub">ARTISANAL BISTRO &amp; ROASTERY</div>
-        <div class="thermal-address">Plot 42, Sector 8, Inner Ring • Connaught Place</div>
-        <div class="thermal-gst">GSTIN: 07AAECR9812K1ZT • FSSAI: 10021011000452</div>
+    paper.innerHTML = `
+      <div class="receipt-header">
+        <div class="receipt-brand">THE RUSTY COPPER</div>
+        <div>Artisanal Bistro &amp; Specialty Roastery</div>
+        <div>Connaught Place, New Delhi &bull; 110001</div>
+        <div>GSTIN: 07AAACT2849P1Z8 &bull; FSSAI: 13321008000492</div>
       </div>
-      <div class="thermal-dashed"></div>
-      <div class="thermal-meta-grid">
-        <div><strong>Date:</strong> ${dateStr}</div>
-        <div><strong>Time:</strong> ${timeStr}</div>
-        <div><strong>Table:</strong> ${order.tableName}</div>
-        <div><strong>Order:</strong> #${order.id}</div>
-        <div><strong>Channel:</strong> Self-QR Guest</div>
-        <div><strong>Server:</strong> KDS Terminal #1</div>
+
+      <div class="receipt-divider"></div>
+
+      <div class="receipt-table-meta">
+        <span>TABLE: ${order.tableName}</span>
+        <span>ORDER: #${order.id}</span>
       </div>
-      <div class="thermal-dashed"></div>
-      <div class="thermal-items-table">
-        <div class="thermal-item-header">
-          <span>ITEM / MODS</span>
-          <span>QTY</span>
-          <span>AMT (₹)</span>
-        </div>
-        ${order.items.map(i => `
-          <div class="thermal-item-entry">
-            <div class="thermal-item-desc">
-              <strong>${i.name}</strong>
-              ${i.modifiers && i.modifiers.length > 0 ? `
-                <div class="thermal-submods">${i.modifiers.join(', ')}</div>
-              ` : ''}
-            </div>
-            <div class="thermal-item-qty">${i.qty}</div>
-            <div class="thermal-item-amt">₹${(i.price * i.qty).toFixed(2)}</div>
+      <div class="receipt-table-meta">
+        <span>DATE: ${dateStr}</span>
+        <span>TIME: ${timeStr}</span>
+      </div>
+      <div class="receipt-table-meta">
+        <span>SERVER: Rajesh (Station #01)</span>
+        <span>STATUS: PAID</span>
+      </div>
+
+      <div class="receipt-divider"></div>
+
+      <div class="receipt-items-list">
+        ${order.items.map(it => `
+          <div class="r-item-row">
+            <span>${it.qty}x ${it.name}</span>
+            <span>₹${(it.price * it.qty).toFixed(2)}</span>
           </div>
+          ${it.modifiers && it.modifiers.length > 0 ? `
+            <div class="r-item-mod">+ ${it.modifiers.join(', ')}</div>
+          ` : ''}
         `).join('')}
       </div>
-      <div class="thermal-dashed"></div>
-      <div class="thermal-totals-grid">
-        <div><span>Subtotal:</span> <span>₹${order.subtotal.toFixed(2)}</span></div>
-        <div><span>CGST (2.5%):</span> <span>₹${(order.tax / 2).toFixed(2)}</span></div>
-        <div><span>SGST (2.5%):</span> <span>₹${(order.tax / 2).toFixed(2)}</span></div>
-        <div><span>Service Charge (5%):</span> <span>₹${order.serviceCharge.toFixed(2)}</span></div>
-        <div class="thermal-grand-total">
+
+      <div class="receipt-divider"></div>
+
+      <div class="receipt-totals-wrap">
+        <div class="r-total-row">
+          <span>Items Subtotal:</span>
+          <span>₹${order.subtotal.toFixed(2)}</span>
+        </div>
+        <div class="r-total-row">
+          <span>CGST (2.5%):</span>
+          <span>₹${(order.tax / 2).toFixed(2)}</span>
+        </div>
+        <div class="r-total-row">
+          <span>SGST (2.5%):</span>
+          <span>₹${(order.tax / 2).toFixed(2)}</span>
+        </div>
+        <div class="r-total-row">
+          <span>Hospitality Service (5%):</span>
+          <span>₹${order.serviceCharge.toFixed(2)}</span>
+        </div>
+        <div class="r-total-row grand">
           <span>TOTAL PAYABLE:</span>
           <span>₹${order.total.toFixed(2)}</span>
         </div>
       </div>
-      <div class="thermal-dashed"></div>
-      <div class="thermal-footer">
-        <div class="barcode-strip">||| | |||| ||| || ||||| || |||| ||| |||| |</div>
-        <div class="thermal-status-paid">✓ PAID VIA UPI / DIGITAL POS</div>
-        <div class="thermal-gratitude">Thank you for dining with us!</div>
-        <div class="thermal-powered">Powered by DineFlow OS • Built by Gursharan Singh</div>
+
+      <div class="receipt-divider"></div>
+
+      <div class="receipt-tax-footer">
+        <div>SETTLEMENT: UPI / Contactless Gateway</div>
+        <div>REF: ${order.txnRef || 'TXN-UPI-88429184'}</div>
+        <div style="margin-top: 8px;">THANK YOU FOR DINING WITH US!</div>
+        <div style="font-size: 0.58rem; margin-top: 4px;">*** TAX INVOICE CUM CASH MEMO ***</div>
       </div>
     `;
 
     modal.classList.add('active');
   }
 
-  // Dismiss Receipt Modal
   const dismissReceiptBtn = document.getElementById('btnDismissReceipt');
   if (dismissReceiptBtn) {
     dismissReceiptBtn.addEventListener('click', () => {
@@ -1018,12 +1384,107 @@
     });
   }
 
-  // Print Receipt Button (triggers standard window print with thermal media stylesheet)
   const printReceiptBtn = document.getElementById('btnPrintReceipt');
   if (printReceiptBtn) {
     printReceiptBtn.addEventListener('click', () => {
       window.print();
     });
+  }
+
+  // --- 15. TOP NAVIGATION & VIEW SWITCHER ---
+  document.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const mode = btn.dataset.view;
+      state.viewMode = mode;
+
+      const appEl = document.getElementById('dineflowApp');
+      if (appEl) {
+        appEl.className = 'dineflow-app mode-' + mode;
+      }
+      playTapSound();
+    });
+  });
+
+  // Category Filter Pills
+  document.querySelectorAll('.cat-pill').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      state.activeCategory = btn.dataset.category;
+      playTapSound();
+      renderCustomerMenu();
+    });
+  });
+
+  // Table Selector in Nav
+  const tableSelect = document.getElementById('tableSelect');
+  if (tableSelect && window.DINEFLOW_TABLES) {
+    tableSelect.innerHTML = window.DINEFLOW_TABLES.map(t => {
+      return `<option value="${t.id}" ${t.id === state.currentTable ? 'selected' : ''}>${t.name} (${t.type})</option>`;
+    }).join('');
+
+    tableSelect.addEventListener('change', () => {
+      state.currentTable = tableSelect.value;
+      const tObj = window.DINEFLOW_TABLES.find(t => t.id === state.currentTable);
+      const badge = document.getElementById('currentTableBadge');
+      if (badge && tObj) badge.textContent = tObj.name;
+      const drawerTag = document.getElementById('drawerTableTag');
+      if (drawerTag && tObj) drawerTag.textContent = tObj.name;
+      playTapSound();
+      showToast(`Switched active terminal to ${tObj?.name}`);
+    });
+  }
+
+  // Device Clock updater
+  function updateDeviceClock() {
+    const clockEl = document.getElementById('deviceClock');
+    if (!clockEl) return;
+    const now = new Date();
+    clockEl.textContent = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false });
+  }
+
+  // --- 16. INITIAL BOOTSTRAP ---
+  function init() {
+    initializeDefaultOrders();
+    loadOutOfStock();
+    updateDeviceClock();
+    setInterval(updateDeviceClock, 10000);
+
+    // Check URL parameters for direct view activation
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const requestedView = urlParams.get('view');
+      if (requestedView && ['split', 'customer', 'kds', 'stats'].includes(requestedView)) {
+        state.viewMode = requestedView;
+        document.querySelectorAll('.view-btn').forEach(b => {
+          b.classList.toggle('active', b.dataset.view === requestedView);
+        });
+        const appEl = document.getElementById('dineflowApp');
+        if (appEl) {
+          appEl.className = 'dineflow-app mode-' + requestedView;
+        }
+      }
+    } catch (e) {}
+
+    renderCustomerMenu();
+    renderCart();
+    renderKDS();
+    renderStats();
+    startKDSTimerInterval();
+
+    // Default active order tracker check
+    if (state.orders.length > 0) {
+      state.customerActiveOrder = state.orders[0];
+      renderCustomerOrderStatus();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
 
 })();
