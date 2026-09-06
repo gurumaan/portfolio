@@ -313,7 +313,7 @@
     const tables = window.DINEFLOW_TABLES || [];
     el.tableSelectorDropdown.innerHTML = tables.map(t => `
       <option value="${t.id}" ${t.id === state.currentTable ? 'selected' : ''}>
-        ${t.name} (${t.capacity} Seats)
+        ${escapeHtml(t.name)} (${t.capacity} Seats)
       </option>
     `).join('');
 
@@ -329,7 +329,7 @@
     el.categoriesList.innerHTML = cats.map(c => `
       <button type="button" class="category-tab-btn ${c.id === state.activeCategory ? 'active' : ''}" data-cat="${c.id}">
         <span>${c.icon}</span>
-        <span>${c.name}</span>
+        <span>${escapeHtml(c.name)}</span>
       </button>
     `).join('');
   }
@@ -416,7 +416,7 @@
 
     el.modalDishImg.src = dish.image;
     el.modalDishTitle.textContent = dish.name;
-    el.modalDishPrice.textContent = `₹${dish.price}`;
+    el.modalDishPrice.textContent = `₹${dish.price.toLocaleString('en-IN')}`;
     el.modalDishDesc.textContent = dish.desc;
     el.modalPrepTag.textContent = dish.prepTime;
     el.modalQtyVal.textContent = '1';
@@ -608,7 +608,7 @@
     el.kdsStationsTabs.innerHTML = stations.map(s => `
       <button type="button" class="kds-station-btn ${s.id === state.selectedStation ? 'active' : ''}" data-station="${s.id}">
         <span>${s.icon}</span>
-        <span>${s.name}</span>
+        <span>${escapeHtml(s.name)}</span>
       </button>
     `).join('');
   }
@@ -742,7 +742,7 @@
             <span class="ft-id">${t.id}</span>
             <span class="ft-status-dot ${statusClass}"></span>
           </div>
-          <span class="ft-zone">${t.name}</span>
+          <span class="ft-zone">${escapeHtml(t.name)}</span>
           <span class="ft-orders">${statusLabel}</span>
         </div>
       `;
