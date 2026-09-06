@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>APIPulse — Real-Time API Profiler, Latency Waterfall & Protocol Inspector</title>
+  <meta name="description" content="Sub-millisecond API latency profiler, HTTP timing waterfall visualizer, live WebSocket stream inspector, and OWASP security header auditor.">
+  
+  <!-- Modern Typography: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="ap-app">
+    <!-- TOP MASTHEAD / BRAND BAR -->
+    <header class="ap-navbar">
+      <div class="ap-nav-left">
+        <a href="../" class="ap-back-link" title="Return to Portfolio">← Portfolio</a>
+        <div class="ap-brand">
+          <div class="ap-brand-icon">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+          </div>
+          <span class="ap-brand-name">APIPulse</span>
+          <span class="ap-version-badge">v2.4 Telemetry Studio</span>
+        </div>
+      </div>
+
+      <!-- PROTOCOL MODE SWITCHER -->
+      <nav class="ap-mode-selector">
+        <button class="ap-mode-btn active" data-mode="http" id="modeHttpBtn">
+          <span class="mode-icon">⚡</span>
+          <span>HTTP &amp; REST</span>
+        </button>
+        <button class="ap-mode-btn" data-mode="websocket" id="modeWsBtn">
+          <span class="mode-icon">📡</span>
+          <span>WebSocket Stream</span>
+        </button>
+      </nav>
+
+      <!-- GLOBAL UTILITY ACTIONS -->
+      <div class="ap-nav-actions">
+        <button class="ap-btn-ghost" id="copyCurlBtn" title="Copy current request as executable cURL command">
+          <span class="icon">📋</span>
+          <span>Copy cURL</span>
+        </button>
+        <button class="ap-btn-ghost" id="exportHarBtn" title="Export HTTP Archive (HAR) JSON specification">
+          <span class="icon">⬇️</span>
+          <span>Export HAR</span>
+        </button>
+        <button class="ap-btn-ghost" id="shareUrlBtn" title="Copy shareable link with encoded parameters">
+          <span class="icon">🔗</span>
+          <span>Share</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- PRESETS QUICK-LAUNCH STRIP -->
+    <section class="ap-presets-strip" aria-label="Quick Presets">
+      <span class="presets-label">VERIFIED PRESETS:</span>
+      <div class="presets-scroll" id="presetsList">
+        <!-- Injected dynamically from sample_data.js -->
+      </div>
+    </section>
+
+    <!-- =========================================================================
+         WORKSPACE 1: HTTP & REST PROFILER
+         ========================================================================= -->
+    <main class="ap-workspace mode-http-active" id="httpWorkspace">
+      <!-- REQUEST DISPATCH BAR -->
+      <div class="ap-request-card">
+        <form class="ap-url-bar" id="requestForm">
+          <div class="ap-method-wrapper">
+            <select class="ap-method-select" id="methodSelect" aria-label="HTTP Method">
+              <option value="GET">GET</option>
+              <option value="POST">POST</option>
+              <option value="PUT">PUT</option>
+              <option value="PATCH">PATCH</option>
+              <option value="DELETE">DELETE</option>
+              <option value="HEAD">HEAD</option>
+            </select>
+            <span class="select-chevron">▾</span>
+          </div>
+
+          <div class="ap-url-wrapper">
+            <input type="url" class="ap-url-input" id="urlInput" placeholder="https://api.example.com/v1/telemetry" value="https://speed.cloudflare.com/meta" required spellcheck="false" autocomplete="off">
+            <button type="button" class="ap-clear-btn" id="clearUrlBtn" title="Clear URL" style="display: none;">✕</button>
+          </div>
+
+          <button type="submit" class="ap-send-btn" id="sendBtn">
+            <span class="send-spinner" id="sendSpinner" style="display: none;"></span>
+            <span class="send-icon" id="sendIcon">⚡</span>
+            <span class="send-text">Send Request</span>
+            <kbd class="send-kbd">Ctrl+↵</kbd>
+          </button>
+        </form>
+
+        <!-- REQUEST PARAMETERS & HEADERS ACCORDION / TABS -->
+        <div class="ap-request-tabs-bar">
+          <div class="ap-subtabs">
+            <button class="ap-subtab active" data-tab="headers">Headers (<span id="headerCountBadge">1</span>)</button>
+            <button class="ap-subtab" data-tab="params">Params (<span id="paramCountBadge">0</span>)</button>
+            <button class="ap-subtab" data-tab="body" id="bodyTabBtn" style="display: none;">Body (JSON)</button>
+          </div>
+          <div class="ap-tab-actions">
+            <button type="button" class="ap-link-action" id="addRowBtn">+ Add Row</button>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: HEADERS -->
+        <div class="ap-tab-panel active" id="tabHeaders">
+          <div class="ap-kv-table" id="headersTable">
+            <div class="kv-header-row">
+              <span class="col-check"></span>
+              <span class="col-key">HEADER KEY</span>
+              <span class="col-val">VALUE</span>
+              <span class="col-del"></span>
+            </div>
+            <div class="kv-body" id="headersBody">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: PARAMS -->
+        <div class="ap-tab-panel" id="tabParams">
+          <div class="ap-kv-table" id="paramsTable">
+            <div class="kv-header-row">
+              <span class="col-check"></span>
+              <span class="col-key">QUERY PARAM</span>
+              <span class="col-val">VALUE</span>
+              <span class="col-del"></span>
+            </div>
+            <div class="kv-body" id="paramsBody">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: BODY (FOR POST/PUT/PATCH) -->
+        <div class="ap-tab-panel" id="tabBody">
+          <div class="ap-body-editor-wrapper">
+            <textarea class="ap-body-textarea" id="requestBodyInput" placeholder="{
+  &quot;key&quot;: &quot;value&quot;
+}" spellcheck="false"></textarea>
+            <div class="ap-body-statusbar">
+              <span id="bodyJsonValidity" class="validity-ok">✓ Valid JSON</span>
+              <button type="button" class="ap-link-action" id="formatJsonBtn">Beautify JSON</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =====================================================================
+           TELEMETRY & RESPONSE DUAL STUDIO GRID
+           ===================================================================== -->
+      <div class="ap-dual-studio">
+        <!-- LEFT COLUMN: PERFORMANCE WATERFALL & SECURITY AUDIT -->
+        <div class="ap-studio-col ap-telemetry-col">
+          <!-- 4 METRIC TILES STRIP -->
+          <div class="ap-metrics-grid">
+            <div class="ap-metric-card" id="metricStatusCard">
+              <span class="metric-label">STATUS</span>
+              <div class="metric-value-row">
+                <span class="status-pill status-2xx" id="metricStatusPill">200 OK</span>
+                <span class="protocol-tag" id="metricProtocolTag">HTTP/2</span>
+              </div>
+              <span class="metric-sub" id="metricStatusText">Successful Handshake</span>
+            </div>
+
+            <div class="ap-metric-card">
+              <span class="metric-label">ROUNDTRIP LATENCY</span>
+              <div class="metric-value-row">
+                <span class="metric-number highlight-amber" id="metricTotalTime">142.4</span>
+                <span class="metric-unit">ms</span>
+              </div>
+              <span class="metric-sub" id="metricDeltaCompare">↓ 18ms faster than origin</span>
+            </div>
+
+            <div class="ap-metric-card">
+              <span class="metric-label">SERVER TTFB</span>
+              <div class="metric-value-row">
+                <span class="metric-number highlight-cyan" id="metricTtfb">78.2</span>
+                <span class="metric-unit">ms</span>
+              </div>
+              <span class="metric-sub">Time To First Byte</span>
+            </div>
+
+            <div class="ap-metric-card">
+              <span class="metric-label">PAYLOAD TRANSFER</span>
+              <div class="metric-value-row">
+                <span class="metric-number" id="metricSize">1.84</span>
+                <span class="metric-unit" id="metricSizeUnit">KB</span>
+              </div>
+              <span class="metric-sub" id="metricCompression">Gzip Encoded</span>
+            </div>
+          </div>
+
+          <!-- SUB-MILLISECOND TIMING WATERFALL (GANTT CHART) -->
+          <section class="ap-panel-card ap-waterfall-card">
+            <div class="ap-panel-header">
+              <div class="panel-title-group">
+                <h2 class="ap-panel-title">Sub-Millisecond Network Waterfall</h2>
+                <span class="ap-panel-subtitle">W3C PerformanceResourceTiming Telemetry</span>
+              </div>
+              <div class="waterfall-legend">
+                <span class="legend-item"><span class="legend-dot dot-dns"></span>DNS</span>
+                <span class="legend-item"><span class="legend-dot dot-tcp"></span>TCP</span>
+                <span class="legend-item"><span class="legend-dot dot-tls"></span>TLS</span>
+                <span class="legend-item"><span class="legend-dot dot-ttfb"></span>TTFB</span>
+                <span class="legend-item"><span class="legend-dot dot-download"></span>Transfer</span>
+              </div>
+            </div>
+
+            <div class="ap-waterfall-container">
+              <div class="waterfall-axis" id="waterfallAxis">
+                <span>0 ms</span>
+                <span id="axisMid">75 ms</span>
+                <span id="axisMax">150 ms</span>
+              </div>
+
+              <div class="waterfall-rows" id="waterfallRows">
+                <!-- DNS ROW -->
+                <div class="wf-row" data-phase="dns">
+                  <div class="wf-meta">
+                    <span class="wf-phase-name">DNS Resolution</span>
+                    <span class="wf-phase-dur" id="wfDnsDur">14.2 ms</span>
+                  </div>
+                  <div class="wf-track">
+                    <div class="wf-bar bar-dns" id="wfDnsBar" style="left: 0%; width: 9.8%;"></div>
+                  </div>
+                </div>
+
+                <!-- TCP CONNECT ROW -->
+                <div class="wf-row" data-phase="tcp">
+                  <div class="wf-meta">
+                    <span class="wf-phase-name">TCP Handshake</span>
+                    <span class="wf-phase-dur" id="wfTcpDur">26.8 ms</span>
+                  </div>
+                  <div class="wf-track">
+                    <div class="wf-bar bar-tcp" id="wfTcpBar" style="left: 9.8%; width: 18.5%;"></div>
+                  </div>
+                </div>
+
+                <!-- TLS NEGOTIATION ROW -->
+                <div class="wf-row" data-phase="tls">
+                  <div class="wf-meta">
+                    <span class="wf-phase-name">TLS / SSL Negotiation</span>
+                    <span class="wf-phase-dur" id="wfTlsDur">34.5 ms</span>
+                  </div>
+                  <div class="wf-track">
+                    <div class="wf-bar bar-tls" id="wfTlsBar" style="left: 28.3%; width: 23.8%;"></div>
+                  </div>
+                </div>
+
+                <!-- TTFB ROW -->
+                <div class="wf-row" data-phase="ttfb">
+                  <div class="wf-meta">
+                    <span class="wf-phase-name">Server Processing (TTFB)</span>
+                    <span class="wf-phase-dur" id="wfTtfbDur">52.4 ms</span>
+                  </div>
+                  <div class="wf-track">
+                    <div class="wf-bar bar-ttfb" id="wfTtfbBar" style="left: 52.1%; width: 36.2%;"></div>
+                  </div>
+                </div>
+
+                <!-- CONTENT DOWNLOAD ROW -->
+                <div class="wf-row" data-phase="download">
+                  <div class="wf-meta">
+                    <span class="wf-phase-name">Content Transfer</span>
+                    <span class="wf-phase-dur" id="wfDownloadDur">14.5 ms</span>
+                  </div>
+                  <div class="wf-track">
+                    <div class="wf-bar bar-download" id="wfDownloadBar" style="left: 88.3%; width: 11.7%;"></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- TOTAL METRIC SUMMARY FOOTER -->
+              <div class="wf-total-footer">
+                <span>Total Duration: <strong id="wfTotalDurText">142.4 ms</strong></span>
+                <span class="wf-breakdown-sub" id="wfBreakdownSub">Server: 36.8% • Network &amp; Crypto: 63.2%</span>
+              </div>
+            </div>
+          </section>
+
+          <!-- OWASP SECURITY HEADERS & SSL AUDITOR -->
+          <section class="ap-panel-card ap-security-card">
+            <div class="ap-panel-header">
+              <div class="panel-title-group">
+                <h2 class="ap-panel-title">OWASP Security Headers &amp; TLS Auditor</h2>
+                <span class="ap-panel-subtitle">RFC &amp; Zero-Trust Protocol Compliance</span>
+              </div>
+              <div class="security-score-badge" id="securityScoreBadge">
+                <span class="score-label">GRADE</span>
+                <span class="score-val" id="securityGrade">A</span>
+                <span class="score-num" id="securityPercent">83%</span>
+              </div>
+            </div>
+
+            <div class="security-items-grid" id="securityGrid">
+              <!-- Rendered dynamically -->
+            </div>
+          </section>
+        </div>
+
+        <!-- RIGHT COLUMN: RESPONSE STUDIO & PAYLOAD INSPECTOR -->
+        <div class="ap-studio-col ap-response-col">
+          <div class="ap-panel-card ap-response-card">
+            <div class="ap-response-top">
+              <!-- RESPONSE TABS -->
+              <div class="ap-response-tabs">
+                <button class="ap-resp-tab active" data-resptab="json">Formatted JSON</button>
+                <button class="ap-resp-tab" data-resptab="raw">Raw</button>
+                <button class="ap-resp-tab" data-resptab="headers">Headers (<span id="respHeaderCount">7</span>)</button>
+              </div>
+
+              <!-- RESPONSE UTILITIES -->
+              <div class="ap-response-actions">
+                <input type="text" class="ap-filter-input" id="jsonFilterInput" placeholder="Filter keys..." spellcheck="false">
+                <button type="button" class="ap-btn-icon" id="copyRespBtn" title="Copy response JSON">
+                  <span id="copyRespIcon">📋</span>
+                </button>
+                <button type="button" class="ap-btn-icon" id="collapseAllBtn" title="Toggle Collapse All">
+                  <span>↕</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- RESPONSE TAB PANELS -->
+            <div class="ap-response-content">
+              <!-- FORMATTED JSON TREE -->
+              <div class="resp-panel active" id="panelRespJson">
+                <div class="json-tree-container" id="jsonTreeContainer">
+                  <!-- Injected by JsonTreeRenderer -->
+                </div>
+              </div>
+
+              <!-- RAW TEXT PANEL -->
+              <div class="resp-panel" id="panelRespRaw">
+                <pre class="raw-pre" id="rawTextContent"><code></code></pre>
+              </div>
+
+              <!-- RESPONSE HEADERS TABLE -->
+              <div class="resp-panel" id="panelRespHeaders">
+                <table class="resp-headers-table">
+                  <thead>
+                    <tr>
+                      <th>HEADER</th>
+                      <th>VALUE</th>
+                    </tr>
+                  </thead>
+                  <tbody id="respHeadersTableBody">
+                    <!-- Rendered dynamically -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- =========================================================================
+         WORKSPACE 2: WEBSOCKET REAL-TIME STREAM INSPECTOR
+         ========================================================================= -->
+    <main class="ap-workspace mode-ws-inactive" id="wsWorkspace" style="display: none;">
+      <div class="ap-request-card">
+        <form class="ap-url-bar" id="wsForm">
+          <div class="ap-ws-badge">WSS</div>
+          <div class="ap-url-wrapper">
+            <input type="text" class="ap-url-input" id="wsUrlInput" value="wss://echo.websocket.events" placeholder="wss://stream.binance.com/ws" required spellcheck="false">
+          </div>
+          <button type="submit" class="ap-send-btn ap-ws-connect-btn" id="wsConnectBtn">
+            <span class="ws-pulse-dot" id="wsStatusDot"></span>
+            <span id="wsConnectText">Connect Socket</span>
+          </button>
+        </form>
+
+        <!-- WEBSOCKET QUICK PRESETS -->
+        <div class="ap-ws-presets-strip">
+          <span class="presets-label">SOCKET TARGETS:</span>
+          <button type="button" class="preset-pill ws-preset-btn" data-ws="wss://echo.websocket.events">Echo Server (Events)</button>
+          <button type="button" class="preset-pill ws-preset-btn" data-ws="wss://stream.binance.com:9443/ws/btcusdt@ticker">Binance BTC/USDT Ticker</button>
+          <button type="button" class="preset-pill ws-preset-btn" data-ws="wss://ws.postman-echo.com/raw">Postman Echo Socket</button>
+        </div>
+      </div>
+
+      <!-- WEBSOCKET SPLIT STUDIO -->
+      <div class="ap-ws-studio-grid">
+        <!-- LEFT: LIVE FRAME STREAM -->
+        <div class="ap-panel-card ap-ws-stream-card">
+          <div class="ap-panel-header">
+            <div class="panel-title-group">
+              <h2 class="ap-panel-title">Live Bidirectional Frame Stream</h2>
+              <span class="ap-panel-subtitle">Real-time opcode and binary/text payload telemetry</span>
+            </div>
+            <div class="ws-stream-controls">
+              <span class="ws-frame-count" id="wsFrameCount">0 frames</span>
+              <button type="button" class="ap-link-action" id="clearFramesBtn">Clear Stream</button>
+            </div>
+          </div>
+
+          <div class="ws-frames-container" id="wsFramesContainer">
+            <div class="ws-empty-state" id="wsEmptyState">
+              <span>🔌 Socket idle. Click "Connect Socket" to initiate duplex channel.</span>
+            </div>
+            <!-- Injected by WebSocketManager -->
+          </div>
+        </div>
+
+        <!-- RIGHT: FRAME COMPOSER & TELEMETRY -->
+        <div class="ap-panel-card ap-ws-composer-card">
+          <div class="ap-panel-header">
+            <div class="panel-title-group">
+              <h2 class="ap-panel-title">Frame Dispatcher</h2>
+              <span class="ap-panel-subtitle">Transmit text or JSON packets</span>
+            </div>
+            <span class="status-pill status-ws" id="wsStateBadge">DISCONNECTED</span>
+          </div>
+
+          <div class="ws-composer-body">
+            <textarea class="ap-body-textarea ws-msg-input" id="wsMessageInput" placeholder="{
+  &quot;action&quot;: &quot;ping&quot;,
+  &quot;timestamp&quot;: 1725619200
+}" spellcheck="false"></textarea>
+            
+            <div class="ws-composer-actions">
+              <div class="quick-packets">
+                <button type="button" class="quick-packet-btn" data-payload='{"type":"ping","t":Date.now()}'>Send Ping</button>
+                <button type="button" class="quick-packet-btn" data-payload='{"method":"SUBSCRIBE","params":["btcusdt@ticker"],"id":1}'>Subscribe Ticker</button>
+              </div>
+              <button type="button" class="ap-send-btn ap-send-frame-btn" id="wsSendFrameBtn" disabled>
+                <span>Send Frame ➔</span>
+              </button>
+            </div>
+
+            <!-- WS TELEMETRY METRICS -->
+            <div class="ws-metrics-box">
+              <div class="ws-metric-item">
+                <span class="ws-m-lbl">Channel State</span>
+                <span class="ws-m-val" id="wsMetricState">Closed</span>
+              </div>
+              <div class="ws-metric-item">
+                <span class="ws-m-lbl">Roundtrip Ping</span>
+                <span class="ws-m-val highlight-emerald" id="wsMetricPing">-- ms</span>
+              </div>
+              <div class="ws-metric-item">
+                <span class="ws-m-lbl">Bytes In / Out</span>
+                <span class="ws-m-val" id="wsMetricBytes">0 B / 0 B</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- TOAST NOTIFICATION POPUP -->
+    <div class="ap-toast" id="apToast" aria-live="polite"></div>
+  </div>
+
+  <!-- SCRIPT INCLUSIONS -->
+  <script src="sample_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

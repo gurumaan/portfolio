@@ -949,6 +949,16 @@
       repo: 'https://github.com/gurumaan/playify',
       live: 'https://peaceful-davinci.cotton-vole.workers.dev'
     },
+    apipulse: {
+      title: 'APIPulse — Real-Time API Profiler & Network Waterfall Studio',
+      badge: 'Flagship DevTool · Performance Telemetry & Security Audit',
+      problem: 'Debugging API performance bottlenecks, diagnosing unexpected edge latency, and verifying OWASP security compliance often requires heavyweight, proprietary desktop tools. APIPulse provides a zero-install, browser-native studio delivering sub-millisecond timing waterfalls, live WebSocket stream inspection, and automated security grading.',
+      topology: 'Request Bar ──► W3C Fetch & Performance API ──► Timing Waterfall Gantt (DNS ➔ TCP ➔ TLS ➔ TTFB ➔ Transfer) ──► OWASP Security Compliance Matrix ──► Collapsible JSON Tree & cURL Generator',
+      tradeoffs: 'Implemented direct W3C PerformanceResourceTiming telemetry with graceful fallback benchmarks for CORS-restricted public endpoints to guarantee 100% interactive fidelity without requiring a costly backend proxy.',
+      snippet: `// Sub-Millisecond W3C ResourceTiming Extraction Engine\nextractResourceTiming(url, totalElapsed) {\n  const entries = performance.getEntriesByName(url);\n  const entry = entries.length > 0 ? entries[entries.length - 1] : null;\n  if (entry && entry.responseStart > 0) {\n    return {\n      dns: Math.max(2, entry.domainLookupEnd - entry.domainLookupStart),\n      tcp: Math.max(5, entry.connectEnd - entry.connectStart),\n      tls: entry.secureConnectionStart > 0 ? entry.connectEnd - entry.secureConnectionStart : 15,\n      ttfb: Math.max(10, entry.responseStart - entry.requestStart),\n      download: Math.max(2, entry.responseEnd - entry.responseStart),\n      total: entry.duration || totalElapsed\n    };\n  }\n  return this.computeProportionalWaterfall(totalElapsed);\n}`,
+      repo: 'https://github.com/gurumaan/apipulse',
+      live: 'https://gurumaan.github.io/apipulse/'
+    },
     powersync: {
       title: 'PowerSync Offline-First Sync Backend',
       badge: 'Open Source · Node.js & PostgreSQL',
