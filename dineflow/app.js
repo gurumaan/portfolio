@@ -394,7 +394,7 @@
             <div class="dish-footer">
               <span class="dish-price">₹${dish.price.toLocaleString('en-IN')}</span>
               <button type="button" class="btn-dish-add" data-dishid="${dish.id}" ${is86 ? 'disabled' : ''}>
-                <span>${is86 ? '86'd Out of Stock' : 'Customize &amp; Add +'}</span>
+                <span>${is86 ? '86\'d Out of Stock' : 'Customize &amp; Add +'}</span>
               </button>
             </div>
           </div>
@@ -834,7 +834,7 @@
         <div class="item-86-row">
           <span>${escapeHtml(item.name)}</span>
           <button type="button" class="kds-action-btn toggle-86-btn ${is86 ? 'btn-simulate-rush' : ''}" data-itemid="${item.id}">
-            <span>${is86 ? '✓ Restore to Menu' : '🚫 Mark 86'd'}</span>
+            <span>${is86 ? '✓ Restore to Menu' : '🚫 Mark 86\'d'}</span>
           </button>
         </div>
       `;

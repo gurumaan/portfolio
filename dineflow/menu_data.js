@@ -13,7 +13,7 @@ window.DINEFLOW_TABLES = [
   { id: 'T07', name: 'Table 07 — Bar Lounge', zone: 'Bar & Lounge', capacity: 2, status: 'occupied', guests: 2, orderCount: 1, total: 980 },
   { id: 'T08', name: 'Table 08 — Bar High-Top', zone: 'Bar & Lounge', capacity: 2, status: 'vacant' },
   { id: 'T09', name: 'Table 09 — Private Dining Room', zone: 'Mezzanine', capacity: 8, status: 'billed', guests: 6, orderCount: 4, total: 5420 },
-  { id: 'T10', name: 'Table 10 — Chef's Tasting Counter', zone: 'Mezzanine', capacity: 4, status: 'vacant' }
+  { id: 'T10', name: 'Table 10 — Chef\'s Tasting Counter', zone: 'Mezzanine', capacity: 4, status: 'vacant' }
 ];
 
 window.DINEFLOW_STATIONS = [
@@ -28,7 +28,7 @@ window.DINEFLOW_CATEGORIES = [
   { id: 'all', name: 'Full Menu', icon: '✨' },
   { id: 'starters', name: 'Small Plates & Crudo', icon: '🦪' },
   { id: 'pizza', name: 'Artisanal Woodfired Pizza', icon: '🍕' },
-  { id: 'mains', name: 'Chef's Signature Mains', icon: '🥩' },
+  { id: 'mains', name: 'Chef\'s Signature Mains', icon: '🥩' },
   { id: 'pasta', name: 'Handcrafted Pasta', icon: '🍝' },
   { id: 'drinks', name: 'Craft Cocktails & Elixirs', icon: '🍸' },
   { id: 'desserts', name: 'Artisan Dolci', icon: '🍮' }
@@ -218,7 +218,7 @@ window.DINEFLOW_MENU = [
         options: [
           { name: 'Woodford Reserve', price: 0 },
           { name: 'Bulleit 10-Year (+₹120)', price: 120 },
-          { name: 'Michter's Small Batch (+₹180)', price: 180 }
+          { name: 'Michter\'s Small Batch (+₹180)', price: 180 }
         ]
       }
     ]
