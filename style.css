@@ -1400,6 +1400,345 @@ h2.section-title svg.underline {
 }
 
 /* --------------------------------------------------------------------------
+   Playify Master Flagship Showcase Styles
+   -------------------------------------------------------------------------- */
+.playify-status-banner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.banner-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px dashed rgba(214, 165, 76, 0.4);
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--paper-yellow);
+}
+
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #22c55e;
+  box-shadow: 0 0 8px #22c55e;
+  display: inline-block;
+  animation: pulseGlow 2s infinite ease-in-out;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+
+.work-grid.playify-single-grid {
+  display: block;
+  width: 100%;
+}
+
+.card.playify-master-card {
+  --base: 0deg;
+  padding: 44px 44px 34px;
+  width: 100%;
+}
+
+.playify-stamp-badge-cluster {
+  position: absolute;
+  top: 24px;
+  right: 28px;
+  display: flex;
+  gap: 12px;
+  z-index: 2;
+}
+
+.playify-header-block {
+  margin-top: 8px;
+  margin-bottom: 14px;
+}
+
+.playify-master-title {
+  font-family: var(--font-serif);
+  font-size: 2.15rem;
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.playify-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.88rem;
+  color: var(--ochre-dark, #8f651b);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.playify-lead-text {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  margin-bottom: 28px;
+  max-width: 960px;
+}
+
+/* Engineering Metrics Strip */
+.playify-specs-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 14px;
+  margin-bottom: 30px;
+  padding: 18px 20px;
+  background: rgba(0, 0, 0, 0.035);
+  border: 1.5px dashed var(--border-light, rgba(0, 0, 0, 0.14));
+  border-radius: 8px;
+}
+
+body.midnight-mode .playify-specs-strip {
+  background: rgba(0, 0, 0, 0.22);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+.spec-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.spec-value {
+  font-family: var(--font-mono);
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--forest, #214f43);
+  letter-spacing: -0.02em;
+}
+
+body.midnight-mode .spec-value {
+  color: #5eead4;
+}
+
+.spec-name {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.spec-desc {
+  font-size: 0.73rem;
+  font-family: var(--font-mono);
+  color: var(--ink-faint);
+}
+
+/* 4 Core Technical Pillars */
+.playify-pillars-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+  margin-bottom: 28px;
+}
+
+.pillar-card {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 8px;
+  padding: 22px 22px 18px;
+  position: relative;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+body.midnight-mode .pillar-card {
+  background: rgba(0, 0, 0, 0.18);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.pillar-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px var(--shadow-soft);
+}
+
+.pillar-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: var(--terracotta, #b45309);
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+.pillar-title {
+  font-size: 1.05rem;
+  font-family: var(--font-serif);
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pillar-desc {
+  font-size: 0.87rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.pillar-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: var(--ink-soft);
+  line-height: 1.45;
+}
+
+.pillar-list li {
+  position: relative;
+  padding-left: 18px;
+}
+
+.pillar-list li::before {
+  content: "▸";
+  position: absolute;
+  left: 0;
+  color: var(--ochre);
+  font-weight: bold;
+}
+
+.inline-code {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  background: rgba(0, 0, 0, 0.07);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--ink);
+}
+
+body.midnight-mode .inline-code {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--paper-yellow);
+}
+
+/* Topology Diagram Box */
+.playify-topo-box {
+  margin-bottom: 26px;
+  background: #111827;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 16px 20px;
+  overflow-x: auto;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.topo-title {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.topo-diagram {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  line-height: 1.44;
+  color: #38bdf8;
+  white-space: pre;
+}
+
+/* Playify Tags */
+.tag-row.playify-tags {
+  margin-bottom: 18px;
+}
+
+/* Playify Action Bar */
+.playify-action-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  align-items: center;
+  padding-top: 20px;
+  border-top: 1px dashed var(--line-strong);
+  margin-top: 10px;
+}
+
+.playify-action-bar .btn-primary-highlight {
+  background: var(--forest, #214f43);
+  color: #ffffff;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--forest, #214f43);
+  box-shadow: 0 3px 10px rgba(33, 79, 67, 0.28);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playify-action-bar .btn-primary-highlight:hover {
+  background: #16362e;
+  transform: translateY(-1px);
+}
+
+.playify-action-bar .btn-apk-download {
+  background: var(--ochre, #d6a54c);
+  color: #261704;
+  padding: 8px 18px;
+  border-radius: 6px;
+  border: 1px solid var(--ochre, #d6a54c);
+  box-shadow: 0 3px 10px rgba(214, 165, 76, 0.25);
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playify-action-bar .btn-apk-download:hover {
+  background: #c2913b;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 840px) {
+  .card.playify-master-card {
+    padding: 28px 20px 22px;
+  }
+  .playify-stamp-badge-cluster {
+    position: static;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .playify-master-title {
+    font-size: 1.65rem;
+  }
+  .playify-pillars-grid {
+    grid-template-columns: 1fr;
+  }
+  .playify-specs-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* --------------------------------------------------------------------------
    Experience Section (Pinned Work Timeline)
    -------------------------------------------------------------------------- */
 .timeline-container {
