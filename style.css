@@ -654,6 +654,12 @@ nav.cork-nav .nav-container {
   --tape-rot: 4deg;
 }
 
+.tape.terracotta {
+  background: rgba(200, 90, 50, 0.85);
+  transform: rotate(-3deg);
+  --tape-rot: -5deg;
+}
+
 .tape.center {
   left: 50%;
   transform: translateX(-50%) rotate(1deg);
@@ -684,6 +690,12 @@ nav.cork-nav .nav-container {
   border-color: var(--teal);
   color: var(--teal-dark);
   transform: rotate(-5deg);
+}
+
+.rubber-stamp.terracotta {
+  border-color: #c85a32;
+  color: #c85a32;
+  transform: rotate(-4deg);
 }
 
 /* Coffee Stain Ring Watermark */

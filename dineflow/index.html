@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>DineFlow — Real-Time QR Table Ordering & Kitchen Display System (KDS)</title>
+  
+  <!-- Typography (Plus Jakarta Sans, Fraunces Serif, JetBrains Mono) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;700;800&family=JetBrains+Mono:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍽️</text></svg>">
+</head>
+<body>
+
+  <!-- =========================================================================
+       TOP GLOBAL NAVIGATION & MODE SWITCHER
+       ========================================================================= -->
+  <header class="df-navbar">
+    <div class="df-nav-inner">
+      <div class="df-brand-group">
+        <div class="df-logo-mark">D</div>
+        <div>
+          <h1 class="df-brand-title">DineFlow</h1>
+          <span class="df-brand-sub">Hospitality OS &bull; Real-Time KDS</span>
+        </div>
+      </div>
+
+      <!-- Viewport Switcher Controls -->
+      <nav class="df-view-switcher" aria-label="Application Viewport Mode">
+        <button class="view-btn active" data-view="split" title="Side-by-side interactive testing">
+          <span>⚡</span> Split Live Lab
+        </button>
+        <button class="view-btn" data-view="customer" title="Customer mobile table ordering experience">
+          <span>📱</span> Guest Mobile
+        </button>
+        <button class="view-btn" data-view="kds" title="Chef kitchen display terminal">
+          <span>👨‍🍳</span> Kitchen KDS
+        </button>
+        <button class="view-btn" data-view="stats" title="POS revenue & 86'd stock controls">
+          <span>📊</span> POS &amp; Stock
+        </button>
+      </nav>
+
+      <!-- Context Actions & Return link -->
+      <div class="df-nav-actions">
+        <div class="df-table-selector-wrap">
+          <label for="tableSelect">Table:</label>
+          <select id="tableSelect" class="df-select-table"></select>
+        </div>
+        <a href="../" class="btn-portfolio-return">← Back to Portfolio</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN DINEFLOW APP CONTAINER
+       ========================================================================= -->
+  <main class="dineflow-app mode-split" id="dineflowApp">
+    <div class="df-workspace">
+
+      <!-- ---------------------------------------------------------------------
+           CUSTOMER DINING VIEWPORT
+           --------------------------------------------------------------------- -->
+      <section class="df-customer-section" aria-label="Guest Table Ordering">
+        <div class="phone-mockup-header">
+          <span>13:35</span>
+          <div class="speaker-pill" aria-hidden="true"></div>
+          <span>5G 100%</span>
+        </div>
+
+        <div class="restaurant-hero-banner">
+          <h2 class="hero-restaurant-title">The Rusty Copper</h2>
+          <div class="hero-restaurant-meta">
+            <span>★ 4.9 (420+ reviews)</span>
+            <span>&bull;</span>
+            <span>Connaught Place, New Delhi</span>
+            <span>&bull;</span>
+            <span class="table-tag-active">
+              <span class="table-dot"></span>
+              <span id="currentTableBadge">Table 04</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Category Filter Pills -->
+        <div class="category-pills-row" role="tablist">
+          <button class="cat-pill active" data-category="all">All Curations</button>
+          <button class="cat-pill" data-category="starters">Small Plates</button>
+          <button class="cat-pill" data-category="mains">Wood-Fired Mains</button>
+          <button class="cat-pill" data-category="beverages">Specialty Coffee</button>
+          <button class="cat-pill" data-category="desserts">Pastry Counter</button>
+        </div>
+
+        <!-- Menu Cards Grid -->
+        <div class="menu-grid-container" id="menuGrid"></div>
+
+        <!-- Floating Order Tray Bar -->
+        <div class="customer-tray-bar" id="customerTrayBar" role="button" aria-label="View current order tray">
+          <div class="tray-left">
+            <span class="tray-badge" id="trayItemCount">0 items</span>
+            <span class="tray-hint">View Order Tray</span>
+          </div>
+          <div class="tray-right">
+            <span class="tray-total" id="trayTotalAmount">₹0.00</span>
+            <span class="tray-arrow">→</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------------------
+           KITCHEN DISPLAY SYSTEM (KDS)
+           --------------------------------------------------------------------- -->
+      <section class="df-kds-section" aria-label="Kitchen Display System">
+        <div class="kds-header">
+          <div class="kds-title-wrap">
+            <h2 class="kds-title">KDS &mdash; LINE #1 (GRILL &amp; SAUTÉ)</h2>
+            <div class="kds-live-indicator">
+              <span class="kds-live-dot"></span>
+              <span>LIVE BROADCAST BUS</span>
+            </div>
+          </div>
+          <div class="kds-metrics-strip">
+            <div>AVG PREP: <span class="kds-metric-val">8.4m</span></div>
+            <div>STATION BELL: <span class="kds-metric-val">ACTIVE (1.8kHz)</span></div>
+          </div>
+        </div>
+
+        <!-- Kanban Columns Board -->
+        <div class="kds-kanban-board">
+          
+          <!-- Column 1: Incoming -->
+          <div class="kds-column">
+            <div class="kds-col-header">
+              <span class="kds-col-title">1. Incoming</span>
+              <span class="kds-col-count" id="countIncoming">0</span>
+            </div>
+            <div class="kds-col-tickets" id="kdsColIncoming"></div>
+          </div>
+
+          <!-- Column 2: Cooking -->
+          <div class="kds-column">
+            <div class="kds-col-header">
+              <span class="kds-col-title">2. In Preparation</span>
+              <span class="kds-col-count" id="countCooking">0</span>
+            </div>
+            <div class="kds-col-tickets" id="kdsColCooking"></div>
+          </div>
+
+          <!-- Column 3: Ready -->
+          <div class="kds-column">
+            <div class="kds-col-header">
+              <span class="kds-col-title">3. Ready for Window</span>
+              <span class="kds-col-count" id="countReady">0</span>
+            </div>
+            <div class="kds-col-tickets" id="kdsColReady"></div>
+          </div>
+
+          <!-- Column 4: Served / History -->
+          <div class="kds-column">
+            <div class="kds-col-header">
+              <span class="kds-col-title">4. Served &amp; Settled</span>
+              <span class="kds-col-count" id="countServed">0</span>
+            </div>
+            <div class="kds-col-tickets" id="kdsColServed"></div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ---------------------------------------------------------------------
+           STATS & 86'D STOCK MANAGEMENT SECTION
+           --------------------------------------------------------------------- -->
+      <section class="df-stats-section" aria-label="POS Telemetry and Stock Control">
+        <div class="stats-grid-row">
+          <div class="stat-box">
+            <div class="stat-label">Today's Gross Sales</div>
+            <div class="stat-number" id="statTotalRevenue">₹0</div>
+            <div class="stat-sub">↑ 14.8% vs last Thursday</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Active Kitchen Tickets</div>
+            <div class="stat-number" id="statActiveTickets">0</div>
+            <div class="stat-sub">Real-time load index</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Average Ticket Duration</div>
+            <div class="stat-number" id="statAvgPrepTime">8.4m</div>
+            <div class="stat-sub">Within SLA benchmark (<12m)</div>
+          </div>
+          <div class="stat-box">
+            <div class="stat-label">Total Completed Covers</div>
+            <div class="stat-number" id="statCompletedOrders">0</div>
+            <div class="stat-sub">Archived to thermal audit log</div>
+          </div>
+        </div>
+
+        <div class="stock-manager-card">
+          <h3 class="stock-card-title">Chef's 86'd Out-of-Stock Management</h3>
+          <p class="stock-card-desc">Instantly mark sold-out items to prevent guest orders across mobile menus in real-time.</p>
+          <div class="stock-toggles-grid" id="stockTogglesList"></div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       MODALS & DRAWERS
+       ========================================================================= -->
+
+  <!-- 1. Dish Modifiers & Add-ons Customization Modal -->
+  <div class="df-modal-overlay" id="modifierModal" role="dialog" aria-modal="true" aria-labelledby="modalItemTitle">
+    <div class="modifier-modal-card">
+      <div class="mod-header">
+        <h3 class="mod-title" id="modalItemTitle">Customize Dish</h3>
+        <span class="mod-price" id="modalBasePrice">₹0</span>
+      </div>
+      <div class="mod-body">
+        <p class="mod-item-desc" id="modalItemDesc"></p>
+        <div id="modalModifiersBody"></div>
+        <div class="mod-notes-wrap">
+          <label for="modalChefNotes" class="mod-notes-label">Chef Notes &amp; Allergies</label>
+          <textarea id="modalChefNotes" class="mod-notes-input" rows="2" placeholder="e.g., Extra hot sauce, no onions, dressing on the side..."></textarea>
+        </div>
+      </div>
+      <div class="mod-footer">
+        <button class="btn-modal-cancel" id="btnDismissModal">Cancel</button>
+        <button class="btn-modal-confirm" id="btnConfirmAddToCart">Add to Tray</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Customer Order Tray Slide-in Drawer -->
+  <aside class="cart-drawer-panel" id="cartDrawer" role="dialog" aria-modal="true" aria-label="Current Order Tray">
+    <div class="cart-drawer-head">
+      <h3 class="cart-drawer-title">Your Order Tray</h3>
+      <button class="btn-close-drawer" id="btnCloseCartDrawer" aria-label="Close Order Tray">&times;</button>
+    </div>
+    <div class="cart-items-scroll" id="cartItemsList"></div>
+    <div class="cart-drawer-foot">
+      <div class="cart-totals-row">
+        <span>Items Subtotal:</span>
+        <span id="cartSubtotal">₹0.00</span>
+      </div>
+      <div class="cart-totals-row">
+        <span>Taxes &amp; Service Charge:</span>
+        <span id="cartTax">₹0.00</span>
+      </div>
+      <div class="cart-totals-row grand">
+        <span>Total Payable:</span>
+        <span id="cartGrandTotal">₹0.00</span>
+      </div>
+      <button class="btn-submit-order" id="btnSubmitOrder">🔥 Send Ticket to Kitchen</button>
+    </div>
+  </aside>
+
+  <!-- 3. Customer Live Order Status Stepper Modal -->
+  <div class="df-modal-overlay" id="customerOrderTrackerModal" role="dialog" aria-modal="true">
+    <div class="tracker-modal-card">
+      <div class="tracker-tag-row">
+        <span id="trackerTableName">Table 04</span>
+        <span>&bull;</span>
+        <span id="trackerOrderId">#DF-8842</span>
+      </div>
+      <h3 class="tracker-status-title" id="trackerStatusTitle">Order Received</h3>
+      <p class="tracker-status-desc" id="trackerStatusDesc">Your order has been sent to the Kitchen Display System.</p>
+
+      <!-- Stepper Progress -->
+      <div class="tracker-stepper">
+        <div class="tracker-step active" id="stepReceived">
+          <div class="step-circle">1</div>
+          <span class="step-label">Received</span>
+        </div>
+        <div class="tracker-step" id="stepCooking">
+          <div class="step-circle">2</div>
+          <span class="step-label">Cooking</span>
+        </div>
+        <div class="tracker-step" id="stepReady">
+          <div class="step-circle">3</div>
+          <span class="step-label">Ready</span>
+        </div>
+        <div class="tracker-step" id="stepServed">
+          <div class="step-circle">4</div>
+          <span class="step-label">Served</span>
+        </div>
+      </div>
+
+      <div class="tracker-actions-row">
+        <button id="btnDismissTracker">Dismiss Status</button>
+        <button id="btnViewReceiptFromTracker" style="background:var(--df-ink); color:#fff;">🖨️ View Receipt</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Thermal Receipt Modal (80mm Dot-Matrix Print Preview) -->
+  <div class="df-modal-overlay" id="thermalReceiptModal" role="dialog" aria-modal="true">
+    <div class="thermal-modal-card">
+      <div class="thermal-paper" id="receiptPaperContent"></div>
+      <div class="thermal-action-bar">
+        <button class="btn-thermal-print" id="btnPrintReceipt">Print Thermal Receipt</button>
+        <button class="btn-thermal-dismiss" id="btnDismissReceipt">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="menu_data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
