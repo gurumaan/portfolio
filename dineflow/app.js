@@ -1,12 +1,12 @@
 // ============================================================================
-// DINEFLOW — HOSPITALITY OPERATING SYSTEM & KDS
-// Real-Time Table Ordering, Kitchen Display Engine & Hardware POS Audio
+// DINEFLOW — HOSPITALITY OPERATING SYSTEM & REAL-TIME KDS (v2.4)
+// Commercial Kitchen Expediter Engine & Acoustic Web Audio Synthesizer
 // ============================================================================
 
 (function() {
   'use strict';
 
-  // --- 1. AUDIO SYNTHESIZER ENGINE (Web Audio API) ---
+  // --- 1. WEB AUDIO POS HARDWARE SYNTHESIZER ENGINE ---
   let audioCtx = null;
   function getAudioContext() {
     if (!audioCtx) {
@@ -26,28 +26,28 @@
       if (!ctx) return;
       const t = ctx.currentTime;
 
-      // 1st Harmonic Ping
+      // 1st Harmonic Strike
       [1760, 3520, 5280].forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = idx === 0 ? 'sine' : 'triangle';
         osc.frequency.setValueAtTime(freq, t);
-        gain.gain.setValueAtTime(0.25 / (idx + 1), t);
-        gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
+        gain.gain.setValueAtTime(0.28 / (idx + 1), t);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.25);
         osc.connect(gain);
         gain.connect(ctx.destination);
         osc.start(t);
-        osc.stop(t + 1.25);
+        osc.stop(t + 1.3);
       });
 
-      // 2nd Echo Ping (Delayed 120ms)
-      const t2 = t + 0.12;
+      // 2nd Secondary Echo Strike (Delayed 115ms)
+      const t2 = t + 0.115;
       [1840, 3680].forEach((freq, idx) => {
         const osc = ctx.createOscillator();
         const gain = ctx.createGain();
         osc.type = 'sine';
         osc.frequency.setValueAtTime(freq, t2);
-        gain.gain.setValueAtTime(0.28 / (idx + 1), t2);
+        gain.gain.setValueAtTime(0.3 / (idx + 1), t2);
         gain.gain.exponentialRampToValueAtTime(0.0001, t2 + 1.4);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -69,8 +69,8 @@
       const gain = ctx.createGain();
       osc.type = 'triangle';
       osc.frequency.setValueAtTime(320, t);
-      osc.frequency.exponentialRampToValueAtTime(80, t + 0.08);
-      gain.gain.setValueAtTime(0.2, t);
+      osc.frequency.exponentialRampToValueAtTime(75, t + 0.08);
+      gain.gain.setValueAtTime(0.22, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.08);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -79,7 +79,7 @@
     } catch (e) {}
   }
 
-  // Cart Add Tick
+  // Cart Add Tap
   function playTapSound() {
     try {
       const ctx = getAudioContext();
@@ -88,9 +88,9 @@
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(880, t);
-      osc.frequency.exponentialRampToValueAtTime(440, t + 0.04);
-      gain.gain.setValueAtTime(0.12, t);
+      osc.frequency.setValueAtTime(920, t);
+      osc.frequency.exponentialRampToValueAtTime(460, t + 0.04);
+      gain.gain.setValueAtTime(0.14, t);
       gain.gain.exponentialRampToValueAtTime(0.001, t + 0.04);
       osc.connect(gain);
       gain.connect(ctx.destination);
@@ -106,23 +106,22 @@
       if (!ctx) return;
       const t = ctx.currentTime;
 
-      // Register Bell
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-      osc.type = 'triangle';
-      osc.frequency.setValueAtTime(2093, t); // C7
-      osc.frequency.setValueAtTime(2637, t + 0.08); // E7
-      osc.frequency.setValueAtTime(3136, t + 0.16); // G7
-      gain.gain.setValueAtTime(0.3, t);
-      gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);
-      osc.connect(gain);
-      gain.connect(ctx.destination);
-      osc.start(t);
-      osc.stop(t + 1.25);
+      [2093, 2637, 3136].forEach((f, i) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(f, t + i * 0.08);
+        gain.gain.setValueAtTime(0.3, t + i * 0.08);
+        gain.gain.exponentialRampToValueAtTime(0.0001, t + i * 0.08 + 1.2);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start(t + i * 0.08);
+        osc.stop(t + i * 0.08 + 1.25);
+      });
     } catch (e) {}
   }
 
-  // --- 2. CROSS-TAB & MULTI-VIEW BROADCAST BUS ---
+  // --- 2. CROSS-WINDOW BROADCAST CHANNEL & STORAGE BUS ---
   const SYNC_KEY = 'dineflow_channel_events_v2';
   let broadcastChannel = null;
   try {
@@ -158,7 +157,7 @@
       loadOrders();
       renderKDS();
       renderStats();
-      showToast('New ticket incoming from ' + evt.payload.tableName);
+      showToast('New ticket arrived from ' + evt.payload.tableName);
     } else if (evt.action === 'STATUS_UPDATE') {
       loadOrders();
       renderKDS();
@@ -190,11 +189,9 @@
     modalItem: null,
     orders: [],
     outOfStock: [],
-    customerActiveOrder: null,
-    activeWaiterAlert: null
+    customerActiveOrder: null
   };
 
-  // Seed sample realistic tickets if storage is fresh
   function initializeDefaultOrders() {
     const existing = localStorage.getItem('dineflow_orders_v2');
     if (existing) {
@@ -210,16 +207,18 @@
         id: 'DF-8842',
         tableId: 'T-04',
         tableName: 'Table 04',
+        covers: 3,
         status: 'cooking',
         createdAt: now - (6 * 60 * 1000 + 40 * 1000), // 6m 40s ago
         items: [
-          { name: 'Slow-Braised Short Rib Tagliatelle', qty: 1, price: 680, modifiers: ['Calabrian Chili Kick', 'Fresh Shaved 24-mo Pecorino'], notes: 'Extra hot garnish' },
-          { name: 'Burrata & Charred Peach Salad', qty: 1, price: 490, modifiers: ['Hot Chili Wildflower Honey'], notes: '' },
-          { name: 'Nitro Cold Brew Float', qty: 2, price: 580, modifiers: ['Ethiopia Yirgacheffe'], notes: '' }
+          { name: 'Slow-Braised Short Rib Tagliatelle', station: 'grill', qty: 1, price: 680, modifiers: ['Calabrian Chili Kick', 'Fresh Shaved 24-mo Pecorino'], notes: 'Extra hot garnish' },
+          { name: 'Burrata & Charred Peach Salad', station: 'larder', qty: 1, price: 490, modifiers: ['Hot Chili Wildflower Honey'], notes: '' },
+          { name: 'Nitro Cold Brew Float', station: 'barista', qty: 2, price: 580, modifiers: ['Ethiopia Yirgacheffe'], notes: '' }
         ],
         notes: 'Guest celebrating anniversary',
         subtotal: 1750,
-        tax: 87.5,
+        cgst: 43.75,
+        sgst: 43.75,
         serviceCharge: 87.5,
         total: 1925
       },
@@ -227,33 +226,37 @@
         id: 'DF-8840',
         tableId: 'T-02',
         tableName: 'Table 02',
+        covers: 2,
         status: 'ready',
-        createdAt: now - (11 * 60 * 1000 + 10 * 1000), // 11m 10s ago
+        createdAt: now - (11 * 60 * 1000 + 20 * 1000), // 11m 20s ago (Warning)
         items: [
-          { name: 'Truffle Mushroom Sourdough Toast', qty: 1, price: 380, modifiers: ['36h Country Sourdough', 'Poached Free-Range Egg'], notes: '' },
-          { name: 'Artisan Oat Flat White', qty: 1, price: 240, modifiers: ['Oatly Barista', 'Double Ristretto'], notes: '' }
+          { name: 'Truffle Mushroom Sourdough Toast', station: 'larder', qty: 1, price: 380, modifiers: ['36h Country Sourdough', 'Poached Free-Range Egg'], notes: '' },
+          { name: 'Artisan Oat Flat White', station: 'barista', qty: 1, price: 240, modifiers: ['Oatly Barista', 'Double Ristretto'], notes: '' }
         ],
         notes: '',
         subtotal: 620,
-        tax: 31,
+        cgst: 15.5,
+        sgst: 15.5,
         serviceCharge: 31,
         total: 682
       },
       {
-        id: 'DF-8837',
-        tableId: 'T-07',
-        tableName: 'Table 07',
-        status: 'served',
-        createdAt: now - (28 * 60 * 1000),
+        id: 'DF-8835',
+        tableId: 'T-01',
+        tableName: 'Table 01',
+        covers: 4,
+        status: 'incoming',
+        createdAt: now - (14 * 60 * 1000 + 10 * 1000), // 14m ago (RUSH)
         items: [
-          { name: 'Wood-Fired Neapolitan Burrata Pizza', qty: 1, price: 640, modifiers: ['Leopard Char Crust'], notes: '' },
-          { name: 'Cascara & Grapefruit Botanicals', qty: 1, price: 260, modifiers: ['Clear Ice Block'], notes: '' }
+          { name: 'Prime Black Angus Ribeye Steak (300g)', station: 'grill', qty: 2, price: 1960, modifiers: ['Medium Rare', 'Bone Marrow Jus'], notes: 'Gluten allergy on steak' },
+          { name: 'Valrhona 70% Dark Chocolate Lava', station: 'pastry', qty: 1, price: 420, modifiers: ['Clotted Cream'], notes: '' }
         ],
-        notes: '',
-        subtotal: 900,
-        tax: 45,
-        serviceCharge: 45,
-        total: 990
+        notes: 'VIP Guest - Rush table',
+        subtotal: 2380,
+        cgst: 59.5,
+        sgst: 59.5,
+        serviceCharge: 119,
+        total: 2618
       }
     ];
     saveOrders();
@@ -291,12 +294,12 @@
     if (!container) return;
     const toast = document.createElement('div');
     toast.className = 'df-toast';
-    toast.innerHTML = `<span>⚡</span><span>${msg}</span>`;
+    toast.innerHTML = `<span>✦</span><span>${msg}</span>`;
     container.appendChild(toast);
     setTimeout(() => {
       toast.style.opacity = '0';
-      toast.style.transform = 'translateY(10px)';
-      toast.style.transition = 'all 0.3s ease';
+      toast.style.transform = 'translateY(12px)';
+      toast.style.transition = 'all 0.25s ease';
       setTimeout(() => toast.remove(), 300);
     }, 3200);
   }
@@ -313,20 +316,26 @@
 
     container.innerHTML = filtered.map(item => {
       const is86 = state.outOfStock.includes(item.id);
-      const dietClass = item.diet === 'veg' ? 'diet-veg' : 'diet-nonveg';
-      const dietTitle = item.diet === 'veg' ? 'Vegetarian' : 'Non-Vegetarian';
+      const isVeg = item.diet === 'veg';
+      const dietBadge = isVeg 
+        ? '<span class="diet-badge diet-veg">[V]</span>' 
+        : '<span class="diet-badge diet-nonveg">[NV]</span>';
+      
       const specialTag = item.tags.find(t => t.includes('Signature') || t.includes('Special'));
 
       return `
         <article class="menu-card ${is86 ? 'is-soldout' : ''}" data-id="${item.id}">
           <div class="menu-content">
-            <div class="menu-header-row">
-              <span class="diet-indicator ${dietClass}" title="${dietTitle}"></span>
-              <h4 class="dish-title">${item.name}</h4>
+            <div>
+              <div class="dish-header-strip">
+                ${dietBadge}
+                <h4 class="dish-title">${item.name}</h4>
+              </div>
+              <p class="dish-desc">${item.description}</p>
             </div>
-            <p class="dish-desc">${item.description}</p>
+            
             <div class="menu-footer-row">
-              <div>
+              <div class="dish-price-wrap">
                 <span class="dish-price">₹${item.price}</span>
                 <span class="dish-cal">&bull; ${item.calories}</span>
               </div>
@@ -351,7 +360,6 @@
       `;
     }).join('');
 
-    // Attach click listeners to open modifier modal
     container.querySelectorAll('.btn-customize-add').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -385,7 +393,7 @@
         <div class="mod-group" data-group-id="${grp.id}">
           <div class="mod-group-head">
             <span class="mod-group-title">${grp.name}</span>
-            <span class="mod-group-req">${grp.required ? 'Required (Choose 1)' : 'Optional'}</span>
+            <span class="mod-group-req">${grp.required ? 'Required (Pick 1)' : 'Optional Addition'}</span>
           </div>
           <div class="mod-options-list">
             ${grp.options.map((opt, oIdx) => {
@@ -395,9 +403,11 @@
               const isDefault = opt.default ? 'checked' : '';
               return `
                 <label class="mod-option-row" for="${inputId}">
-                  <input type="${inputType}" id="${inputId}" name="${inputName}" 
-                         value="${opt.name}" data-price="${opt.price}" ${isDefault} class="mod-input" />
-                  <span class="mod-opt-name">${opt.name}</span>
+                  <div>
+                    <input type="${inputType}" id="${inputId}" name="${inputName}" 
+                           value="${opt.name}" data-price="${opt.price}" ${isDefault} class="mod-input" />
+                    <span class="mod-opt-name">${opt.name}</span>
+                  </div>
                   <span class="mod-opt-price">${opt.price > 0 ? '+₹' + opt.price : 'Free'}</span>
                 </label>
               `;
@@ -430,7 +440,6 @@
     }
   }
 
-  // Dismiss modifier modal
   const dismissModBtn = document.getElementById('btnDismissModal');
   const closeModBtn = document.getElementById('btnCloseModModal');
   [dismissModBtn, closeModBtn].forEach(b => {
@@ -442,7 +451,6 @@
     }
   });
 
-  // Confirm Add to Tray
   const confirmAddBtn = document.getElementById('btnConfirmAddToCart');
   if (confirmAddBtn) {
     confirmAddBtn.addEventListener('click', () => {
@@ -486,32 +494,33 @@
     const trayTotal = document.getElementById('trayTotalAmount');
     const cartList = document.getElementById('cartItemsList');
     const subtotalEl = document.getElementById('cartSubtotal');
-    const taxEl = document.getElementById('cartTax');
+    const cgstEl = document.getElementById('cartCgst');
+    const sgstEl = document.getElementById('cartSgst');
     const serviceEl = document.getElementById('cartServiceCharge');
     const grandEl = document.getElementById('cartGrandTotal');
 
     const totalQty = state.cart.reduce((sum, i) => sum + i.qty, 0);
     const subtotal = state.cart.reduce((sum, i) => sum + (i.totalPrice * i.qty), 0);
-    const tax = Math.round(subtotal * 0.05 * 100) / 100;
+    const taxEach = Math.round(subtotal * 0.025 * 100) / 100; // 2.5% CGST / SGST
     const service = Math.round(subtotal * 0.05 * 100) / 100;
-    const grandTotal = subtotal + tax + service;
+    const grandTotal = subtotal + (taxEach * 2) + service;
 
     if (trayCount) trayCount.textContent = `${totalQty} item${totalQty !== 1 ? 's' : ''}`;
     if (trayTotal) trayTotal.textContent = `₹${grandTotal.toFixed(2)}`;
 
     if (subtotalEl) subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
-    if (taxEl) taxEl.textContent = `₹${tax.toFixed(2)}`;
+    if (cgstEl) cgstEl.textContent = `₹${taxEach.toFixed(2)}`;
+    if (sgstEl) sgstEl.textContent = `₹${taxEach.toFixed(2)}`;
     if (serviceEl) serviceEl.textContent = `₹${service.toFixed(2)}`;
     if (grandEl) grandEl.textContent = `₹${grandTotal.toFixed(2)}`;
 
-    // Update payment modal amount if open
     const pmAmt = document.getElementById('pmAmountValue');
     if (pmAmt) pmAmt.textContent = `₹${grandTotal.toFixed(2)}`;
 
     if (!cartList) return;
 
     if (state.cart.length === 0) {
-      cartList.innerHTML = `<div class="kds-empty-col">Your order tray is empty.<br/>Browse the menu to add dishes.</div>`;
+      cartList.innerHTML = `<div class="kds-empty-col">Your order tray is currently empty.<br/>Browse curations to begin.</div>`;
       return;
     }
 
@@ -533,7 +542,6 @@
       </div>
     `).join('');
 
-    // Attach step listeners
     cartList.querySelectorAll('.btn-minus').forEach(btn => {
       btn.addEventListener('click', () => {
         const cid = btn.dataset.cid;
@@ -560,7 +568,7 @@
     });
   }
 
-  // Open/Close Cart Drawer
+  // Open/Close Tray Drawer
   const trayBar = document.getElementById('customerTrayBar');
   const cartDrawer = document.getElementById('cartDrawer');
   const closeCartBtn = document.getElementById('btnCloseCartDrawer');
@@ -581,22 +589,23 @@
   if (submitOrderBtn) {
     submitOrderBtn.addEventListener('click', () => {
       if (state.cart.length === 0) {
-        showToast('Your tray is empty! Add items first.');
+        showToast('Tray is empty. Add dishes first!');
         return;
       }
 
       playServiceBell();
 
-      const tableObj = (window.DINEFLOW_TABLES || []).find(t => t.id === state.currentTable) || { name: 'Table 04' };
+      const tableObj = (window.DINEFLOW_TABLES || []).find(t => t.id === state.currentTable) || { name: 'Table 04', capacity: 4 };
       const orderNum = 'DF-' + Math.floor(1000 + Math.random() * 9000);
       const subtotal = state.cart.reduce((sum, item) => sum + (item.totalPrice * item.qty), 0);
-      const tax = Math.round(subtotal * 0.05 * 100) / 100;
+      const taxEach = Math.round(subtotal * 0.025 * 100) / 100;
       const service = Math.round(subtotal * 0.05 * 100) / 100;
 
       const newOrder = {
         id: orderNum,
         tableId: state.currentTable,
         tableName: tableObj.name,
+        covers: tableObj.capacity || 2,
         status: 'incoming',
         createdAt: Date.now(),
         items: state.cart.map(i => ({
@@ -609,9 +618,10 @@
         })),
         notes: state.cart.map(i => i.notes).filter(Boolean).join(' | '),
         subtotal: subtotal,
-        tax: tax,
+        cgst: taxEach,
+        sgst: taxEach,
         serviceCharge: service,
-        total: subtotal + tax + service
+        total: subtotal + (taxEach * 2) + service
       };
 
       state.orders.unshift(newOrder);
@@ -628,52 +638,61 @@
       renderCustomerOrderStatus();
       renderKDS();
       renderStats();
-      showToast(`Ticket #${newOrder.id} dispatched to kitchen!`);
+      showToast(`Ticket #${newOrder.id} sent to kitchen rail!`);
     });
   }
 
-  // --- 9. CUSTOMER LIVE ORDER TRACKER & DYNAMIC ISLAND ---
+  // --- 9. CUSTOMER LIVE TRACKER & ACTIVE DYNAMIC ISLAND ---
   function renderCustomerOrderStatus() {
     const banner = document.getElementById('activeOrderPillBanner');
-    const islandPill = document.getElementById('islandPill');
+    const dynamicIsland = document.getElementById('dynamicIsland');
+    const islandExpanded = document.getElementById('islandExpanded');
+    const islandTitle = document.getElementById('islandStatusText');
+    const islandTimer = document.getElementById('islandTimer');
     const aopTitle = document.getElementById('aopTitle');
     const aopSub = document.getElementById('aopSubtitle');
 
     if (!state.customerActiveOrder) {
       if (banner) banner.style.display = 'none';
-      if (islandPill) islandPill.style.display = 'none';
+      if (dynamicIsland) dynamicIsland.classList.remove('is-active');
+      if (islandExpanded) islandExpanded.style.display = 'none';
       return;
     }
 
     const current = state.orders.find(o => o.id === state.customerActiveOrder.id) || state.customerActiveOrder;
 
     if (banner) banner.style.display = 'flex';
-    if (islandPill) islandPill.style.display = 'flex';
+    if (dynamicIsland) dynamicIsland.classList.add('is-active');
+    if (islandExpanded) islandExpanded.style.display = 'flex';
 
-    let statusText = 'Received';
-    let subText = 'Sent to kitchen display';
+    let statusText = 'Queued';
+    let subText = 'Order received at kitchen pass';
 
     if (current.status === 'incoming') {
-      statusText = 'Received';
-      subText = 'Order ticket queued at chef station';
+      statusText = 'Queued';
+      subText = 'Ticket landed on chef rail';
     } else if (current.status === 'cooking') {
-      statusText = 'Cooking';
-      subText = 'Chef is preparing your meal 🔥';
+      statusText = 'Firing 🔥';
+      subText = 'Chef is preparing wood-fired mains';
     } else if (current.status === 'ready') {
-      statusText = 'Plated & Ready';
-      subText = 'Dishes ready at service window 🛎️';
+      statusText = 'Plated 🛎️';
+      subText = 'Dishes ready at expediter window';
     } else if (current.status === 'served') {
-      statusText = 'Served & Settled';
-      subText = 'Hope you enjoyed your meal! ✨';
+      statusText = 'Settled ✨';
+      subText = 'Dining session complete. Receipt ready.';
     }
 
-    if (aopTitle) aopTitle.textContent = `#${current.id} — ${statusText}`;
+    if (aopTitle) aopTitle.textContent = `#${current.id} &bull; ${statusText}`;
     if (aopSub) aopSub.textContent = subText;
-    const islandText = islandPill?.querySelector('.island-text');
-    if (islandText) islandText.textContent = statusText;
+    if (islandTitle) islandTitle.textContent = statusText;
+
+    const elapsedMin = Math.floor((Date.now() - current.createdAt) / 60000);
+    const elapsedSec = Math.floor(((Date.now() - current.createdAt) % 60000) / 1000);
+    if (islandTimer) {
+      islandTimer.textContent = `${String(elapsedMin).padStart(2, '0')}:${String(elapsedSec).padStart(2, '0')}`;
+    }
   }
 
-  // Track Live Modal open
   const trackBtn = document.getElementById('btnTrackActiveOrder');
   const trackerModal = document.getElementById('customerOrderTrackerModal');
   const dismissTrackerBtn = document.getElementById('btnDismissTracker');
@@ -709,13 +728,13 @@
       if (descEl) descEl.textContent = 'Ticket sent to Chef Terminal. Waiting for prep confirmation.';
       if (stepReceived) stepReceived.classList.add('active');
     } else if (current.status === 'cooking') {
-      if (titleEl) titleEl.textContent = 'Chef is Preparing Your Meal 🔥';
-      if (descEl) descEl.textContent = 'Dishes are currently sizzling on the wood-fired grill line.';
+      if (titleEl) titleEl.textContent = 'Chef Firing Dishes 🔥';
+      if (descEl) descEl.textContent = 'Your dishes are sizzling on the wood-fired grill and sauté line.';
       if (stepReceived) stepReceived.classList.add('completed');
       if (stepCooking) stepCooking.classList.add('active');
     } else if (current.status === 'ready') {
-      if (titleEl) titleEl.textContent = 'Dishes Ready for Pickup 🛎️';
-      if (descEl) descEl.textContent = 'Plated and ready at the service expediting pass.';
+      if (titleEl) titleEl.textContent = 'Dishes Ready at Pass 🛎️';
+      if (descEl) descEl.textContent = 'Plated and ready at the service window for serving!';
       if (stepReceived) stepReceived.classList.add('completed');
       if (stepCooking) stepCooking.classList.add('completed');
       if (stepReady) stepReady.classList.add('active');
@@ -737,7 +756,6 @@
     });
   }
 
-  // View receipt from tracker
   const trackerReceiptBtn = document.getElementById('btnViewReceiptFromTracker');
   if (trackerReceiptBtn) {
     trackerReceiptBtn.addEventListener('click', () => {
@@ -748,7 +766,7 @@
     });
   }
 
-  // --- 10. WAITER SERVICE REQUEST CALL ---
+  // --- 10. WAITER SERVICE REQUEST DISPATCHER ---
   const openWaiterCallBtn = document.getElementById('btnOpenWaiterCall');
   const waiterCallModal = document.getElementById('waiterCallModal');
   const closeWaiterBtn = document.getElementById('btnCloseWaiterModal');
@@ -783,7 +801,7 @@
 
       broadcastEvent('WAITER_CALL', payload);
       displayKdsServiceAlert(payload);
-      showToast(`Server notified for "${reason}" at Table 04`);
+      showToast(`Server notified for "${reason}"`);
     });
   });
 
@@ -793,7 +811,7 @@
     const timeEl = document.getElementById('alertTimestamp');
     if (!banner || !textEl) return;
 
-    textEl.textContent = `${payload.tableName} requested: ${payload.reason}`;
+    textEl.textContent = `${payload.tableName.toUpperCase()} REQUESTED: ${payload.reason}`;
     if (timeEl) timeEl.textContent = `At ${payload.time}`;
     banner.style.display = 'flex';
   }
@@ -808,7 +826,7 @@
     });
   }
 
-  // --- 11. INTERACTIVE PAYMENT SIMULATION (UPI QR & CARD) ---
+  // --- 11. INTERACTIVE PAYMENT GATEWAY (UPI & CARD) ---
   const openPaymentBtn = document.getElementById('btnOpenPaymentModal');
   const paymentModal = document.getElementById('paymentModal');
   const closePaymentBtn = document.getElementById('btnClosePaymentModal');
@@ -835,20 +853,18 @@
 
     if (!modal) return;
 
-    // Reset steps
     if (contentStep) contentStep.style.display = 'block';
     if (procStep) procStep.style.display = 'none';
     if (succStep) succStep.style.display = 'none';
 
-    // Calculate due amount
     let totalDue = 0;
     if (state.cart.length > 0) {
       const subtotal = state.cart.reduce((sum, i) => sum + (i.totalPrice * i.qty), 0);
-      totalDue = subtotal + (subtotal * 0.1); // +10% taxes/charges
+      totalDue = subtotal + (subtotal * 0.1);
     } else if (state.customerActiveOrder) {
       totalDue = state.customerActiveOrder.total;
     } else {
-      totalDue = 1925; // fallback demo check for Table 04
+      totalDue = 1925;
     }
 
     if (pmAmt) pmAmt.textContent = `₹${totalDue.toFixed(2)}`;
@@ -856,7 +872,6 @@
     modal.classList.add('active');
   }
 
-  // Switch tabs in payment modal
   const tabUpi = document.getElementById('tabUpi');
   const tabCard = document.getElementById('tabCard');
   const paneUpi = document.getElementById('paneUpi');
@@ -878,7 +893,6 @@
     });
   }
 
-  // Simulate Payments
   const simulateUpiBtn = document.getElementById('btnSimulateUpiPay');
   const simulateCardBtn = document.getElementById('btnSimulateCardPay');
 
@@ -900,7 +914,6 @@
     if (contentStep) contentStep.style.display = 'none';
     if (procStep) procStep.style.display = 'flex';
 
-    // Simulate 1.2s bank network latency
     setTimeout(() => {
       playPaymentSuccessChime();
 
@@ -910,17 +923,16 @@
       const txnRef = `TXN-${method.toUpperCase()}-${Math.floor(10000000 + Math.random() * 90000000)}`;
       if (refBadge) refBadge.textContent = txnRef;
 
-      // Settle active order or cart
       let settledOrder = state.customerActiveOrder;
       if (!settledOrder && state.cart.length > 0) {
-        // Automatically create and settle
         const subtotal = state.cart.reduce((sum, item) => sum + (item.totalPrice * item.qty), 0);
-        const tax = Math.round(subtotal * 0.05 * 100) / 100;
+        const taxEach = Math.round(subtotal * 0.025 * 100) / 100;
         const service = Math.round(subtotal * 0.05 * 100) / 100;
         settledOrder = {
           id: 'DF-' + Math.floor(1000 + Math.random() * 9000),
           tableId: state.currentTable,
           tableName: 'Table 04',
+          covers: 3,
           status: 'served',
           createdAt: Date.now(),
           settledAt: Date.now(),
@@ -928,9 +940,10 @@
           txnRef: txnRef,
           items: [...state.cart],
           subtotal: subtotal,
-          tax: tax,
+          cgst: taxEach,
+          sgst: taxEach,
           serviceCharge: service,
-          total: subtotal + tax + service
+          total: subtotal + (taxEach * 2) + service
         };
         state.orders.unshift(settledOrder);
         state.cart = [];
@@ -961,7 +974,6 @@
     }, 1200);
   }
 
-  // View Receipt After Pay
   const viewReceiptAfterPayBtn = document.getElementById('btnViewReceiptAfterPay');
   if (viewReceiptAfterPayBtn) {
     viewReceiptAfterPayBtn.addEventListener('click', () => {
@@ -972,7 +984,7 @@
     });
   }
 
-  // --- 12. KITCHEN DISPLAY SYSTEM (KDS) RENDERING & MULTI-STATION ROUTING ---
+  // --- 12. KDS KANBAN EXPEDITER RENDERING & MULTI-STATION ROUTING ---
   function renderKDS() {
     const colIncoming = document.getElementById('kdsColIncoming');
     const colCooking = document.getElementById('kdsColCooking');
@@ -981,10 +993,8 @@
 
     if (!colIncoming || !colCooking || !colReady || !colServed) return;
 
-    // Filter by Active Station
     const filteredOrders = state.orders.filter(order => {
       if (state.activeStation === 'all') return true;
-      // Match if any item in order belongs to this station
       return order.items.some(it => {
         const menuItem = (window.DINEFLOW_MENU || []).find(m => m.name === it.name);
         const itemStation = it.station || menuItem?.station || 'grill';
@@ -999,21 +1009,17 @@
       served: filteredOrders.filter(o => o.status === 'served')
     };
 
-    // Update column badge counters
     document.getElementById('countIncoming')?.replaceChildren(document.createTextNode(ordersByStatus.incoming.length));
     document.getElementById('countCooking')?.replaceChildren(document.createTextNode(ordersByStatus.cooking.length));
     document.getElementById('countReady')?.replaceChildren(document.createTextNode(ordersByStatus.ready.length));
     document.getElementById('countServed')?.replaceChildren(document.createTextNode(ordersByStatus.served.length));
 
-    // Update active tickets in top tools
     const totalActive = ordersByStatus.incoming.length + ordersByStatus.cooking.length + ordersByStatus.ready.length;
     const activeCountEl = document.getElementById('kdsActiveCount');
     if (activeCountEl) activeCountEl.textContent = totalActive;
 
-    // Update Station Badge Counts
     updateStationBadges();
 
-    // Render Cards
     renderKDSColumn(colIncoming, ordersByStatus.incoming, 'incoming');
     renderKDSColumn(colCooking, ordersByStatus.cooking, 'cooking');
     renderKDSColumn(colReady, ordersByStatus.ready, 'ready');
@@ -1043,7 +1049,7 @@
 
   function renderKDSColumn(container, orders, columnStatus) {
     if (orders.length === 0) {
-      container.innerHTML = `<div class="kds-empty-col">No tickets currently</div>`;
+      container.innerHTML = `<div class="kds-empty-col">No tickets in this column</div>`;
       return;
     }
 
@@ -1054,9 +1060,14 @@
       const formattedTime = `${String(elapsedMin).padStart(2, '0')}:${String(elapsedRemSec).padStart(2, '0')}`;
 
       let alertClass = 'urgency-normal';
+      let isRush = false;
       if (order.status !== 'served') {
-        if (elapsedMin >= 12) alertClass = 'urgency-delayed';
-        else if (elapsedMin >= 8) alertClass = 'urgency-warning';
+        if (elapsedMin >= 12) {
+          alertClass = 'urgency-delayed';
+          isRush = true;
+        } else if (elapsedMin >= 8) {
+          alertClass = 'urgency-warning';
+        }
       }
 
       let actionBtnHtml = '';
@@ -1067,15 +1078,17 @@
       } else if (columnStatus === 'ready') {
         actionBtnHtml = `<button class="kds-bump-btn btn-complete" data-action="served" data-id="${order.id}">✓ Mark Served</button>`;
       } else {
-        actionBtnHtml = `<button class="kds-bump-btn btn-receipt" data-action="receipt" data-id="${order.id}">🖨️ View Receipt</button>`;
+        actionBtnHtml = `<button class="kds-bump-btn btn-receipt" data-action="receipt" data-id="${order.id}">🖨️ Thermal Receipt</button>`;
       }
 
       return `
         <div class="kds-ticket ${alertClass}" data-id="${order.id}" data-created="${order.createdAt}">
+          ${isRush ? '<div class="rush-stamp">RUSH TICKET</div>' : ''}
+          
           <div class="ticket-head">
             <div class="ticket-left">
               <span class="ticket-table">${order.tableName}</span>
-              <span class="ticket-id">#${order.id}</span>
+              <span class="ticket-id">#${order.id} &bull; ${order.covers || 2} COVERS</span>
             </div>
             <div class="ticket-right">
               <span class="ticket-timer" id="timer_${order.id}">⏱ ${formattedTime}</span>
@@ -1091,7 +1104,9 @@
                     <span class="t-name">${item.name}</span>
                   </div>
                   ${item.modifiers && item.modifiers.length > 0 ? `
-                    <div class="t-mods">${item.modifiers.join(', ')}</div>
+                    <div class="t-mods">
+                      ${item.modifiers.map(m => `<span class="t-mod-pill">${m}</span>`).join('')}
+                    </div>
                   ` : ''}
                 </div>
               `;
@@ -1100,19 +1115,18 @@
 
           ${order.notes ? `
             <div class="ticket-chef-notes">
-              <strong>Special Note:</strong> ${order.notes}
+              <strong>Chef Note:</strong> ${order.notes}
             </div>
           ` : ''}
 
           <div class="ticket-actions">
             ${actionBtnHtml}
-            <button class="btn-quick-receipt" data-id="${order.id}" title="Print Thermal Tax Invoice">🖨️</button>
+            <button class="btn-quick-receipt" data-id="${order.id}" title="Inspect Thermal Tax Invoice">🖨️</button>
           </div>
         </div>
       `;
     }).join('');
 
-    // Attach bump listeners
     container.querySelectorAll('.kds-bump-btn').forEach(btn => {
       btn.addEventListener('click', (e) => {
         e.stopPropagation();
@@ -1134,7 +1148,6 @@
     });
   }
 
-  // Bump Order Status
   function bumpOrderStatus(orderId, newStatus) {
     playBumpSound();
     const order = state.orders.find(o => o.id === orderId);
@@ -1149,10 +1162,9 @@
     renderKDS();
     renderCustomerOrderStatus();
     renderStats();
-    showToast(`Order #${order.id} moved to "${newStatus}"`);
+    showToast(`Order #${order.id} transitioned to "${newStatus}"`);
   }
 
-  // Interval for KDS active seconds
   function startKDSTimerInterval() {
     setInterval(() => {
       const now = Date.now();
@@ -1170,15 +1182,32 @@
         if (elapsedMin >= 12) {
           ticket.classList.remove('urgency-normal', 'urgency-warning');
           ticket.classList.add('urgency-delayed');
+          if (!ticket.querySelector('.rush-stamp')) {
+            const stamp = document.createElement('div');
+            stamp.className = 'rush-stamp';
+            stamp.textContent = 'RUSH TICKET';
+            ticket.appendChild(stamp);
+          }
         } else if (elapsedMin >= 8) {
           ticket.classList.remove('urgency-normal', 'urgency-delayed');
           ticket.classList.add('urgency-warning');
         }
       });
+
+      // Update Dynamic Island timer
+      if (state.customerActiveOrder) {
+        const current = state.orders.find(o => o.id === state.customerActiveOrder.id) || state.customerActiveOrder;
+        const elapsedMin = Math.floor((now - current.createdAt) / 60000);
+        const elapsedSec = Math.floor(((now - current.createdAt) % 60000) / 1000);
+        const islandTimer = document.getElementById('islandTimer');
+        if (islandTimer) {
+          islandTimer.textContent = `${String(elapsedMin).padStart(2, '0')}:${String(elapsedSec).padStart(2, '0')}`;
+        }
+      }
     }, 1000);
   }
 
-  // Station Filter Buttons Click
+  // Station Filter Buttons
   document.querySelectorAll('.station-tab-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.station-tab-btn').forEach(b => b.classList.remove('active'));
@@ -1189,12 +1218,64 @@
     });
   });
 
-  // Test Bell Chime Button
+  // Brass Bell Trigger
   const testBellBtn = document.getElementById('btnTestBell');
   if (testBellBtn) {
     testBellBtn.addEventListener('click', () => {
       playServiceBell();
-      showToast('Synthesized 1.8kHz brass service bell triggered');
+      showToast('1.8kHz brass restaurant service bell rung');
+    });
+  }
+
+  // "Rush Demo" Trigger: Generates 2 active tickets for immediate evaluation
+  const rushBtn = document.getElementById('btnSimulateRush');
+  if (rushBtn) {
+    rushBtn.addEventListener('click', () => {
+      playServiceBell();
+      const now = Date.now();
+      const demoOrder1 = {
+        id: 'DF-' + Math.floor(1000 + Math.random() * 9000),
+        tableId: 'T-07',
+        tableName: 'Table 07',
+        covers: 2,
+        status: 'incoming',
+        createdAt: now,
+        items: [
+          { name: 'Crispy Polenta Bites & Smoked Aioli', station: 'larder', qty: 1, price: 320, modifiers: ['Truffle Mayo Dip'] },
+          { name: 'Cascara & Grapefruit Botanicals', station: 'barista', qty: 2, price: 520, modifiers: ['Clear Ice Block'] }
+        ],
+        notes: 'Cocktail rush order',
+        subtotal: 840,
+        cgst: 21,
+        sgst: 21,
+        serviceCharge: 42,
+        total: 924
+      };
+      const demoOrder2 = {
+        id: 'DF-' + Math.floor(1000 + Math.random() * 9000),
+        tableId: 'T-12',
+        tableName: 'Table 12',
+        covers: 6,
+        status: 'cooking',
+        createdAt: now - (9 * 60 * 1000), // 9 mins ago (warning state)
+        items: [
+          { name: 'Wood-Fired Neapolitan Burrata Pizza', station: 'grill', qty: 2, price: 1280, modifiers: ['Leopard Char Crust', 'Spicy Hot Honey'] },
+          { name: 'Basque Burnt Cheesecake & Sea Salt', station: 'pastry', qty: 2, price: 720, modifiers: ['Blackberry Compote'] }
+        ],
+        notes: 'PDR VIP Table',
+        subtotal: 2000,
+        cgst: 50,
+        sgst: 50,
+        serviceCharge: 100,
+        total: 2200
+      };
+
+      state.orders.unshift(demoOrder1, demoOrder2);
+      saveOrders();
+      broadcastEvent('NEW_ORDER', demoOrder1);
+      renderKDS();
+      renderStats();
+      showToast('⚡ Rush hour simulated: 2 live tickets fired to KDS!');
     });
   }
 
@@ -1234,7 +1315,7 @@
             <span class="tfc-name">${table.name}</span>
             <span class="tfc-status-pill ${statusClass}">${statusLabel}</span>
           </div>
-          <div class="tfc-meta">${table.type} &bull; ${table.capacity} seats</div>
+          <div class="tfc-meta">${table.type} &bull; ${table.capacity} covers</div>
           <div class="tfc-bill">Check: ${runningBill}</div>
         </div>
       `;
@@ -1286,7 +1367,7 @@
     });
   }
 
-  // --- 14. THERMAL DOT-MATRIX TAX INVOICE GENERATOR (80mm) ---
+  // --- 14. THERMAL TAX INVOICE GENERATOR WITH POS FEED ANIMATION ---
   function openThermalReceipt(orderId) {
     const order = state.orders.find(o => o.id === orderId) || state.orders[0];
     if (!order) return;
@@ -1305,7 +1386,7 @@
     paper.innerHTML = `
       <div class="receipt-header">
         <div class="receipt-brand">THE RUSTY COPPER</div>
-        <div>Artisanal Bistro &amp; Specialty Roastery</div>
+        <div>Artisanal Wood-Fired Kitchen &amp; Roastery</div>
         <div>Connaught Place, New Delhi &bull; 110001</div>
         <div>GSTIN: 07AAACT2849P1Z8 &bull; FSSAI: 13321008000492</div>
       </div>
@@ -1321,8 +1402,8 @@
         <span>TIME: ${timeStr}</span>
       </div>
       <div class="receipt-table-meta">
-        <span>SERVER: Rajesh (Station #01)</span>
-        <span>STATUS: PAID</span>
+        <span>COVERS: ${order.covers || 2} GUESTS</span>
+        <span>STATUS: PAID &bull; SETTLED</span>
       </div>
 
       <div class="receipt-divider"></div>
@@ -1348,18 +1429,18 @@
         </div>
         <div class="r-total-row">
           <span>CGST (2.5%):</span>
-          <span>₹${(order.tax / 2).toFixed(2)}</span>
+          <span>₹${(order.cgst || order.tax / 2 || 0).toFixed(2)}</span>
         </div>
         <div class="r-total-row">
           <span>SGST (2.5%):</span>
-          <span>₹${(order.tax / 2).toFixed(2)}</span>
+          <span>₹${(order.sgst || order.tax / 2 || 0).toFixed(2)}</span>
         </div>
         <div class="r-total-row">
           <span>Hospitality Service (5%):</span>
-          <span>₹${order.serviceCharge.toFixed(2)}</span>
+          <span>₹${(order.serviceCharge || 0).toFixed(2)}</span>
         </div>
         <div class="r-total-row grand">
-          <span>TOTAL PAYABLE:</span>
+          <span>TOTAL PAID:</span>
           <span>₹${order.total.toFixed(2)}</span>
         </div>
       </div>
@@ -1369,8 +1450,8 @@
       <div class="receipt-tax-footer">
         <div>SETTLEMENT: UPI / Contactless Gateway</div>
         <div>REF: ${order.txnRef || 'TXN-UPI-88429184'}</div>
-        <div style="margin-top: 8px;">THANK YOU FOR DINING WITH US!</div>
-        <div style="font-size: 0.58rem; margin-top: 4px;">*** TAX INVOICE CUM CASH MEMO ***</div>
+        <div style="margin-top: 8px; font-weight: 700;">THANK YOU FOR DINING WITH US!</div>
+        <div style="font-size: 0.6rem; margin-top: 4px;">*** FISCAL TAX INVOICE CUM CASH MEMO ***</div>
       </div>
     `;
 
@@ -1407,7 +1488,6 @@
     });
   });
 
-  // Category Filter Pills
   document.querySelectorAll('.cat-pill').forEach(btn => {
     btn.addEventListener('click', () => {
       document.querySelectorAll('.cat-pill').forEach(b => b.classList.remove('active'));
@@ -1418,7 +1498,6 @@
     });
   });
 
-  // Table Selector in Nav
   const tableSelect = document.getElementById('tableSelect');
   if (tableSelect && window.DINEFLOW_TABLES) {
     tableSelect.innerHTML = window.DINEFLOW_TABLES.map(t => {
@@ -1433,11 +1512,10 @@
       const drawerTag = document.getElementById('drawerTableTag');
       if (drawerTag && tObj) drawerTag.textContent = tObj.name;
       playTapSound();
-      showToast(`Switched active terminal to ${tObj?.name}`);
+      showToast(`Switched terminal context to ${tObj?.name}`);
     });
   }
 
-  // Device Clock updater
   function updateDeviceClock() {
     const clockEl = document.getElementById('deviceClock');
     if (!clockEl) return;
@@ -1452,7 +1530,7 @@
     updateDeviceClock();
     setInterval(updateDeviceClock, 10000);
 
-    // Check URL parameters for direct view activation
+    // Direct URL parameter activation (?view=customer | ?view=kds)
     try {
       const urlParams = new URLSearchParams(window.location.search);
       const requestedView = urlParams.get('view');
@@ -1474,7 +1552,6 @@
     renderStats();
     startKDSTimerInterval();
 
-    // Default active order tracker check
     if (state.orders.length > 0) {
       state.customerActiveOrder = state.orders[0];
       renderCustomerOrderStatus();
