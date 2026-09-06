@@ -949,16 +949,6 @@
       repo: 'https://github.com/gurumaan/playify',
       live: 'https://peaceful-davinci.cotton-vole.workers.dev'
     },
-    dineflow: {
-      title: 'DineFlow — Real-Time QR Ordering & Kitchen Display System',
-      badge: 'Flagship Hospitality Tech · Real-Time Broadcast & Web Audio',
-      problem: 'Restaurant operations suffer from fragile tablet POS setups, expensive proprietary hardware lock-ins, and high ordering latency during peak dining hours. DineFlow provides an instant zero-install guest mobile web ordering experience synchronized in real-time with kitchen display terminals.',
-      topology: 'Guest Smartphone (/dine) ──[W3C BroadcastChannel / LocalStorage Event Bus]──► Kitchen KDS Terminal (/kds) ──► Web Audio POS Synthesizer (1.8kHz Acoustic Bell) ──► 80mm Thermal Receipt Generator',
-      tradeoffs: 'Used browser-native BroadcastChannel and Web Audio API oscillators to achieve instantaneous cross-device ticket dispatch with zero external audio assets or server cold-start delays.',
-      snippet: `// DineFlow Acoustic POS Counter Bell Synthesizer (Dual-Stage Harmonic Ping)\nplayServiceBell() {\n  const ctx = getAudioContext();\n  const t = ctx.currentTime;\n  // 1760Hz, 3520Hz, 5280Hz Multi-Harmonic Brass Ping\n  [1760, 3520, 5280].forEach((freq, idx) => {\n    const osc = ctx.createOscillator();\n    const gain = ctx.createGain();\n    osc.type = idx === 0 ? 'sine' : 'triangle';\n    osc.frequency.setValueAtTime(freq, t);\n    gain.gain.setValueAtTime(0.25 / (idx + 1), t);\n    gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);\n    osc.connect(gain);\n    gain.connect(ctx.destination);\n    osc.start(t);\n    osc.stop(t + 1.25);\n  });\n}`,
-      repo: 'https://github.com/gurumaan/dineflow',
-      live: 'https://gurumaan.github.io/dineflow/'
-    },
     powersync: {
       title: 'PowerSync Offline-First Sync Backend',
       badge: 'Open Source · Node.js & PostgreSQL',
