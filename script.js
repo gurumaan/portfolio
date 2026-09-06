@@ -949,17 +949,17 @@
       repo: 'https://github.com/gurumaan/playify',
       live: 'https://peaceful-davinci.cotton-vole.workers.dev'
     },
-    apipulse: {
-      title: 'APIPulse — Real-Time API Profiler & Network Waterfall Studio',
-      badge: 'Flagship DevTool · Performance Telemetry & Security Audit',
-      problem: 'Debugging API performance bottlenecks, diagnosing unexpected edge latency, and verifying OWASP security compliance often requires heavyweight, proprietary desktop tools. APIPulse provides a zero-install, browser-native studio delivering sub-millisecond timing waterfalls, live WebSocket stream inspection, and automated security grading.',
-      topology: 'Request Bar ──► W3C Fetch & Performance API ──► Timing Waterfall Gantt (DNS ➔ TCP ➔ TLS ➔ TTFB ➔ Transfer) ──► OWASP Security Compliance Matrix ──► Collapsible JSON Tree & cURL Generator',
-      tradeoffs: 'Implemented direct W3C PerformanceResourceTiming telemetry with graceful fallback benchmarks for CORS-restricted public endpoints to guarantee 100% interactive fidelity without requiring a costly backend proxy.',
-      snippet: `// Sub-Millisecond W3C ResourceTiming Extraction Engine\nextractResourceTiming(url, totalElapsed) {\n  const entries = performance.getEntriesByName(url);\n  const entry = entries.length > 0 ? entries[entries.length - 1] : null;\n  if (entry && entry.responseStart > 0) {\n    return {\n      dns: Math.max(2, entry.domainLookupEnd - entry.domainLookupStart),\n      tcp: Math.max(5, entry.connectEnd - entry.connectStart),\n      tls: entry.secureConnectionStart > 0 ? entry.connectEnd - entry.secureConnectionStart : 15,\n      ttfb: Math.max(10, entry.responseStart - entry.requestStart),\n      download: Math.max(2, entry.responseEnd - entry.responseStart),\n      total: entry.duration || totalElapsed\n    };\n  }\n  return this.computeProportionalWaterfall(totalElapsed);\n}`,
-      repo: 'https://github.com/gurumaan/apipulse',
-      live: 'https://gurumaan.github.io/apipulse/'
+        dineflow: {
+      title: 'DineFlow 2.0 — Enterprise Hospitality OS & Real-Time KDS',
+      badge: 'Flagship Hospitality Tech · Real-Time Broadcast & Web Audio',
+      problem: 'Restaurant operations suffer from fragile tablet POS setups, expensive proprietary hardware lock-ins, and high ordering latency during peak dining hours. DineFlow provides dedicated full-viewport workspaces for guests, kitchen line chefs, and floor managers synchronized in real-time.',
+      topology: 'Guest Workspace (/dineflow) ──[W3C BroadcastChannel ('dineflow_v2_bus')]──► Kitchen KDS Terminal (/kds) ──► Web Audio POS Synthesizer (1.8kHz Acoustic Bell) ──► 80mm Thermal Receipt Generator',
+      tradeoffs: 'Used browser-native BroadcastChannel and Web Audio API oscillators to achieve instantaneous cross-device ticket dispatch with zero external audio assets or server cold-start delays.',
+      snippet: `// DineFlow Acoustic POS Counter Bell Synthesizer (Dual-Stage Harmonic Ping)\nplayBrassBell() {\n  const ctx = getAudioContext();\n  const t = ctx.currentTime;\n  // 1760Hz, 3520Hz, 5280Hz Multi-Harmonic Brass Ping\n  [1760, 3520, 5280].forEach((freq, idx) => {\n    const osc = ctx.createOscillator();\n    const gain = ctx.createGain();\n    osc.type = idx === 0 ? 'sine' : 'triangle';\n    osc.frequency.setValueAtTime(freq, t);\n    gain.gain.setValueAtTime(0.35 / (idx + 1), t);\n    gain.gain.exponentialRampToValueAtTime(0.0001, t + 1.2);\n    osc.connect(gain);\n    gain.connect(ctx.destination);\n    osc.start(t);\n    osc.stop(t + 1.25);\n  });\n}`,
+      repo: 'https://github.com/gurumaan/dineflow',
+      live: 'https://gurumaan.github.io/dineflow/'
     },
-    powersync: {
+powersync: {
       title: 'PowerSync Offline-First Sync Backend',
       badge: 'Open Source · Node.js & PostgreSQL',
       problem: 'Building reliable offline-first mobile and web applications requires deterministic data replication between edge SQLite engines and centralized cloud relational databases.',
